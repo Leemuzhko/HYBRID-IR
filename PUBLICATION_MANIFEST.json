@@ -292,11 +292,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "e03bd9104469263085796b450bef0371723d36617c8f23cf55add8059d32a257"
+      "sha256": "5e28009f57bcc69e0386bbdc6f8ad94b7814b1f05dcd2e16ef75fe2bff7bd286"
     },
     {
       "path": "README.ru.md",
-      "sha256": "544773c0103ba07c6e8864915e3a4dedba51438ee6071a65003211bf4bc17ba4"
+      "sha256": "be05c2b5ad9c2826caad3ed6ce6a54711f6e3d2ad74e8d292e2cd7aeb0874437"
+    },
+    {
+      "path": "README.uk.md",
+      "sha256": "9b8c9a270c2159e411813f222945a5dca5b8a54076b41a5751c7b546ac71d707"
     },
     {
       "path": "requirements-zoom-lock.txt",
@@ -312,7 +316,11 @@
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "62bdf8929d76200a60d887af9cfb6fded15fd45dcdcc458eb3bdc11111a64d66"
+      "sha256": "fdefc2d91baba56d142cf93a249c40df5b74aec5ca8a3b8813cb7dc26bf84514"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.uk.md",
+      "sha256": "53aefc526d70cdf7920404923d4a923592d836c0cb74aefb44ffbc13de97b340"
     },
     {
       "path": "uninstaller.py",
