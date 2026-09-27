@@ -55,6 +55,33 @@ all long IRs can be replaced transparently. Importing a WAV directly into a
 bank does not automatically perform hybrid fitting; prepare it in Trainer first
 when you want that trade-off.
 
+## IR length and DSP load: read before use
+
+The compilation-based builder supports IRs up to **4096 samples at 44.1 kHz,
+with 16-bit (Q15) FIR coefficients**. In the author's pedal experiments, a
+4096-tap convolution was already close to the practical DSP ceiling, especially
+when combined with other effects. This is not a universal measured CPU limit.
+Long IRs also consume more coefficient storage, sharply reducing how many
+different IRs fit in a bank. Bank capacity and real-time DSP load are separate limits.
+
+**The bundled compiler-free HYBRID4 template is limited to 2048 taps per slot**
+and a shared pool of 4096 distinct taps. Its pool size does not mean that it can
+accept one 4096-tap IR. That requires a different compiled build/template.
+
+**The effect deliberately declares a low, fixed DSP cost (20), not its worst-case
+load. This number is not a CPU percentage.** Actual processing load varies with
+the selected IR length, filters and active branches; the declared cost does not
+track those changes. The pedal may therefore accept a chain that overloads its
+DSP without displaying **DSP Full**.
+
+Check the complete chain **by ear**, including the heaviest settings you intend
+to use. If clicks, crackling or digital breakup appear, reduce the processing
+load: select a shorter IR or switch to **L** or **R** mode so only one processing
+branch runs. Selecting IR **OFF** removes its FIR/correction processing but leaves
+RESO/PRES and output processing active; it is not a complete branch shutdown.
+These artifacts can have other causes too. A clean listening test is a practical
+check, not proof of sample-perfect operation or guaranteed DSP headroom.
+
 ## Download — experimental Windows distribution
 
 [Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip)
