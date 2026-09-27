@@ -12,7 +12,7 @@ Prepare cabinet responses, fit hybrid FIR/IIR models and build your own ZDL effe
 </p>
 <p align="center"><strong>English</strong> · <a href="README.ru.md">Русский</a> · <a href="README.uk.md">Українська</a></p>
 <h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip">Download for Windows</a></h3>
-<p align="center"><a href="#installation">Installation</a> · <a href="#workflow">Build your first effect</a> · <a href="https://ko-fi.com/leemuzhko">Support on Ko-fi</a></p>
+<p align="center"><a href="docs/en/installation.md">Installation</a> · <a href="docs/en/workflow.md">Build your first effect</a> · <a href="https://ko-fi.com/leemuzhko">Support on Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
 <sub>Project device family. Hardware validation varies by model and bank; see the technical guide.</sub></p>
 
@@ -33,7 +33,7 @@ Looking for something ready to try? My [Zoom-ZDL-FX repository](https://github.c
 
 ## Quick start
 
-Install the desktop app, open **Zoom ZDL**, add an IR with **Import WAV**, and export with **Patch ZDL (no TI)**. Transfer the resulting ZDL with [Zoom Effect Manager](https://zoomeffectmanager.com/en/download/). The guides below cover the settings and checks.
+Install the desktop app, open **Zoom ZDL**, add an IR with **Import WAV**, and export with **Patch ZDL (no TI)**. Transfer the resulting ZDL with [Zoom Effect Manager](https://zoomeffectmanager.com/en/download/). The guides above cover the settings and checks.
 
 ## Before you start
 
