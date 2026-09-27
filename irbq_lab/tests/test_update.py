@@ -149,6 +149,46 @@ class TestUpdate(unittest.TestCase):
         self.assertEqual((self.destination / 'program.txt').read_text(), 'version one')
         self.assertTrue((self.destination / 'new-user-file.txt').exists())
 
+    def test_change_at_rename_restores_new_personal_file(self):
+        rename = updater.rename_tree
+        def alter(source, target):
+            if source == self.destination and '.backup-' in target.name:
+                (source / 'last-second.wav').write_bytes(b'personal')
+            return rename(source, target)
+        with patch.object(updater, 'rename_tree', side_effect=alter):
+            with self.assertRaisesRegex(RuntimeError, 'old installation restored'):self.update()
+        self.assertEqual((self.destination / 'last-second.wav').read_bytes(), b'personal')
+        self.assertEqual((self.destination / 'program.txt').read_text(), 'version one')
+
+    def test_browsing_legacy_folder_does_not_nest_new_install(self):
+        (self.destination / 'uninstall-receipt.json').unlink()
+        self.assertEqual(installer.browsed_destination(self.destination), self.destination)
+        with self.assertRaisesRegex(ValueError, 'No uninstall receipt'):
+            updater.describe(self.source, installer.browsed_destination(self.destination), installer.checked_payload)
+        empty = self.root / 'empty';empty.mkdir()
+        self.assertEqual(installer.browsed_destination(empty), empty / 'HYBRIDIR')
+
+    def test_shortcut_receipt_failure_removes_only_new_link(self):
+        link = self.root / 'HYBRID IR.lnk'
+        def create(_destination):
+            link.write_bytes(b'new shortcut')
+            return dict(path=str(link), sha256=hashlib.sha256(link.read_bytes()).hexdigest())
+        real_record = updater.atomic_record
+        def record(path, data):
+            if data.get('shortcut'):raise PermissionError('receipt locked')
+            real_record(path, data)
+        original_helper = updater.helper
+        from types import SimpleNamespace
+        def helper(name):
+            return SimpleNamespace(create_desktop_shortcut=create) if name == 'installer' else original_helper(name)
+        progress = []
+        with patch.object(updater, 'helper', side_effect=helper),patch.object(updater, 'atomic_record', side_effect=record):
+            updater.update(self.source, self.destination, installer.install, installer.checked_payload,
+                           progress.append, desktop_shortcut=True)
+        self.assertFalse(link.exists())
+        self.assertTrue(any('unrecorded shortcut removed' in message for message in progress))
+        self.assertIsNone(json.loads((self.destination / 'uninstall-receipt.json').read_text()).get('shortcut'))
+
     def test_launch_update_uninstall_mutex(self):
         with guard.installation_lock(self.destination):
             with self.assertRaisesRegex(ValueError, 'running'):self.update()
@@ -186,6 +226,19 @@ class TestUpdate(unittest.TestCase):
 
 @unittest.skipUnless(os.name == 'nt', 'Windows lifecycle detection')
 class TestWindowsUpdateGuard(unittest.TestCase):
+    def test_relative_legacy_launcher_detected(self):
+        with tempfile.TemporaryDirectory(prefix='hybrid relative ') as td:
+            root = Path(td)
+            (root / 'launch.py').write_text('import time; time.sleep(30)')
+            child = subprocess.Popen([sys.executable, 'launch.py'], cwd=root,
+                                     creationflags=subprocess.CREATE_NO_WINDOW)
+            try:
+                with self.assertRaises(subprocess.CalledProcessError) as error:updater.assert_not_running(root)
+                self.assertEqual(error.exception.returncode, 23)
+            finally:
+                child.terminate();child.wait(timeout=10)
+            updater.assert_not_running(root)
+
     def test_legacy_running_process_detected(self):
         with tempfile.TemporaryDirectory(prefix='hybrid process ') as td:
             root = Path(td)
