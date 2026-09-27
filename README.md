@@ -155,6 +155,10 @@ identify exact packages; they are not semantic version numbers or signatures.
 Existing Developer mode and compiler settings are retained during an update;
 the Setup Developer fields apply only to a new installation.
 
+The legacy-process check is deliberately conservative: other Python programs
+started through `launch.py` or `run.py` may also need to be closed. If Windows
+denies process inspection, the update stops without replacing the installation.
+
 The updater prepares and checks a separate candidate first. It then keeps the
 entire old installation in a sibling `APP.backup-*` folder and installs a fresh
 Python environment at the original path. This takes extra disk space and performs
