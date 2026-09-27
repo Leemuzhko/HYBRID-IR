@@ -67,6 +67,42 @@
       "sha256": "1e324a740a21e97573b05be8e621066ae69821dc3798773f8f38380fbdbc73cf"
     },
     {
+      "path": "docs/en/installation.md",
+      "sha256": "95df9346cf4b463c0ffe873da40aa83a9170cb2b9b9d3c37a7fdbcf33a481839"
+    },
+    {
+      "path": "docs/en/technical.md",
+      "sha256": "9025fbf7549bde36560243b05abf9e391408797501f417555e7c4dd0d8e3dd9e"
+    },
+    {
+      "path": "docs/en/workflow.md",
+      "sha256": "038b54cc1aa964f7be709bfa6f242cd361f0a158063f73a8025db81f185e0953"
+    },
+    {
+      "path": "docs/ru/installation.md",
+      "sha256": "65a54bd7850384784f35bccb3d254b31363c6ac43844820edea800dd5e673c22"
+    },
+    {
+      "path": "docs/ru/technical.md",
+      "sha256": "be27f4fd43ea6f2d3e81e18077549a08ab3ab1c7fc2110ad5cf96abb6ad8ce46"
+    },
+    {
+      "path": "docs/ru/workflow.md",
+      "sha256": "fc297591f9313eab908161b38e9da59c92e248d48d9ab30d3ec0c1e015df1388"
+    },
+    {
+      "path": "docs/uk/installation.md",
+      "sha256": "a3e7484c3193f7030a5565e38312652e31f2c95cdd51dfed5a5aae82196a448c"
+    },
+    {
+      "path": "docs/uk/technical.md",
+      "sha256": "47f27fd9a4402410a3bde733d14d62d03492999228b26fc38c1612131b40f113"
+    },
+    {
+      "path": "docs/uk/workflow.md",
+      "sha256": "f3c508e0f24a615f13a2d5ab0da8bc6f7e5ac866dc38af6c6e5407c4d0c0dcbc"
+    },
+    {
       "path": "hybridir_sdk/build/linker.py",
       "sha256": "3c7904673675ade2d6c8d6cb4c83e5a8f836889fd6f36b045bc35f5dcbd2c2c6"
     },
@@ -300,15 +336,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "c1dd9e31ca43437c9ae0a93f831979ed5d2c3b0f0786bd756b861ebbcd172c03"
+      "sha256": "d9513ae1f47ca39fb02118a310ec384d7d9ccec71de82f2efe33a8f19bc69155"
     },
     {
       "path": "README.ru.md",
-      "sha256": "f1caa79700bd321075061be5907eee95ad26a786c71645b90431b9f3ebe75f90"
+      "sha256": "0f9dce362a9a40ab8197def655e6587f36ae061c91174c273b8433c3d184f567"
     },
     {
       "path": "README.uk.md",
-      "sha256": "e178326c5ddf1ebe4eaa1a35d6b607e1275fa9b8234ef30677d4cbdc34d82394"
+      "sha256": "4061c9217488924301618fce4ad3edd89e5b4fb2fa2c8277619edb41359e4323"
     },
     {
       "path": "requirements-zoom-lock.txt",
