@@ -108,8 +108,11 @@ $prefix = $env:HYBRID_UPDATE_ROOT.TrimEnd('\') + '\'
 $busy = @(Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {
     $_.ProcessId -ne [int]$env:HYBRID_UPDATE_PID -and (
         ($_.ExecutablePath -and $_.ExecutablePath.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) -or
-        ($_.CommandLine -and $_.Name -match '^(python|pythonw|py)(\.exe)?$' -and
-         $_.CommandLine.IndexOf($prefix, [StringComparison]::OrdinalIgnoreCase) -ge 0)
+        ($_.Name -match '^(python|pythonw|py)(\.exe)?$' -and (
+            -not $_.CommandLine -or
+            $_.CommandLine.Replace('/', '\').IndexOf($prefix, [StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+            $_.CommandLine -match '(?i)(?:launch|run)\.py(?:["\s]|$)'
+        ))
     )
 })
 if ($busy.Count) { exit 23 }
@@ -165,6 +168,10 @@ def update(source, destination, install, checked_payload, progress=lambda text: 
             journal.unlink()
             raise
         try:
+            # Detect edits in the snapshot-to-rename interval before committing.
+            # On a mismatch the unchanged backup (including those edits) is restored.
+            if snapshot(backup) != info['state']:
+                raise RuntimeError('Installation changed during replacement; retry after closing all applications.')
             # Recreate the venv here: moving a prepared venv breaks absolute launchers.
             install(source, root, ti, str(backup / 'hybridir_sdk') if full else '', full,
                     progress, desktop_shortcut=False, _allow_pending_update=True)
@@ -194,11 +201,22 @@ def update(source, destination, install, checked_payload, progress=lambda text: 
             raise RuntimeError(f'Update failed; old installation restored. Failed candidate/logs: {failed}. {exc}') from exc
         journal.unlink()
         if desktop_shortcut and not receipt.get('shortcut'):
+            shortcut = None
             try:
                 shortcut = helper('installer').create_desktop_shortcut(root)
                 receipt['shortcut'] = shortcut
                 atomic_record(receipt_path, receipt)
             except Exception as exc:
-                progress('Application installed, but desktop shortcut was not created. ' + str(exc))
+                cleanup = ''
+                if shortcut is not None:
+                    try:
+                        link = safe_root(shortcut['path'])
+                        if not link.is_file() or hashlib.sha256(link.read_bytes()).hexdigest() != shortcut['sha256']:
+                            raise ValueError('Shortcut changed; preserved')
+                        link.unlink()
+                        cleanup = ' New unrecorded shortcut removed.'
+                    except (OSError, ValueError) as removal:
+                        cleanup = f" Unrecorded shortcut remains at {shortcut['path']}; check/remove it manually. {removal}"
+                progress('Application installed, but desktop shortcut was not recorded. ' + str(exc) + cleanup)
         progress(f'Updated. Backup: {backup}. Prepared candidate: {stage}. Modified source files remain in the backup.')
         return dict(destination=root, backup=backup, stage=stage, modified=info['modified'])
