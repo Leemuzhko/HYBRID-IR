@@ -81,6 +81,27 @@ class TestUninstall(unittest.TestCase):
                 self.assertTrue((root/'launch.py').exists())
                 self.assertTrue((root/'.venv/package.py').exists())
 
+    def test_locked_control_or_receipt_restores_runnable_uninstaller(self):
+        for locked_name in ('installation_guard.py','uninstaller.py','Uninstall_HYBRIDIR.cmd',module.RECEIPT):
+            with self.subTest(locked_name=locked_name),tempfile.TemporaryDirectory() as td:
+                root=Path(td)/'app';root.mkdir()
+                for name in ('uninstaller.py','installation_guard.py'):
+                    (root/name).write_bytes(Path(module.__file__).with_name(name).read_bytes())
+                for name in ('launch.py','installer.py','Uninstall_HYBRIDIR.cmd'):
+                    (root/name).write_bytes(b'owned')
+                module.write_receipt(root)
+                real_unlink=Path.unlink
+                def locked(path,*args,**kwargs):
+                    if path.name==locked_name:raise PermissionError('simulated control lock')
+                    return real_unlink(path,*args,**kwargs)
+                with patch.object(Path,'unlink',locked):result=module.uninstall(root)
+                self.assertTrue(result['errors'])
+                for name in ('uninstaller.py','installation_guard.py','Uninstall_HYBRIDIR.cmd',module.RECEIPT):
+                    self.assertTrue((root/name).is_file(),name)
+                retry_spec=importlib.util.spec_from_file_location('retry_uninstall',root/'uninstaller.py')
+                retry=importlib.util.module_from_spec(retry_spec);retry_spec.loader.exec_module(retry)
+                self.assertFalse(retry.uninstall(root)['folder_remains'])
+
     @unittest.skipUnless(os.name=='nt','Windows shortcut')
     def test_shortcut_only_if_recorded_and_unchanged(self):
         with tempfile.TemporaryDirectory() as td:
