@@ -33,6 +33,7 @@
   },
   "included_stock_derived_material": [{"file": "hybridir_sdk/build/linker.py", "symbol": "_DLL_WORDS", "bytes": 200, "source": "NoiseGate Dll entry function", "evidence": "Upstream comment and history; donor byte comparison not performed in this review", "license_scope": "Third-party material; not covered by the project's MIT declaration"}],
   "compiled_template": {"file": "hybridir_sdk/templates/HYBRID4.zdl", "bank": "synthetic unit impulses", "contains_inherited_stock_runtime": true, "purpose": "interoperability and reverse-engineering research", "hardware_validated": false},
+  "variable_template": {"file":"hybridir_sdk/templates/HVB4RBJ.zdl","sha256":"b21528b5a6444dbe6200cf73b450643da22082c0e865a6c86e4cb4b298357894","bank":"synthetic unit impulse","contains_inherited_stock_runtime":true,"hardware_validated":false,"derived_export_evidence":"HBUNIT/HB9BQ/HB8RBJ user-reported functional PASS on MS-70CDR 2026-09-27; see RELEASE_CANDIDATE.md","parameter_order":"OUT-L/MODE/OUT-R; RESO/IR-L/PRES; RESO/IR-R/PRES"},
   "excluded": ["three separate stock-derived .bin files (not embedded code in the template)", "TI compiler distribution", "commercial IRs and fitted models"],
   "scope": "Source provenance and upstream license declaration; not a blanket license for vendor firmware or runtime data."
 }

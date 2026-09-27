@@ -7,11 +7,19 @@ import unittest
 from unittest.mock import patch
 import numpy as np
 from irbq.dsp import Model
-from irbq.zoom_bank import BankProject
+from irbq.zoom_bank import BankProject,Slot
 
 
 @unittest.skipUnless(os.name=='nt' or os.environ.get('DISPLAY'),'Desktop required')
 class TestZoomGUI(unittest.TestCase):
+    def setUp(self):
+        self.profile=tempfile.TemporaryDirectory()
+        self.profile_patch=patch.dict(os.environ,{'IRBQ_SETTINGS_PATH':str(Path(self.profile.name)/'settings.json')})
+        self.profile_patch.start()
+
+    def tearDown(self):
+        self.profile_patch.stop();self.profile.cleanup()
+
     def test_trainer_only_and_build_close_guard(self):
         from irbq.gui import App
         with patch.dict(os.environ,{'HYBRIDIR_ZDL_ENABLED':'0'}):
@@ -21,13 +29,14 @@ class TestZoomGUI(unittest.TestCase):
                 self.assertNotIn('disabled',app.zoom_panel.patch_button.state())
                 with self.assertRaisesRegex(ValueError,'disabled'):app.zoom_panel.build()
                 app.zoom_panel.append(Model(44100,np.r_[.1,np.zeros(31)],[]),'TEST')
-                with tempfile.TemporaryDirectory() as td, patch('irbq.zoom_panel.filedialog.askdirectory',return_value=td), patch.object(app,'run_job') as job, patch('irbq.zoom_patch.patch_project') as patcher:
+                with tempfile.TemporaryDirectory() as td, patch('irbq.zoom_panel.filedialog.askdirectory',return_value=td), patch.object(app,'run_job') as job, patch('irbq.zoom_variable_patch.patch_project') as patcher:
                     app.zoom_panel.build(patch=True)
                     job.assert_called_once()
                     job.call_args.args[0]()
                     patcher.assert_called_once()
                     self.assertFalse(job.call_args.kwargs['cancellable'])
-                    sidecar=Path(td)/(app.zoom_panel.project.filename+'.patch.json')
+                    sidecar=Path(td)/app.zoom_panel.project.filename/(app.zoom_panel.project.filename+'.patch.json')
+                    sidecar.parent.mkdir()
                     sidecar.write_text('keep',encoding='utf-8')
                     job.reset_mock()
                     with patch('irbq.zoom_panel.messagebox.askyesno',return_value=False) as confirm:
@@ -53,6 +62,12 @@ class TestZoomGUI(unittest.TestCase):
         app=App();app.withdraw()
         try:
             panel=app.zoom_panel
+            def labels(widget):
+                found=[]
+                if widget.winfo_class()=='TLabel':found.append(str(widget.cget('text')))
+                for child in widget.winfo_children():found.extend(labels(child))
+                return found
+            self.assertIn('Zoom Effect Manager custom folder:',labels(panel))
             # Preparation must be deferred; worker must not touch Tk widgets.
             with patch('irbq.zoom_panel.filedialog.askopenfilename',return_value='test.wav'), \
                  patch('irbq.zoom_panel.simpledialog.askinteger',return_value=32), \
@@ -64,6 +79,10 @@ class TestZoomGUI(unittest.TestCase):
             app.session.model=Model(44100,np.r_[.2,np.zeros(31)],[],output_gain_db=-3.)
             panel.append(app.session.model,'A')
             panel.append(app.session.model,'B')
+            usage=panel.update_budget()
+            self.assertEqual(usage['active_slots'],2)
+            self.assertGreater(float(panel.capacity_bar['value']),0)
+            self.assertIn('244',panel.capacity_text.get())
             panel.tree.selection_set('0');panel.move(1)
             self.assertEqual([s.label for s in panel.project.slots],['B','A'])
             with patch('irbq.zoom_panel.simpledialog.askstring',return_value='CAB2'):panel.rename()
@@ -81,9 +100,76 @@ class TestZoomGUI(unittest.TestCase):
             panel=app.zoom_panel
             self.assertEqual(panel.variables['name'].get(),'TEST IR')
             self.assertEqual([s.label for s in panel.project.slots],['B','CAB2'])
+            self.assertEqual(panel.update_budget()['active_slots'],2)
             self.assertTrue(panel.dirty)
+            previous_image=panel.variables['image'].get()
+            panel.variables['image'].set('missing.png')
+            self.assertIsNone(panel.update_budget())
+            self.assertEqual(float(panel.capacity_bar['value']),0)
+            self.assertIn('Capacity unavailable',panel.capacity_text.get())
+            panel.variables['image'].set(previous_image)
+            self.assertIsNotNone(panel.update_budget())
             app.update_idletasks()
         finally:
             app.player.close();app.destroy()
+
+    def test_export_uses_custom_folder_and_confirms_completed_save(self):
+        from irbq.gui import App
+        app=App();app.withdraw()
+        try:
+            panel=app.zoom_panel
+            panel.append(Model(44100,np.r_[.1,np.zeros(31)],[]),'TEST')
+            with tempfile.TemporaryDirectory() as td:
+                panel.variables['patched_folder'].set(td)
+                for patch_mode,builder_name in ((False,'irbq.zoom_panel.build_project'),
+                                                 (True,'irbq.zoom_variable_patch.patch_project')):
+                    with self.subTest(patch=patch_mode), \
+                         patch('irbq.zoom_panel.filedialog.askdirectory') as chooser, \
+                         patch('irbq.zoom_panel.messagebox.showinfo') as notice, \
+                         patch.object(app,'run_job') as job, patch(builder_name) as builder:
+                        path=Path(td)/'TEST.zdl'
+                        builder.return_value=(path,{'sha256':'test-hash'})
+                        panel.build(patch=patch_mode)
+                        chooser.assert_not_called();notice.assert_not_called()
+                        job.assert_called_once()
+                        result=job.call_args.args[0]()
+                        self.assertEqual(builder.call_args.args[1],td)
+                        job.call_args.args[1](result)
+                        notice.assert_called_once()
+                        self.assertIn(str(path.resolve()),notice.call_args.args[1])
+                        self.assertIn('successfully',notice.call_args.args[1])
+        finally:app.player.close();app.destroy()
+
+    def test_role_migration_confirmation_and_cancel_are_inert(self):
+        from irbq.gui import App
+        from irbq.dsp import preset_sections
+        app=App();app.withdraw()
+        try:
+            panel=app.zoom_panel
+            model=Model(44100,np.r_[.5,np.zeros(127)],preset_sections(8))
+            panel.append(model,'NEW')
+            self.assertEqual(int(panel.tree.item('0','values')[2]),9)
+            self.assertFalse(model.sections[-1].locked)
+            legacy=model.clone()
+            for b in legacy.sections:b.control_role=''
+            before=legacy.to_dict()
+            with patch('irbq.zoom_panel.messagebox.askyesnocancel',return_value=None):panel.append(legacy,'CANCEL')
+            self.assertEqual(len(panel.project.slots),1)
+            with patch('irbq.zoom_panel.messagebox.askyesnocancel',return_value=True):panel.append(legacy,'OWNED')
+            self.assertEqual(int(panel.tree.item('1','values')[2]),9)
+            with patch('irbq.zoom_panel.messagebox.askyesnocancel',return_value=False):panel.append(legacy,'GEN')
+            self.assertEqual(int(panel.tree.item('2','values')[2]),10)
+            self.assertEqual(legacy.to_dict(),before)
+            with tempfile.TemporaryDirectory() as td:
+                p=BankProject(slots=[Slot('OLD',legacy)])
+                path=Path(td)/'old.zoombank.json';p.save(path)
+                previous=panel.project
+                with patch('irbq.zoom_panel.messagebox.askyesno',return_value=True), \
+                     patch('irbq.zoom_panel.messagebox.askyesnocancel',return_value=None), \
+                     patch('irbq.zoom_panel.filedialog.askopenfilename',return_value=str(path)):
+                    panel.open()
+                self.assertIs(panel.project,previous)
+        finally:app.update_idletasks();app.player.close();app.destroy()
+
 
 if __name__=='__main__':unittest.main()

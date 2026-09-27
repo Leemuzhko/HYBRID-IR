@@ -5,8 +5,9 @@ Only authoring/presentation changes live here. FIR/BQ equations and trainer stay
 from __future__ import annotations
 import copy
 import time
+from pathlib import Path
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk, messagebox, filedialog
 import numpy as np
 from scipy import ndimage
 from matplotlib.figure import Figure
@@ -14,7 +15,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from .i18n import tr as _, trf as _tf, ChoiceVar, DisplayVar, set_language, get_language
 from .preferences import load_preferences, save_preferences
 from .ui_theme import apply_theme, theme_axes, theme_widgets
-from .dsp import KINDS, Biquad, db, sos_response, sos_array, fir_response, response_metrics, phase_diagnostics, sos_stability
+from .dsp import KINDS, Biquad, db, sos_response, sos_array, fir_response, response_metrics, phase_diagnostics, sos_stability, frequency_grid
 from . import __version__
 
 PLOTS=['АЧХ','ΔАЧХ: модель − эталон','ФЧХ: без выравнивания','ΔФЧХ: относительно эталона',
@@ -74,6 +75,8 @@ class WorkspaceMixin:
                           ('Пересчитать FIR',self.refit_fir),('Снимок модели',self.snapshot),('Экспорт',self.export)]:
             b=ttk.Button(bar,text=_(label),command=cmd,style='Accent.TButton' if label=='Обучить' else 'TButton')
             b.pack(side='left',padx=3);self.action_buttons.append(b)
+        for label,cmd in [('Открыть проект…',self.open_project),('Сохранить проект',self.save_project)]:
+            b=ttk.Button(bar,text=_(label),command=cmd);b.pack(side='left',padx=3);self.action_buttons.append(b)
         self.tools_button=ttk.Button(bar,text=_('Скрыть инструменты'),command=self.toggle_tools);self.tools_button.pack(side='right',padx=3)
         ttk.Button(bar,text=_('СТОП'),command=self.cancel).pack(side='right',padx=3)
         self.mainpane=ttk.Panedwindow(self,orient='horizontal');self.mainpane.pack(fill='both',expand=True,padx=10)
@@ -89,6 +92,7 @@ class WorkspaceMixin:
         prep.bind_wheel_tree();fit.bind_wheel_tree()
         self.split=ttk.Panedwindow(self.right_panel,orient='vertical');self.split.pack(fill='both',expand=True)
         plotbox=ttk.Frame(self.split);lower=ttk.Frame(self.split)
+        self.plot_panel=plotbox;self.detail_panel=lower
         self.split.add(plotbox,weight=5);self.split.add(lower,weight=1)
         self._plot_ui(plotbox)
         self.tabs=ttk.Notebook(lower);self.tabs.pack(fill='both',expand=True)
@@ -100,6 +104,11 @@ class WorkspaceMixin:
         from .zoom_panel import ZoomPanel
         self.zoom_panel=ZoomPanel(self,self.tabs)
         self.tabs.add(self.zoom_panel,text='Zoom ZDL')
+        from .library_panel import LibraryPanel
+        self.library_panel=LibraryPanel(self,self.tabs)
+        self.tabs.add(self.library_panel,text=_('Library'))
+        self._catalog_active=False;self._trainer_sash=None
+        self.tabs.bind('<<NotebookTabChanged>>',self.catalog_selected,add='+')
         self.metrics_label=ttk.Label(info,text=_('Метрики появятся после подготовки WAV.'),justify='left',font=('Consolas',9))
         self.metrics_label.pack(fill='x',anchor='w',padx=6,pady=3)
         logframe=ttk.Frame(info);logframe.pack(fill='both',expand=True)
@@ -118,7 +127,108 @@ class WorkspaceMixin:
             self.mainpane.sashpos(0,300)
             height=self.split.winfo_height()
             self.split.sashpos(0,max(290,height-218))
+            self.catalog_selected()
         except tk.TclError:pass
+
+    def expand_catalog(self):
+        self.split.pane(self.plot_panel,weight=1);self.split.pane(self.detail_panel,weight=1)
+        if not self._catalog_active:
+            self._trainer_sash=self.split.sashpos(0)
+            self._catalog_active=True
+            self.split.sashpos(0,int(self.split.winfo_height()*.5))
+
+    def catalog_selected(self,event=None):
+        if not hasattr(self,'library_panel'):return
+        current=self.tabs.select()
+        if current in (str(self.zoom_panel),str(self.library_panel)):
+            self.expand_catalog()
+            if current==str(self.library_panel):self.library_panel.ensure_loaded()
+        elif self._catalog_active:
+            self._catalog_active=False
+            self.split.pane(self.plot_panel,weight=5);self.split.pane(self.detail_panel,weight=1)
+            if self._trainer_sash is not None:self.split.sashpos(0,self._trainer_sash)
+
+    def remember_path(self,field,path):
+        paths=getattr(self.prefs,field)
+        path=str(Path(path).resolve())
+        setattr(self.prefs,field,[path]+[p for p in paths if p!=path][:9])
+        if field=='recent_projects':self.refresh_recent_projects()
+        self._save_settings_quietly()
+
+    def refresh_recent_projects(self):
+        if not hasattr(self,'recent_projects_menu'):return
+        self.recent_projects_menu.delete(0,'end')
+        for path in self.prefs.recent_projects:
+            self.recent_projects_menu.add_command(label=Path(path).name,command=lambda p=path:self.open_project(p))
+
+    def confirm_session(self,discard=None):
+        if not self.dirty:return True
+        answer=messagebox.askyesnocancel(_('IRBQ project'),_('Save project changes before continuing?'),parent=self)
+        if answer is True:return self.save_project()
+        if answer is False:
+            if discard:discard()
+            return True
+        return False
+
+    def install_session(self,session,path=None):
+        self.player.stop();self.audio_render=None;self.training_preview=None
+        self.session=session;self.project_path=str(path) if path else None
+        self.target_cache={};self.undo_stack=[];self.redo_stack=[]
+        self.zoom_panel.edit_uid=None;self.zoom_panel.edit_digest=None;self.zoom_panel.refresh_titles()
+        self.sync_prep();self.refresh_snapshots();self.changed();self.dirty=False
+        if session.target is None:self.plotvar.set(PLOTS[0])
+        self.file_label.configure(text=Path(path).name if path else (session.source_name or _('Model without reference')))
+
+    def save_active(self):
+        if self.tabs.select()==str(self.zoom_panel):return self.zoom_panel.guarded(self.zoom_panel.save)
+        return self.save_project()
+
+    def save_project(self,save_as=False):
+        if not self.guard_model():return False
+        path=self.project_path
+        choose=save_as or not path
+        if choose:
+            path=filedialog.asksaveasfilename(parent=self,defaultextension='.irbq',filetypes=[('IRBQ project','*.irbq')],
+                initialfile=Path(path).name if path else 'Cabinet.irbq',confirmoverwrite=False)
+        if not path:return False
+        if choose and Path(path).exists() and not messagebox.askyesno(_('Replace project?'),str(path),parent=self):return False
+        try:
+            self.session.save(path);self.project_path=str(path);self.dirty=False
+            self.remember_path('recent_projects',path)
+            self.file_label.configure(text=Path(path).name);self.status.set(_('Project saved: {path}').format(path=path))
+            return True
+        except Exception as exc:self.error(exc);return False
+
+    def open_project(self,path=None):
+        if not self.guard(False):return
+        path=path or filedialog.askopenfilename(parent=self,filetypes=[('IRBQ project','*.irbq')])
+        if not path:return
+        try:
+            from .project import Session
+            session=Session.load(path)
+            if not self.confirm_session():return
+            self.install_session(session,path);self.remember_path('recent_projects',path)
+        except Exception as exc:self.error(exc)
+
+    def attach_reference(self):
+        if not self.guard_model():return
+        path=filedialog.askopenfilename(parent=self,filetypes=[('Audio','*.wav *.flac *.aif *.aiff')])
+        if not path:return
+        # Keep the fitted model; a new WAV supplies a real target, never a synthesized one.
+        from .project import Session
+        cfg=copy.deepcopy(self.session.config);model=self.session.model.clone()
+        snapshots=copy.deepcopy(self.session.snapshots)
+        def task():
+            session=Session(config=cfg);session.load_audio(path);session.preprocess()
+            session.model=model;session.snapshots=snapshots
+            return session
+        def done(session):
+            binding=(self.zoom_panel.edit_uid,self.zoom_panel.edit_digest)
+            previous=self.project_path
+            self.install_session(session,previous)
+            self.zoom_panel.edit_uid,self.zoom_panel.edit_digest=binding;self.zoom_panel.refresh_titles()
+            self.dirty=True
+        self.run_job(task,done,'Attach reference WAV')
 
     def _bind_wheel_scroll(self, widget, target):
         def wheel(event):
@@ -151,6 +261,9 @@ class WorkspaceMixin:
                  ('Импорт таблицы BQ CSV…',self.import_bq),('Экспорт модели…',self.export),('Экспорт всех снимков…',self.export_snapshots),
                  ('Сохранить график PNG…',self.save_plot)]
         for label,cmd in actions:fm.add_command(label=_(label),command=cmd)
+        fm.add_command(label=_('Attach reference WAV'),command=self.attach_reference)
+        self.recent_projects_menu=tk.Menu(fm,tearoff=False)
+        fm.add_cascade(label=_('Recent projects'),menu=self.recent_projects_menu);self.refresh_recent_projects()
         fm.add_separator();fm.add_command(label=_('Выход'),command=self.close);menu.add_cascade(label=_('Файл'),menu=fm)
         em=tk.Menu(menu,tearoff=False);em.add_command(label=_('Отмена действия'),command=self.undo);em.add_command(label=_('Повтор действия'),command=self.redo)
         menu.add_cascade(label=_('Правка'),menu=em)
@@ -334,7 +447,7 @@ class WorkspaceMixin:
         except Exception as e:self.error(e);self.sync_output_gain()
 
     def output_gain_zero(self):
-        if not self.guard() or self.session.model is None:return
+        if not self.guard_model():return
         self._set_output_gain(0.0,push=True);self.sync_output_gain()
 
     def _band_names(self):
@@ -421,6 +534,7 @@ class WorkspaceMixin:
         b=self.session.model.sections[i]
         try:
             nb=copy.deepcopy(b);nb.kind=self.eq_kind.get()
+            if nb.kind!=b.kind:nb.control_role=''
             nb.enabled=self.eq_on.get();nb.locked=self.eq_lock.get()
             if nb.kind=='SOS' and b.kind!='SOS':self.edit_bq();self.sync_eq_quick();return
             if b.kind!='SOS':
@@ -435,11 +549,12 @@ class WorkspaceMixin:
         except Exception as e:self.error(e);self.sync_eq_quick()
 
     def duplicate_bq(self):
-        if not self.guard():return
+        if not self.guard_model():return
         i=self.selected_bq()
         if i is None:return
         if len(self.session.model.sections)>=32:self.error(ValueError(_('Максимум 32 секции.')));return
         self.push_undo();b=copy.deepcopy(self.session.model.sections[i]);b.name+=' (copy)'
+        b.control_role=''  # A duplicated correction does not own a second knob.
         self.session.model.sections.insert(i+1,b);self.changed();self.bqtree.selection_set(str(i+1))
 
     def manual_bq_changed(self,i=None,refresh_tree=True):
@@ -542,9 +657,22 @@ class WorkspaceMixin:
             self.band_ax.remove();self.band_ax=None
         self.ax.clear();self.eq_handle_xy=[]
         c=self.colors;ax=self.ax
-        if self.session.target is None or self.session.model is None:
+        self.plot_combo.configure(values=[_(v) for v in (PLOTS if self.session.target is not None else [PLOTS[0]])])
+        if self.session.model is None:
             ax.text(.5,.5,_('Загрузите IR WAV или откройте проект'),ha='center',va='center',transform=ax.transAxes)
             ax.set_axis_off();theme_axes(self.figure,ax,c);self.canvas.draw_idle();self.sync_eq_quick();return
+        if self.session.target is None:
+            m=self.session.model;f=frequency_grid(m.fs,3000);H=m.response(f)
+            self._sync_figure_size();ax.set_axis_on()
+            self._edit_trace=db(H)
+            ax.semilogx(f,self._edit_trace,color=c['model'],label=_('Модель'))
+            ax.set(xlabel=_('Частота, Hz'),ylabel=_('АЧХ, dB'),xlim=(float(self.flo.get()),min(float(self.fhi.get()),m.fs*.499)))
+            ax.set_title(_('Model only — attach reference WAV to train'),fontsize=10,loc='left')
+            if self.show_bands.get():self._draw_band_curves(ax,f,m.fs)
+            if self._can_edit():self._draw_handles(f,self._edit_trace)
+            if old_limits:ax.set_xlim(old_limits[0]);ax.set_ylim(old_limits[1])
+            self.metrics_label.configure(text=_('No reference: comparison metrics and training are unavailable.'))
+            theme_axes(self.figure,ax,c);self.canvas.draw_idle();self.sync_eq_quick();return
         try:
             m=self.training_preview if self.training_preview is not None else self.session.model
             fs=m.fs;f,T=self.target_response();H=m.response(f)
@@ -710,7 +838,8 @@ class WorkspaceMixin:
                     tab=self.tabs.index(self.tabs.select()),selected=self.selected_bq(),snapshots=self.stree.selection(),
                     tools=self._tools_visible,log=self.logtext.get('1.0','end-1c'),dirty=self.dirty,
                     sashes=(self.mainpane.sashpos(0) if self._tools_visible else 300,self.split.sashpos(0)),
-                    zoom=self.zoom_panel.capture())
+                    zoom=self.zoom_panel.capture(),library=self.library_panel.capture(),
+                    catalog=self._catalog_active,trainer_sash=self._trainer_sash)
 
     def _save_settings_quietly(self):
         try:save_preferences(self.prefs)
@@ -740,7 +869,9 @@ class WorkspaceMixin:
         for k,v in state['prep'].items():self.pvars[k].set(v)
         for k,v in state['fit'].items():self.fitvars[k].set(v)
         self.zoom_panel.restore(state['zoom'])
+        self.library_panel.restore(state['library'])
         self.options.select(state['options']);self.tabs.select(state['tab'])
+        self._catalog_active=state['catalog'];self._trainer_sash=state['trainer_sash']
         self.refresh_bq();self.refresh_snapshots()
         i=state['selected']
         if i is not None and self.bqtree.exists(str(i)):self.bqtree.selection_set(str(i))
@@ -776,8 +907,19 @@ class WorkspaceMixin:
         if getattr(self,'_destroying',False):return
         self._destroying=True
         try:
+            # Cancel a Python timer through its registering widget. Deleting a
+            # Canvas command through the root leaves a stale child command list.
+            owners={}
+            def collect(widget):
+                for command in getattr(widget,'_tclCommands',None) or []:owners[command]=widget
+                for child in widget.winfo_children():collect(child)
+            collect(self)
             for token in self.tk.call('after','info'):
-                try:self.after_cancel(token)
+                try:
+                    script=self.tk.call('after','info',token)[0]
+                    owner=owners.get(str(script))
+                    if owner:owner.after_cancel(token)
+                    else:self.tk.call('after','cancel',token)
                 except tk.TclError:pass
         except tk.TclError:pass
         super().destroy()

@@ -1,4 +1,4 @@
-"""Build reserved IDs from ZEM original_effects (stock and bundled Other effects)."""
+"""Build reserved IDs from Zoom Effect Manager original_effects (stock and bundled Other effects)."""
 import argparse
 import hashlib
 import json
@@ -21,7 +21,7 @@ def main():
                             sha256=hashlib.sha256(raw).hexdigest()))
     if not records:raise ValueError('No original effects found')
     payload=dict(schema='hybridir-reserved-ids/1',
-                 scope='ZEM original_effects snapshot, including stock, cross-model and bundled Other effects (RainSel, RTFM, Div0). Not a live pedal inventory or guarantee of all future IDs.',
+                 scope='Zoom Effect Manager original_effects snapshot, including stock, cross-model and bundled Other effects (RainSel, RTFM, Div0). Not a live pedal inventory or guarantee of all future IDs.',
                  entries=records)
     with args.output.open('x',encoding='utf-8') as stream:
         json.dump(payload,stream,indent=2,ensure_ascii=True)

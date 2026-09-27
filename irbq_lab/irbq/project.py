@@ -41,41 +41,14 @@ class Session:
         self.snapshots=[]
 
     def save(self,path):
-        path=Path(path)
-        if self.source is None or self.target is None or self.model is None:
-            raise ValueError('Нет подготовленного проекта.')
-        metadata={'schema':'irbq-project/1','app_version':__version__,'source_name':self.source_name,
-                  'source_fs':self.source_fs,'prep':asdict(self.config),'log':self.log,
-                  'model':self.model.to_dict(),'snapshots':[m.to_dict() for m in self.snapshots]}
-        tmp=path.with_name(path.name+'.tmp')
-        data=io.BytesIO()
-        np.savez_compressed(data,source=self.source,target=self.target,before_mpt=self.before_mpt)
-        with zipfile.ZipFile(tmp,'w',zipfile.ZIP_DEFLATED) as z:
-            z.writestr('project.json',json.dumps(metadata,ensure_ascii=False,allow_nan=False))
-            z.writestr('signals.npz',data.getvalue())
-        tmp.replace(path)
+        from .authoring import session_bytes
+        from .zoom_bank import atomic_write
+        atomic_write(path, session_bytes(self))
 
     @classmethod
     def load(cls,path):
-        with zipfile.ZipFile(path) as z:
-            if sum(i.file_size for i in z.infolist())>160_000_000:
-                raise ValueError('Слишком большой проект.')
-            d=json.loads(z.read('project.json'))
-            if d.get('schema')!='irbq-project/1':
-                raise ValueError('Неизвестный формат проекта.')
-            with np.load(io.BytesIO(z.read('signals.npz')),allow_pickle=False) as a:
-                source=a['source'].copy(); target=array1(a['target']).copy(); before=array1(a['before_mpt']).copy()
-        if source.size>6_000_000 or len(target)>4_000_000 or not np.all(np.isfinite(source)):
-            raise ValueError('Недопустимые сигналы в проекте.')
-        cfg=PrepConfig(**{k:v for k,v in d['prep'].items() if k in PrepConfig.__dataclass_fields__})
-        m=Model.from_dict(d['model'])
-        if cfg.fs!=m.fs:
-            raise ValueError('Частота модели не совпадает с эталоном.')
-        s=cls(source,int(d['source_fs']),d.get('source_name',''),target,before,cfg,d.get('log',[]),m,
-              [Model.from_dict(t) for t in d.get('snapshots',[])])
-        if any(q.fs!=cfg.fs for q in s.snapshots):
-            raise ValueError('Несовместимая частота снимков.')
-        return s
+        from .authoring import read_file, session_from_bytes
+        return session_from_bytes(read_file(path))
 
 
 def model_from_runtime(d):

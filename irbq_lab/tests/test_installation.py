@@ -38,8 +38,12 @@ class TestInstallation(unittest.TestCase):
                 shortcut.assert_not_called()
             self.assertTrue((destination/'Uninstall_HYBRIDIR.cmd').is_file())
             spec=importlib.util.spec_from_file_location('installed_uninstall_test',destination/'uninstaller.py')
-            uninstaller=importlib.util.module_from_spec(spec);spec.loader.exec_module(uninstaller)
-            result=uninstaller.uninstall(destination)
+            uninstaller=importlib.util.module_from_spec(spec)
+            # Match the installed -B launcher. The test must not add unowned
+            # __pycache__ files that uninstall intentionally preserves.
+            with patch.object(sys,'dont_write_bytecode',True):
+                spec.loader.exec_module(uninstaller)
+                result=uninstaller.uninstall(destination)
             self.assertFalse(result['errors']);self.assertFalse(destination.exists())
             self.assertTrue((source/'uninstaller.py').exists())
 

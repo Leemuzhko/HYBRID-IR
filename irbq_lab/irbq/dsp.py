@@ -37,13 +37,18 @@ class Biquad:
     gmin: float = -24.0
     gmax: float = 24.0
     raw: list[float] | None = None
+    control_role: str = ''  # Explicit Zoom role; ordinary correction stays untagged.
 
     def to_dict(self):
         return asdict(self)
 
     @classmethod
     def from_dict(cls, d):
-        return cls(**{k: v for k, v in d.items() if k in cls.__dataclass_fields__})
+        values={k:v for k,v in d.items() if k in cls.__dataclass_fields__}
+        # Upgrade the unreleased two-role prototype without changing coefficients.
+        if values.get('control_role')=='pres':
+            values['control_role']='';values['locked']=False
+        return cls(**values)
 
     def coefficients(self, fs: float) -> np.ndarray:
         if not self.enabled:
@@ -346,8 +351,8 @@ def preset_sections(count=8, lowcut=True, fs=44100):
         raise ValueError('BQ: 0…32.')
     if count == 0:
         return []
-    res = Biquad('Peak', 'Resonance', 120, 0.8, 3, fmin=50, fmax=220, gmin=-12, gmax=24)
-    pres = Biquad('HighShelf', 'Presence', min(3500, fs * 0.35), 0.8, 0, locked=True, qmin=0.1, qmax=1.0)
+    res = Biquad('Peak', 'Resonance', 120, 0.8, 3, fmin=50, fmax=220, gmin=-12, gmax=24, control_role='reso')
+    pres = Biquad('HighShelf', 'Presence', min(3500, fs * 0.35), 0.8, 0, locked=False, qmin=0.1, qmax=1.0)
     if count == 1:
         return [res]
     if count == 2:

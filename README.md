@@ -37,11 +37,13 @@ Install the desktop app, open **Zoom ZDL**, add an IR with **Import WAV**, and e
 
 ## Before you start
 
-The bundled HYBRID4 template holds **up to 4 IRs + OFF**, at most **2048 samples per IR**, with a **shared 4096-sample FIR pool**. It cannot hold four different 2048-sample IRs. Keep slot names to **5 characters** for the pedal display.
+Trainer **0.4.0** adds a searchable IR library, portable projects/banks and editing of bank slots. Export goes straight to your configured Zoom Effect Manager folder and confirms the saved path. See the [workflow guide](docs/en/workflow.md).
+
+The current **HVB4RBJ** patcher supports **1–8 IR slots + OFF**, within its memory budget. Watch the bank indicator: eight short hybrid models can fit, while four distinct 2048-tap IRs cannot. The conservative profile does not admit a 4096-tap bank; longer-IR experiments are covered in the technical guide. Keep slot names to **5 characters** for the pedal display.
 
 DSP cost is deliberately low and fixed at **20**, not a CPU percentage. Listen to the complete chain: if it crackles, use a shorter IR or **L/R** mode to run one branch. IR **OFF** alone is not a complete branch shutdown. See the technical guide before testing.
 
-My documented prototype tests used an **MS-70CDR, firmware 2.10**. They do not validate every listed model, new bank or the bundled experimental template. This is cabinet filtering, not an amplifier or distortion model.
+My documented tests used an **MS-70CDR, firmware 2.10**. Three HVB4RBJ test exports, including an eight-slot bank, worked in functional pedal tests. Every new bank and effect chain still needs checking. This is cabinet filtering, not an amplifier or distortion model.
 
 ## Support the project
 

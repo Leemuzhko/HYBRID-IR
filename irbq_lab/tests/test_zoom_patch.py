@@ -47,11 +47,12 @@ class TestZoomPatch(unittest.TestCase):
 
     def test_orphan_sidecar_requires_overwrite(self):
         with tempfile.TemporaryDirectory() as td:
-            sidecar=Path(td)/'PATCHED.patch.json'
+            sidecar=Path(td)/'PATCHED'/'PATCHED.patch.json'
+            sidecar.parent.mkdir()
             sidecar.write_bytes(b'keep me')
             with self.assertRaises(FileExistsError):patch_project(self.project(),td)
             self.assertEqual(sidecar.read_bytes(),b'keep me')
-            self.assertFalse((Path(td)/'PATCHED.zdl').exists())
+            self.assertFalse((sidecar.parent/'PATCHED.zdl').exists())
             target,_=patch_project(self.project(),td,overwrite=True)
             self.assertTrue(target.exists())
             self.assertEqual(json.loads(sidecar.read_text())['schema'],'hybridir-patch-report/1')
@@ -81,6 +82,114 @@ class TestZoomPatch(unittest.TestCase):
             second=Path(td)/'repeat'
             self.assertEqual(patch_project(p,second)[0].read_bytes(),raw)
             self.assertEqual(report['sha256'],hashlib.sha256(raw).hexdigest())
+
+    def test_manager_package_and_overwrite(self):
+        from PIL import Image
+        p=self.project()
+        with tempfile.TemporaryDirectory() as td:
+            target,report=patch_project(p,td)
+            self.assertEqual(target,Path(td)/'PATCHED'/'PATCHED.zdl')
+            folder=target.parent
+            self.assertEqual({f.name for f in folder.iterdir()},
+                             {'PATCHED.zdl','PATCHED.json','PATCHED.png','PATCHED.patch.json'})
+            metadata=json.loads((folder/'PATCHED.json').read_text(encoding='utf-8'))
+            self.assertEqual(metadata['name'],p.name)
+            self.assertEqual(metadata['inDeviceFileName'],'PATCHED.ZDL')
+            self.assertEqual(metadata['iconFile'],'PATCHED.png')
+            self.assertIn('CAB1, CAB2',metadata['descriptionEng'])
+            self.assertIn('Слоты IR',metadata['descriptionRus'])
+            self.assertNotIn('dependencies',metadata)
+            with Image.open(folder/metadata['iconFile']) as actual, Image.open(p.image) as source:
+                self.assertEqual(actual.size,(128,96))
+                self.assertEqual(actual.mode,'RGBA')
+                expected=source.convert('L').point(lambda v: 255 if v >= 128 else 0).resize((128,96),Image.Resampling.NEAREST)
+                self.assertEqual(actual.convert('L').tobytes(),expected.tobytes())
+                self.assertEqual(set(actual.getdata()),{(0,0,0,255),(255,255,255,0)})
+            (folder/'user-notes.txt').write_text('keep')
+            p.name='NEW NAME'
+            patch_project(p,td,overwrite=True)
+            self.assertEqual(json.loads((folder/'PATCHED.json').read_text())['name'],p.name)
+            self.assertEqual((folder/'user-notes.txt').read_text(),'keep')
+
+    def test_metadata_collision_and_legacy_flat_export(self):
+        with tempfile.TemporaryDirectory() as td:
+            folder=Path(td)/'PATCHED';folder.mkdir()
+            metadata=folder/'PATCHED.json';metadata.write_text('keep')
+            with self.assertRaises(FileExistsError):patch_project(self.project(),td)
+            self.assertEqual(metadata.read_text(),'keep')
+            self.assertFalse((folder/'PATCHED.zdl').exists())
+            legacy=Path(td)/'PATCHED.zdl';legacy.write_bytes(b'old')
+            with self.assertRaisesRegex(ValueError,'previous flat ZDL'):
+                patch_project(self.project(),td,overwrite=True)
+            self.assertEqual(legacy.read_bytes(),b'old')
+
+    def test_package_write_failure_restores_existing_files(self):
+        import irbq.zoom_export as exporter
+        with tempfile.TemporaryDirectory() as td:
+            target,_=patch_project(self.project(),td)
+            before={f:f.read_bytes() for f in target.parent.iterdir()}
+            replace=exporter.os.replace
+            def fail_image(source,destination):
+                if Path(source).name=='image':raise OSError('test disk failure')
+                return replace(source,destination)
+            with patch.object(exporter.os,'replace',side_effect=fail_image):
+                with self.assertRaisesRegex(OSError,'test disk failure'):
+                    patch_project(self.project(),td,overwrite=True)
+            self.assertEqual({f:f.read_bytes() for f in target.parent.iterdir()},before)
+
+    def test_failed_first_export_leaves_no_effect(self):
+        import irbq.zoom_export as exporter
+        with tempfile.TemporaryDirectory() as td:
+            replace=exporter.os.replace
+            def fail_zdl(source,destination):
+                if Path(source).name=='zdl':raise OSError('test disk failure')
+                return replace(source,destination)
+            with patch.object(exporter.os,'replace',side_effect=fail_zdl):
+                with self.assertRaisesRegex(OSError,'test disk failure'):
+                    patch_project(self.project(),td)
+            self.assertEqual(list(Path(td).iterdir()),[])
+
+    @unittest.skipUnless(os.name=='nt','Windows junction semantics')
+    def test_junction_outputs_rejected_without_external_writes(self):
+        import _winapi
+        for position in ('package','root','ancestor'):
+            with self.subTest(position=position), tempfile.TemporaryDirectory() as td:
+                root=Path(td);outside=root/'outside';outside.mkdir()
+                marker=outside/'keep.txt';marker.write_bytes(b'unchanged')
+                output=root/'output'
+                if position=='root':
+                    link=output
+                elif position=='ancestor':
+                    link=root/'link';output=link/'exports'
+                else:
+                    output.mkdir();link=output/'PATCHED'
+                _winapi.CreateJunction(str(outside),str(link))
+                try:
+                    self.assertTrue(link.is_junction())
+                    with self.assertRaisesRegex(ValueError,'folder'):
+                        patch_project(self.project(),output,overwrite=True)
+                    self.assertEqual([p.name for p in outside.iterdir()],['keep.txt'])
+                    self.assertEqual(marker.read_bytes(),b'unchanged')
+                finally:
+                    link.rmdir()  # Removes only the junction, not the target directory.
+
+    def test_failed_rollback_keeps_recovery_data(self):
+        import irbq.zoom_export as exporter
+        with tempfile.TemporaryDirectory() as td:
+            target,_=patch_project(self.project(),td)
+            original=(target.parent/'PATCHED.json').read_bytes()
+            replace=exporter.os.replace
+            def fail_restore(source,destination):
+                if Path(source).name in ('image','metadata.old'):
+                    raise OSError('test disk failure')
+                return replace(source,destination)
+            with patch.object(exporter.os,'replace',side_effect=fail_restore):
+                with self.assertRaisesRegex(OSError,'recovery files retained'):
+                    patch_project(self.project(),td,overwrite=True)
+            recovery=list(Path(td).glob('.hybridir-package-*'))
+            self.assertEqual(len(recovery),1)
+            self.assertEqual((recovery[0]/'metadata.old').read_bytes(),original)
+            self.assertTrue(target.exists())
 
     def test_reject_unknown_template_and_preserve_outputs(self):
         _,raw,_=load_template()

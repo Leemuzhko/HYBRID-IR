@@ -84,3 +84,10 @@ above. It is included for interoperability and reverse-engineering research;
 the project's MIT license does not relicense those embedded third-party portions.
 It is not a wholly original/MIT-only binary. Its hash and fixed patch regions
 are documented in the accompanying HYBRID4.json. New hardware validation is pending.
+
+The HVB4RBJ.zdl template follows the same third-party limitation.
+Its bank was replaced with a synthetic unit impulse, but its inherited runtime
+was not relicensed or removed. Its SHA256 is pinned in zoom_variable_patch.py.
+Three derived test exports received a user-reported functional PASS on MS-70CDR
+on 2026-09-27. This does not establish performance for every new bank or chain;
+the exact artifacts and evidence scope are recorded in RELEASE_CANDIDATE.md.
