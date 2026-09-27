@@ -276,7 +276,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "5b8f4feea7fdfc7502ee1a5b9017f3ad858d9de9345713253566b3df76a9ca10"
+      "sha256": "f630ab18ce38f07d21793a49088cd00416fea30dc2e47d002305cd6f9dbb0e7d"
+    },
+    {
+      "path": "README.ru.md",
+      "sha256": "6ec715b12a1c0e8b7466f45bbf44058bbb5995366828e142a1e444b164938c6b"
     },
     {
       "path": "requirements-zoom-lock.txt",

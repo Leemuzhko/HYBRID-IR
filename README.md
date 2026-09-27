@@ -1,5 +1,7 @@
 # HYBRID IR
 
+English | [Русский](README.ru.md)
+
 ![HYBRID IR effect card with left and right channel controls](assets/IR_CAB-1200x800.png)
 
 Fit your cabinet impulse responses in IRBQ Trainer and build a HYBRID IR ZDL
