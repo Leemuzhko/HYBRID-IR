@@ -26,6 +26,13 @@ def helper(name):
     spec.loader.exec_module(module)
     return module
 
+def browsed_destination(path):
+    selected = Path(path)
+    markers = ('uninstall-receipt.json', 'installation.json', 'launch.py', 'Start_HYBRIDIR.cmd')
+    # Keep legacy app folders as the selected target so describe() refuses them,
+    # rather than silently installing a second copy inside an existing app.
+    return selected if any((selected / name).exists() for name in markers) else selected / 'HYBRIDIR'
+
 def create_desktop_shortcut(destination, desktop=None):
     """Resolve the real Windows Desktop (including redirection), preserve existing links."""
     if os.name!='nt':raise OSError('Desktop shortcuts require Windows')
@@ -201,7 +208,7 @@ def main():
             path=filedialog.askdirectory(parent=root)
             if path:
                 selected=Path(path)
-                v.set(str(selected if (selected/'uninstall-receipt.json').is_file() else selected/'HYBRIDIR') if v is destination else path)
+                v.set(str(browsed_destination(selected)) if v is destination else path)
         button=ttk.Button(body,text='Browse...',command=browse)
         button.grid(row=row,column=2,padx=(8,0))
         controls.extend((entry,button))
