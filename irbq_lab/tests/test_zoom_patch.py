@@ -13,6 +13,23 @@ from irbq.zoom_patch import load_template,patch_project
 
 
 class TestZoomPatch(unittest.TestCase):
+    def test_reserved_ids_cannot_be_overridden_and_zem_is_scanned(self):
+        from irbq.zoom_bank import identity_conflicts,suggest_free_id
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td);p=self.project();p.fxid=241
+            with self.assertRaisesRegex(ValueError,'reserved'):
+                patch_project(p,root/'blocked',allow_identity_replace=True)
+            self.assertFalse((root/'blocked').exists())
+            p=self.project();source,_=patch_project(p,root/'zem'/'nested')
+            p.patched_folder=str(root/'zem')
+            self.assertEqual(identity_conflicts(p),[str(source)])
+            with self.assertRaisesRegex(ValueError,'occupied'):patch_project(p,root/'output')
+            p.name='OTHER NAME'
+            with self.assertRaisesRegex(ValueError,'different/unknown'):patch_project(p,root/'output',allow_identity_replace=True)
+            p.fxid=suggest_free_id(p)
+            self.assertNotEqual(p.fxid,567)
+            patch_project(p,root/'output')
+
     def test_profile_integrity_and_formatting(self):
         _,_,profile=load_template()
         with tempfile.TemporaryDirectory() as td:

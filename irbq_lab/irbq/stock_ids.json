@@ -1,0 +1,3156 @@
+{
+  "schema": "hybridir-reserved-ids/1",
+  "scope": "ZEM original_effects snapshot, including stock, cross-model and bundled Other effects (RainSel, RTFM, Div0). Not a live pedal inventory or guarantee of all future IDs.",
+  "entries": [
+    {
+      "gid": 4,
+      "fxid": 320,
+      "name": "ALIEN-1.00_GB1Xon",
+      "source": "AMP_Simulator/ALIEN-1.00_GB1Xon.ZDL",
+      "sha256": "4937c168eaef8675492beeb7030adefc3c61fd523269cf93392b8811531325ae"
+    },
+    {
+      "gid": 4,
+      "fxid": 320,
+      "name": "ALIEN-v1.00",
+      "source": "AMP_Simulator/ALIEN-v1.00.ZDL",
+      "sha256": "33c70d74163d99c73c73f66e770abc7cd43541ce2afeeb4bd7008b2c5f9e53ae"
+    },
+    {
+      "gid": 4,
+      "fxid": 208,
+      "name": "B_BRKR-1.00_GB1Xon",
+      "source": "AMP_Simulator/B_BRKR-1.00_GB1Xon.ZDL",
+      "sha256": "42caa7258e82789b472336da64e85876364e69d78fb73e3c6f11342e836045b8"
+    },
+    {
+      "gid": 4,
+      "fxid": 208,
+      "name": "B_BRKR-v1.00",
+      "source": "AMP_Simulator/B_BRKR-v1.00.ZDL",
+      "sha256": "42caa7258e82789b472336da64e85876364e69d78fb73e3c6f11342e836045b8"
+    },
+    {
+      "gid": 4,
+      "fxid": 96,
+      "name": "BG_CRNCH-1.00_GB1Xon",
+      "source": "AMP_Simulator/BG_CRNCH-1.00_GB1Xon.ZDL",
+      "sha256": "029edea855a05d116c3f43f51a0de7dfe00df21e2b94b7ce15228f3dc761761c"
+    },
+    {
+      "gid": 4,
+      "fxid": 96,
+      "name": "BG_CRNCH-v1.00",
+      "source": "AMP_Simulator/BG_CRNCH-v1.00.ZDL",
+      "sha256": "029edea855a05d116c3f43f51a0de7dfe00df21e2b94b7ce15228f3dc761761c"
+    },
+    {
+      "gid": 4,
+      "fxid": 288,
+      "name": "BG_DRV-1.00_GB1Xon",
+      "source": "AMP_Simulator/BG_DRV-1.00_GB1Xon.ZDL",
+      "sha256": "91ec2b800e98cfdcd50ca75c3605900577c17517b4dbd487a0271b7e49a495d1"
+    },
+    {
+      "gid": 4,
+      "fxid": 288,
+      "name": "BG_DRV-v1.00",
+      "source": "AMP_Simulator/BG_DRV-v1.00.ZDL",
+      "sha256": "91ec2b800e98cfdcd50ca75c3605900577c17517b4dbd487a0271b7e49a495d1"
+    },
+    {
+      "gid": 4,
+      "fxid": 272,
+      "name": "BGN_DRV-1.00_GB1Xon",
+      "source": "AMP_Simulator/BGN_DRV-1.00_GB1Xon.ZDL",
+      "sha256": "d398421c5e1f0b8fef05f5cc6a0d29c609a66f83a8f222daedb68f361dee36f7"
+    },
+    {
+      "gid": 4,
+      "fxid": 272,
+      "name": "BGN_DRV-v1.00",
+      "source": "AMP_Simulator/BGN_DRV-v1.00.ZDL",
+      "sha256": "d398421c5e1f0b8fef05f5cc6a0d29c609a66f83a8f222daedb68f361dee36f7"
+    },
+    {
+      "gid": 4,
+      "fxid": 128,
+      "name": "CAR_DRV-1.00_GB1Xon",
+      "source": "AMP_Simulator/CAR_DRV-1.00_GB1Xon.ZDL",
+      "sha256": "4be3bf298070cdc7148e84ce9f26d9848d8570d1b2b1fbe848075f97f96212e8"
+    },
+    {
+      "gid": 4,
+      "fxid": 128,
+      "name": "CAR_DRV-v1.00",
+      "source": "AMP_Simulator/CAR_DRV-v1.00.ZDL",
+      "sha256": "4be3bf298070cdc7148e84ce9f26d9848d8570d1b2b1fbe848075f97f96212e8"
+    },
+    {
+      "gid": 4,
+      "fxid": 16,
+      "name": "DELUXE_R-1.00_GB1Xon",
+      "source": "AMP_Simulator/DELUXE_R-1.00_GB1Xon.ZDL",
+      "sha256": "28b1d9f8e81d06240974c04ca15df8e95afb2ec71ecfc63110ad39069aaad7c3"
+    },
+    {
+      "gid": 4,
+      "fxid": 16,
+      "name": "DELUXE_R-v1.00",
+      "source": "AMP_Simulator/DELUXE_R-v1.00.ZDL",
+      "sha256": "3b2e0d35a1c5ae4ce66f4bd2e3ee272653ae107ea572d06898a2deadb1e68b42"
+    },
+    {
+      "gid": 4,
+      "fxid": 304,
+      "name": "DZ_DRIVE-1.00_GB1Xon",
+      "source": "AMP_Simulator/DZ_DRIVE-1.00_GB1Xon.ZDL",
+      "sha256": "67803607043f26f0b477c52702c8f7a71269fa34da70f533c52732eb0476cef1"
+    },
+    {
+      "gid": 4,
+      "fxid": 304,
+      "name": "DZ_DRIVE-v1.00",
+      "source": "AMP_Simulator/DZ_DRIVE-v1.00.ZDL",
+      "sha256": "712ca2a7a82d2ac01300954db7ab561677dcd7eb8f2edfadfbec588d4b0d309e"
+    },
+    {
+      "gid": 4,
+      "fxid": 32,
+      "name": "FD_VIBRO-1.00_GB1Xon",
+      "source": "AMP_Simulator/FD_VIBRO-1.00_GB1Xon.ZDL",
+      "sha256": "bd6c090cdfb6e6e77203c103e4b689311daa989753fb49301e15f25d63ba919f"
+    },
+    {
+      "gid": 4,
+      "fxid": 32,
+      "name": "FD_VIBRO-v1.00",
+      "source": "AMP_Simulator/FD_VIBRO-v1.00.ZDL",
+      "sha256": "bd6c090cdfb6e6e77203c103e4b689311daa989753fb49301e15f25d63ba919f"
+    },
+    {
+      "gid": 4,
+      "fxid": 8,
+      "name": "FDCOMBO-1.00_GB1Xon",
+      "source": "AMP_Simulator/FDCOMBO-1.00_GB1Xon.ZDL",
+      "sha256": "62215deb41bcbfe5fb5b7c63148edd6e67ae12a51c8b95cbb8a9f7520b2a757b"
+    },
+    {
+      "gid": 4,
+      "fxid": 8,
+      "name": "FDCOMBO-v1.00",
+      "source": "AMP_Simulator/FDCOMBO-v1.00.ZDL",
+      "sha256": "646f306ee54ac94b0c2398a67a4ccda4c4ef18e02c0d6ecbd6645e40dd083f04"
+    },
+    {
+      "gid": 4,
+      "fxid": 176,
+      "name": "HW_STACK-1.00_GB1Xon",
+      "source": "AMP_Simulator/HW_STACK-1.00_GB1Xon.ZDL",
+      "sha256": "d39d036e60cb0b2f226d249a7b64e07792cffb5b3ef17d9d6516dd63237959bb"
+    },
+    {
+      "gid": 4,
+      "fxid": 176,
+      "name": "HW_STACK-v1.00",
+      "source": "AMP_Simulator/HW_STACK-v1.00.ZDL",
+      "sha256": "d39d036e60cb0b2f226d249a7b64e07792cffb5b3ef17d9d6516dd63237959bb"
+    },
+    {
+      "gid": 4,
+      "fxid": 112,
+      "name": "MATCH_30-1.00_GB1Xon",
+      "source": "AMP_Simulator/MATCH_30-1.00_GB1Xon.ZDL",
+      "sha256": "3e282866474830f4b99226f2423a4b8cc3ca9c6786af0b9edd0b778e0be6f959"
+    },
+    {
+      "gid": 4,
+      "fxid": 112,
+      "name": "MATCH_30-v1.00",
+      "source": "AMP_Simulator/MATCH_30-v1.00.ZDL",
+      "sha256": "3e282866474830f4b99226f2423a4b8cc3ca9c6786af0b9edd0b778e0be6f959"
+    },
+    {
+      "gid": 4,
+      "fxid": 240,
+      "name": "MS_1959-1.00_GB1Xon",
+      "source": "AMP_Simulator/MS_1959-1.00_GB1Xon.ZDL",
+      "sha256": "c5600622df827999ada53529b67c15569c15bb7cdca2dfd11da6851334fc627a"
+    },
+    {
+      "gid": 4,
+      "fxid": 240,
+      "name": "MS_1959-v1.00",
+      "source": "AMP_Simulator/MS_1959-v1.00.ZDL",
+      "sha256": "c96e0dd963ab99fa495c2ac6b66fbf9daaa24f75ea4ec3477fe6f6d7b2f42349"
+    },
+    {
+      "gid": 4,
+      "fxid": 256,
+      "name": "MS_DRV-1.00_GB1Xon",
+      "source": "AMP_Simulator/MS_DRV-1.00_GB1Xon.ZDL",
+      "sha256": "49e60f1f2778045a22e7f1c19d26c5ec504a90b951acfe198f5f0ff537b5eb7b"
+    },
+    {
+      "gid": 4,
+      "fxid": 256,
+      "name": "MS_DRV-v1.00",
+      "source": "AMP_Simulator/MS_DRV-v1.00.ZDL",
+      "sha256": "49e60f1f2778045a22e7f1c19d26c5ec504a90b951acfe198f5f0ff537b5eb7b"
+    },
+    {
+      "gid": 4,
+      "fxid": 224,
+      "name": "MSCRUNCH-1.00_GB1Xon",
+      "source": "AMP_Simulator/MSCRUNCH-1.00_GB1Xon.ZDL",
+      "sha256": "c763d3418aaa623ae0950dcb94475542949531991ef4045f12622a83e86f9f7b"
+    },
+    {
+      "gid": 4,
+      "fxid": 224,
+      "name": "MSCRUNCH-v1.00",
+      "source": "AMP_Simulator/MSCRUNCH-v1.00.ZDL",
+      "sha256": "c763d3418aaa623ae0950dcb94475542949531991ef4045f12622a83e86f9f7b"
+    },
+    {
+      "gid": 4,
+      "fxid": 336,
+      "name": "REVO_1-1.00_GB1Xon",
+      "source": "AMP_Simulator/REVO_1-1.00_GB1Xon.ZDL",
+      "sha256": "ee11f41cf08ba5db4c1a91ca724809f6061876bf5d0d64e15e5405846e73a585"
+    },
+    {
+      "gid": 4,
+      "fxid": 336,
+      "name": "REVO_1-v1.00",
+      "source": "AMP_Simulator/REVO_1-v1.00.ZDL",
+      "sha256": "ee11f41cf08ba5db4c1a91ca724809f6061876bf5d0d64e15e5405846e73a585"
+    },
+    {
+      "gid": 4,
+      "fxid": 192,
+      "name": "TANGERIN-1.00_GB1Xon",
+      "source": "AMP_Simulator/TANGERIN-1.00_GB1Xon.ZDL",
+      "sha256": "6ef024864465a50ae8578153c44b3da44d6c23c4f3ddc70af030c98724156fcd"
+    },
+    {
+      "gid": 4,
+      "fxid": 192,
+      "name": "TANGERIN-v1.00",
+      "source": "AMP_Simulator/TANGERIN-v1.00.ZDL",
+      "sha256": "6ef024864465a50ae8578153c44b3da44d6c23c4f3ddc70af030c98724156fcd"
+    },
+    {
+      "gid": 4,
+      "fxid": 160,
+      "name": "TONECITY-1.00_GB1Xon",
+      "source": "AMP_Simulator/TONECITY-1.00_GB1Xon.ZDL",
+      "sha256": "3556d402d9c9e1f296430844fb5900d8fa14acdc1c896384183bba8c7556c3bb"
+    },
+    {
+      "gid": 4,
+      "fxid": 160,
+      "name": "TONECITY-v1.00",
+      "source": "AMP_Simulator/TONECITY-v1.00.ZDL",
+      "sha256": "3556d402d9c9e1f296430844fb5900d8fa14acdc1c896384183bba8c7556c3bb"
+    },
+    {
+      "gid": 4,
+      "fxid": 144,
+      "name": "TW_ROCK-1.00_GB1Xon",
+      "source": "AMP_Simulator/TW_ROCK-1.00_GB1Xon.ZDL",
+      "sha256": "a8e9f4e534add7f1010eaefd97a505d1b4afdb09b82a28fe1e65623ffab40940"
+    },
+    {
+      "gid": 4,
+      "fxid": 144,
+      "name": "TW_ROCK-v1.00",
+      "source": "AMP_Simulator/TW_ROCK-v1.00.ZDL",
+      "sha256": "4355f82b98c7c56cd9df3daf6ee30ad2acb22493ba1180549639b0861212fb88"
+    },
+    {
+      "gid": 4,
+      "fxid": 48,
+      "name": "US_BLUES-1.00_GB1Xon",
+      "source": "AMP_Simulator/US_BLUES-1.00_GB1Xon.ZDL",
+      "sha256": "a6356b8a4df8b393c514bf69d6e24d61cd7d3e304ac5b17df7b11e942d02a6a8"
+    },
+    {
+      "gid": 4,
+      "fxid": 48,
+      "name": "US_BLUES-v1.00",
+      "source": "AMP_Simulator/US_BLUES-v1.00.ZDL",
+      "sha256": "253b469d430b5f6b022eb96d7747e4b7e8cc28b1e0f4c69d04fd8fcfc675926b"
+    },
+    {
+      "gid": 4,
+      "fxid": 64,
+      "name": "VX_COMBO-1.00_GB1Xon",
+      "source": "AMP_Simulator/VX_COMBO-1.00_GB1Xon.ZDL",
+      "sha256": "96d99ea152b8b8c42e7657f544e76b8a5367ce9af0d749fdac211d7c30b51d94"
+    },
+    {
+      "gid": 4,
+      "fxid": 64,
+      "name": "VX_COMBO-v1.00",
+      "source": "AMP_Simulator/VX_COMBO-v1.00.ZDL",
+      "sha256": "96d99ea152b8b8c42e7657f544e76b8a5367ce9af0d749fdac211d7c30b51d94"
+    },
+    {
+      "gid": 4,
+      "fxid": 80,
+      "name": "VX_JMI-1.00_GB1Xon",
+      "source": "AMP_Simulator/VX_JMI-1.00_GB1Xon.ZDL",
+      "sha256": "153422e9a6b89147405360783de1d3cfc62ef999dc76595efa63ab6d30bd3669"
+    },
+    {
+      "gid": 4,
+      "fxid": 80,
+      "name": "VX_JMI-v1.00",
+      "source": "AMP_Simulator/VX_JMI-v1.00.ZDL",
+      "sha256": "bc95e5fc75e54b740959fd81c4eba17a9aec9a0942815d0ffa2754fa5f99ce77"
+    },
+    {
+      "gid": 5,
+      "fxid": 96,
+      "name": "_ACOSTIC-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_ACOSTIC-1.00_GB1Xon.ZDL",
+      "sha256": "6bf04468269b3b0aad3e1b9d6f515ea27ed6b70a9f4abe1a5f286b6beaff0d3a"
+    },
+    {
+      "gid": 5,
+      "fxid": 112,
+      "name": "_AG_AMP-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_AG_AMP-1.00_GB1Xon.ZDL",
+      "sha256": "435f281629152ccbd4910b9e9cdc06a5c81b970ccffe6559ae58b721c49890c0"
+    },
+    {
+      "gid": 5,
+      "fxid": 32,
+      "name": "_B_MAN-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_B_MAN-1.00_GB1Xon.ZDL",
+      "sha256": "a5367ac6489b4582b74d46dec294edf770c1e4f847e3139d8f3467a2d01da17c"
+    },
+    {
+      "gid": 5,
+      "fxid": 80,
+      "name": "_FlipTop-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_FlipTop-1.00_GB1Xon.ZDL",
+      "sha256": "c2b8403aad22e6c0580c665de38e57903ab059015561cb9ed9357501b33eaf31"
+    },
+    {
+      "gid": 5,
+      "fxid": 160,
+      "name": "_GKruegr-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_GKruegr-1.00_GB1Xon.ZDL",
+      "sha256": "3b3f1ded880448a051d2b3660e4a8470039ac022741870d8ea0ac4cd8ce09cc6"
+    },
+    {
+      "gid": 5,
+      "fxid": 176,
+      "name": "_Heaven-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_Heaven-1.00_GB1Xon.ZDL",
+      "sha256": "1d24c9a2403769ebcae054a80994c037239eb605c9629115787b339522c10aa5"
+    },
+    {
+      "gid": 5,
+      "fxid": 48,
+      "name": "_HRT3500-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_HRT3500-1.00_GB1Xon.ZDL",
+      "sha256": "b3d25cd892369c9b5ddddf8653b4b436c5600c654384540dcd04f28a1b43f3cb"
+    },
+    {
+      "gid": 5,
+      "fxid": 192,
+      "name": "_MARK_B-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_MARK_B-1.00_GB1Xon.ZDL",
+      "sha256": "e73607f0831475753d332c98a4ffe24ce03d2cffec6fcb8f6dd08ba54650ed51"
+    },
+    {
+      "gid": 5,
+      "fxid": 128,
+      "name": "_Monoton-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_Monoton-1.00_GB1Xon.ZDL",
+      "sha256": "5249d17032576de4ab5e7b6bedfaf4f4beb88785cb98a9a08b9084cdd5584c9b"
+    },
+    {
+      "gid": 5,
+      "fxid": 64,
+      "name": "_SMR-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_SMR-1.00_GB1Xon.ZDL",
+      "sha256": "f9437028cffe9cba7b7e09525f0d0b91bfe69e67cb96d2e295dc95d8302cae76"
+    },
+    {
+      "gid": 5,
+      "fxid": 144,
+      "name": "_SuperB-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_SuperB-1.00_GB1Xon.ZDL",
+      "sha256": "80875d5350c6907bbebb19789c0795e969b1f9bd18edee095fbf7ad17619915d"
+    },
+    {
+      "gid": 5,
+      "fxid": 16,
+      "name": "_SVT-1.00_GB1Xon",
+      "source": "Bass_AMP_Simulator/_SVT-1.00_GB1Xon.ZDL",
+      "sha256": "634eada6ef0de81ddb4da76037ccf440e0a6ba063cf68efd343b0aea8fc14ce9"
+    },
+    {
+      "gid": 5,
+      "fxid": 96,
+      "name": "ACOUSTIC-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/ACOUSTIC-v1.00-60bOnly.ZDL",
+      "sha256": "6c96896fd7e84e2a131a4ccb9b1ea0de76223809ebc4336efdd31548ca7d5934"
+    },
+    {
+      "gid": 5,
+      "fxid": 96,
+      "name": "ACOUSTIC-v1.00",
+      "source": "Bass_AMP_Simulator/ACOUSTIC-v1.00.ZDL",
+      "sha256": "6bf04468269b3b0aad3e1b9d6f515ea27ed6b70a9f4abe1a5f286b6beaff0d3a"
+    },
+    {
+      "gid": 5,
+      "fxid": 112,
+      "name": "AG_AMP-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/AG_AMP-v1.00-60bOnly.ZDL",
+      "sha256": "35630041b8d84ba047c6c40c925993534dadabd6bf49e0aa5c1ef9ccf4f02bc9"
+    },
+    {
+      "gid": 5,
+      "fxid": 112,
+      "name": "AG_AMP-v1.00",
+      "source": "Bass_AMP_Simulator/AG_AMP-v1.00.ZDL",
+      "sha256": "435f281629152ccbd4910b9e9cdc06a5c81b970ccffe6559ae58b721c49890c0"
+    },
+    {
+      "gid": 5,
+      "fxid": 32,
+      "name": "B_MAN-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/B_MAN-v1.00-60bOnly.ZDL",
+      "sha256": "434c049b4c6883f3b7008ea32d31b42aa97221b02fc313dc17f453767b038316"
+    },
+    {
+      "gid": 5,
+      "fxid": 32,
+      "name": "B_MAN-v1.00",
+      "source": "Bass_AMP_Simulator/B_MAN-v1.00.ZDL",
+      "sha256": "a5367ac6489b4582b74d46dec294edf770c1e4f847e3139d8f3467a2d01da17c"
+    },
+    {
+      "gid": 5,
+      "fxid": 80,
+      "name": "FlipTop-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/FlipTop-v1.00-60bOnly.ZDL",
+      "sha256": "7b739ba840dc903523ee92106909e75336a1a85b65c77028c3a3a5d16be2844e"
+    },
+    {
+      "gid": 5,
+      "fxid": 80,
+      "name": "FlipTop-v1.00",
+      "source": "Bass_AMP_Simulator/FlipTop-v1.00.ZDL",
+      "sha256": "c2b8403aad22e6c0580c665de38e57903ab059015561cb9ed9357501b33eaf31"
+    },
+    {
+      "gid": 5,
+      "fxid": 160,
+      "name": "GKruegr-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/GKruegr-v1.00-60bOnly.ZDL",
+      "sha256": "88f7c2269764ba76010805d2b7d84c79839c82446a553e784a0fcac336f56f33"
+    },
+    {
+      "gid": 5,
+      "fxid": 160,
+      "name": "GKruegr-v1.00",
+      "source": "Bass_AMP_Simulator/GKruegr-v1.00.ZDL",
+      "sha256": "3b3f1ded880448a051d2b3660e4a8470039ac022741870d8ea0ac4cd8ce09cc6"
+    },
+    {
+      "gid": 5,
+      "fxid": 176,
+      "name": "Heaven-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/Heaven-v1.00-60bOnly.ZDL",
+      "sha256": "754c181fd42bee1cc518f5619a15f9d6f4de6088bc33892390008a4378c90914"
+    },
+    {
+      "gid": 5,
+      "fxid": 176,
+      "name": "Heaven-v1.00",
+      "source": "Bass_AMP_Simulator/Heaven-v1.00.ZDL",
+      "sha256": "1d24c9a2403769ebcae054a80994c037239eb605c9629115787b339522c10aa5"
+    },
+    {
+      "gid": 5,
+      "fxid": 48,
+      "name": "HRT3500-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/HRT3500-v1.00-60bOnly.ZDL",
+      "sha256": "fe499cab75f75f770cb876815325c3d3e0ef3ebfee36a10f608580592fe430c2"
+    },
+    {
+      "gid": 5,
+      "fxid": 48,
+      "name": "HRT3500-v1.00",
+      "source": "Bass_AMP_Simulator/HRT3500-v1.00.ZDL",
+      "sha256": "b3d25cd892369c9b5ddddf8653b4b436c5600c654384540dcd04f28a1b43f3cb"
+    },
+    {
+      "gid": 5,
+      "fxid": 192,
+      "name": "MARK_B-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/MARK_B-v1.00-60bOnly.ZDL",
+      "sha256": "05bab2afc830b4bfb63d3709248357fcd5e3979f4e30282e0b227c3b786dae5a"
+    },
+    {
+      "gid": 5,
+      "fxid": 192,
+      "name": "MARK_B-v1.00",
+      "source": "Bass_AMP_Simulator/MARK_B-v1.00.ZDL",
+      "sha256": "e73607f0831475753d332c98a4ffe24ce03d2cffec6fcb8f6dd08ba54650ed51"
+    },
+    {
+      "gid": 5,
+      "fxid": 128,
+      "name": "Monoton-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/Monoton-v1.00-60bOnly.ZDL",
+      "sha256": "3a67d028dc3d2b55372089e9705caee15ef24a185f996d163931280c26fe501c"
+    },
+    {
+      "gid": 5,
+      "fxid": 128,
+      "name": "Monoton-v1.00",
+      "source": "Bass_AMP_Simulator/Monoton-v1.00.ZDL",
+      "sha256": "5249d17032576de4ab5e7b6bedfaf4f4beb88785cb98a9a08b9084cdd5584c9b"
+    },
+    {
+      "gid": 5,
+      "fxid": 64,
+      "name": "SMR-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/SMR-v1.00-60bOnly.ZDL",
+      "sha256": "ac5678d3addccf63274e72ed435ce908d09c94c5e8ba2152f9ae9a8e676d3403"
+    },
+    {
+      "gid": 5,
+      "fxid": 64,
+      "name": "SMR-v1.00",
+      "source": "Bass_AMP_Simulator/SMR-v1.00.ZDL",
+      "sha256": "f9437028cffe9cba7b7e09525f0d0b91bfe69e67cb96d2e295dc95d8302cae76"
+    },
+    {
+      "gid": 5,
+      "fxid": 144,
+      "name": "SuperB-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/SuperB-v1.00-60bOnly.ZDL",
+      "sha256": "2f72ac3b7787cfb111e4b8dc410781e8ff89fb1b83eb43c5a3e05d61b27e51dd"
+    },
+    {
+      "gid": 5,
+      "fxid": 144,
+      "name": "SuperB-v1.00",
+      "source": "Bass_AMP_Simulator/SuperB-v1.00.ZDL",
+      "sha256": "80875d5350c6907bbebb19789c0795e969b1f9bd18edee095fbf7ad17619915d"
+    },
+    {
+      "gid": 5,
+      "fxid": 16,
+      "name": "SVT-v1.00-60bOnly",
+      "source": "Bass_AMP_Simulator/SVT-v1.00-60bOnly.ZDL",
+      "sha256": "db3901e5a505719ce43836140a0733c0848e7880cc46ef02261f7ce901b6eb40"
+    },
+    {
+      "gid": 5,
+      "fxid": 16,
+      "name": "SVT-v1.00",
+      "source": "Bass_AMP_Simulator/SVT-v1.00.ZDL",
+      "sha256": "634eada6ef0de81ddb4da76037ccf440e0a6ba063cf68efd343b0aea8fc14ce9"
+    },
+    {
+      "gid": 22,
+      "fxid": 96,
+      "name": "_AC_BPRE-1.00_GB1Xon",
+      "source": "Bass_Drive/_AC_BPRE-1.00_GB1Xon.ZDL",
+      "sha256": "e3b96fbaa01a422c108ec03a1b47a5145440522bc373f30f2ac432b05cfeaed1"
+    },
+    {
+      "gid": 20,
+      "fxid": 16,
+      "name": "_B_BOOST-1.00_GB1Xon",
+      "source": "Bass_Drive/_B_BOOST-1.00_GB1Xon.ZDL",
+      "sha256": "3e439fcf09450b36ac6938fcca2594ad9dc4fef31021d4f9c44d3c41744edb55"
+    },
+    {
+      "gid": 20,
+      "fxid": 80,
+      "name": "_B_DST_1-1.00_GB1Xon",
+      "source": "Bass_Drive/_B_DST_1-1.00_GB1Xon.ZDL",
+      "sha256": "6dbb53da612b96ad1e7f0b29deaf1491f18955b4c37ddb9e640eee0c78628dc3"
+    },
+    {
+      "gid": 20,
+      "fxid": 192,
+      "name": "_B_FZSML-1.00_GB1Xon",
+      "source": "Bass_Drive/_B_FZSML-1.00_GB1Xon.ZDL",
+      "sha256": "e90bb4734f495e2a371eb744d735f5f05fa4d8a6b4a2df517407418448a8bb5b"
+    },
+    {
+      "gid": 20,
+      "fxid": 144,
+      "name": "_B_METAL-1.00_GB1Xon",
+      "source": "Bass_Drive/_B_METAL-1.00_GB1Xon.ZDL",
+      "sha256": "f2e6b3052dfb128b7fec0d27494eb7f69194c6a2074842ee13b7c623bc79707b"
+    },
+    {
+      "gid": 20,
+      "fxid": 32,
+      "name": "_B_OD-1.00_GB1Xon",
+      "source": "Bass_Drive/_B_OD-1.00_GB1Xon.ZDL",
+      "sha256": "42594b2ae7dbc4c4d2e4a73dc60eb5e8b2cd889ab2f283cd77d515dc6858aa63"
+    },
+    {
+      "gid": 20,
+      "fxid": 176,
+      "name": "_B_SQUEK-1.00_GB1Xon",
+      "source": "Bass_Drive/_B_SQUEK-1.00_GB1Xon.ZDL",
+      "sha256": "678381d33190a75c60434c3bc2e048dd8cfbaf7d366e8939bf42eef3d1049f4f"
+    },
+    {
+      "gid": 22,
+      "fxid": 80,
+      "name": "_BAS_PRE-1.00_GB1Xon",
+      "source": "Bass_Drive/_BAS_PRE-1.00_GB1Xon.ZDL",
+      "sha256": "8737a9d8452b90632ddb1b3b8d4724da13d97f90eaf36a6dcbb24ef01ba10b99"
+    },
+    {
+      "gid": 22,
+      "fxid": 48,
+      "name": "_BASS_BB-1.00_GB1Xon",
+      "source": "Bass_Drive/_BASS_BB-1.00_GB1Xon.ZDL",
+      "sha256": "ba705986956881de4030a7e809bf8d0575154926edd9b2fb31cfbf73f23e49f4"
+    },
+    {
+      "gid": 20,
+      "fxid": 160,
+      "name": "_BASS_TS-1.00_GB1Xon",
+      "source": "Bass_Drive/_BASS_TS-1.00_GB1Xon.ZDL",
+      "sha256": "974dff061fc6a8cd242ee2abbc5a60c25d25052272ffe7f54bc8792d607f85f8"
+    },
+    {
+      "gid": 22,
+      "fxid": 16,
+      "name": "_BASSDRV-1.00_GB1Xon",
+      "source": "Bass_Drive/_BASSDRV-1.00_GB1Xon.ZDL",
+      "sha256": "859926c3e3f41e61238885ad079d6b201ab78c2fec67cdf0405b07e6180f92fd"
+    },
+    {
+      "gid": 20,
+      "fxid": 48,
+      "name": "_BASSMUF-1.00_GB1Xon",
+      "source": "Bass_Drive/_BASSMUF-1.00_GB1Xon.ZDL",
+      "sha256": "0580d5695e827f79eecb5ae5944f1c1e39b69c1e49792be0e6266607ef87fb59"
+    },
+    {
+      "gid": 22,
+      "fxid": 64,
+      "name": "_DI5-1.00_GB1Xon",
+      "source": "Bass_Drive/_DI5-1.00_GB1Xon.ZDL",
+      "sha256": "1329d2fa2741eceefb231230d295b5b41f20fb7c92b8d8c01ded2664850c750f"
+    },
+    {
+      "gid": 22,
+      "fxid": 32,
+      "name": "_DI_PLUS-1.00_GB1Xon",
+      "source": "Bass_Drive/_DI_PLUS-1.00_GB1Xon.ZDL",
+      "sha256": "e47024c265a084dc208162dd0510ce4ce6b81a9080bb7fb750fdabb8a803b97e"
+    },
+    {
+      "gid": 13,
+      "fxid": 96,
+      "name": "AC_B_PRE-v1.00-60bOnly",
+      "source": "Bass_Drive/AC_B_PRE-v1.00-60bOnly.ZDL",
+      "sha256": "613cc07d2383d9dacbeecc5b49f0d1d5e5015bc980848d3a9f95ed212029c1fb"
+    },
+    {
+      "gid": 22,
+      "fxid": 96,
+      "name": "AC_B_PRE-v1.00",
+      "source": "Bass_Drive/AC_B_PRE-v1.00.ZDL",
+      "sha256": "e3b96fbaa01a422c108ec03a1b47a5145440522bc373f30f2ac432b05cfeaed1"
+    },
+    {
+      "gid": 12,
+      "fxid": 16,
+      "name": "B_BOOST-v1.00-60bOnly",
+      "source": "Bass_Drive/B_BOOST-v1.00-60bOnly.ZDL",
+      "sha256": "3c276fb6bd0d5ea6478bfbcd0a0d7e4ef3e2605cafa8551e8b17d7462c345c5b"
+    },
+    {
+      "gid": 20,
+      "fxid": 16,
+      "name": "B_BOOST-v1.00",
+      "source": "Bass_Drive/B_BOOST-v1.00.ZDL",
+      "sha256": "3e439fcf09450b36ac6938fcca2594ad9dc4fef31021d4f9c44d3c41744edb55"
+    },
+    {
+      "gid": 12,
+      "fxid": 80,
+      "name": "B_DIST_1-v1.00-60bOnly",
+      "source": "Bass_Drive/B_DIST_1-v1.00-60bOnly.ZDL",
+      "sha256": "8727f0a5f4f73ea6cf39267a6919394bab2be67abfbe590740b47950bf8362ae"
+    },
+    {
+      "gid": 20,
+      "fxid": 80,
+      "name": "B_DIST_1-v1.00",
+      "source": "Bass_Drive/B_DIST_1-v1.00.ZDL",
+      "sha256": "6dbb53da612b96ad1e7f0b29deaf1491f18955b4c37ddb9e640eee0c78628dc3"
+    },
+    {
+      "gid": 12,
+      "fxid": 192,
+      "name": "B_FZSML-v1.00-60bOnly",
+      "source": "Bass_Drive/B_FZSML-v1.00-60bOnly.ZDL",
+      "sha256": "9e601f47ceb1e3f934fd06eb8379a118a545e6240b8aa714bd1a65cf60a65f52"
+    },
+    {
+      "gid": 20,
+      "fxid": 192,
+      "name": "B_FZSML-v1.00",
+      "source": "Bass_Drive/B_FZSML-v1.00.ZDL",
+      "sha256": "e90bb4734f495e2a371eb744d735f5f05fa4d8a6b4a2df517407418448a8bb5b"
+    },
+    {
+      "gid": 12,
+      "fxid": 144,
+      "name": "B_METAL-v1.00-60bOnly",
+      "source": "Bass_Drive/B_METAL-v1.00-60bOnly.ZDL",
+      "sha256": "f06b71c23d3e9944eebf73d5bb87892c3df382c349357ca2b2e8a094c4e43417"
+    },
+    {
+      "gid": 20,
+      "fxid": 144,
+      "name": "B_METAL-v1.00",
+      "source": "Bass_Drive/B_METAL-v1.00.ZDL",
+      "sha256": "f2e6b3052dfb128b7fec0d27494eb7f69194c6a2074842ee13b7c623bc79707b"
+    },
+    {
+      "gid": 12,
+      "fxid": 32,
+      "name": "B_OD-v1.00-60bOnly",
+      "source": "Bass_Drive/B_OD-v1.00-60bOnly.ZDL",
+      "sha256": "a97aa993e6ef27bd0eb59aab378f1b25f2777b97d24e0a41e1d5648327400a84"
+    },
+    {
+      "gid": 20,
+      "fxid": 32,
+      "name": "B_OD-v1.00",
+      "source": "Bass_Drive/B_OD-v1.00.ZDL",
+      "sha256": "42594b2ae7dbc4c4d2e4a73dc60eb5e8b2cd889ab2f283cd77d515dc6858aa63"
+    },
+    {
+      "gid": 12,
+      "fxid": 176,
+      "name": "B_SQUEK-v1.00-60bOnly",
+      "source": "Bass_Drive/B_SQUEK-v1.00-60bOnly.ZDL",
+      "sha256": "5b7fa4e64786aa0bb9995b6da09790ae638ed0c24b12322848abdb599f7a8373"
+    },
+    {
+      "gid": 20,
+      "fxid": 176,
+      "name": "B_SQUEK-v1.00",
+      "source": "Bass_Drive/B_SQUEK-v1.00.ZDL",
+      "sha256": "678381d33190a75c60434c3bc2e048dd8cfbaf7d366e8939bf42eef3d1049f4f"
+    },
+    {
+      "gid": 13,
+      "fxid": 48,
+      "name": "BASS_BB-v1.00-60bOnly",
+      "source": "Bass_Drive/BASS_BB-v1.00-60bOnly.ZDL",
+      "sha256": "b16d98cec643ce1ed173efcc8476d1614ee2f96b2736026523d45c978835002b"
+    },
+    {
+      "gid": 22,
+      "fxid": 48,
+      "name": "BASS_BB-v1.00",
+      "source": "Bass_Drive/BASS_BB-v1.00.ZDL",
+      "sha256": "ba705986956881de4030a7e809bf8d0575154926edd9b2fb31cfbf73f23e49f4"
+    },
+    {
+      "gid": 13,
+      "fxid": 80,
+      "name": "BASS_PRE-v1.00-60bOnly",
+      "source": "Bass_Drive/BASS_PRE-v1.00-60bOnly.ZDL",
+      "sha256": "eec815c7bd782693b844efda42ff36345aed8781fe0ce2929ca22e68e169bfa3"
+    },
+    {
+      "gid": 22,
+      "fxid": 80,
+      "name": "BASS_PRE-v1.00",
+      "source": "Bass_Drive/BASS_PRE-v1.00.ZDL",
+      "sha256": "8737a9d8452b90632ddb1b3b8d4724da13d97f90eaf36a6dcbb24ef01ba10b99"
+    },
+    {
+      "gid": 12,
+      "fxid": 160,
+      "name": "BASS_TS-v1.00-60bOnly",
+      "source": "Bass_Drive/BASS_TS-v1.00-60bOnly.ZDL",
+      "sha256": "59cb5e2a671cce99c6cd0bd7ce0ce7738c10df295c7e306b1db22b0f45f971dd"
+    },
+    {
+      "gid": 20,
+      "fxid": 160,
+      "name": "BASS_TS-v1.00",
+      "source": "Bass_Drive/BASS_TS-v1.00.ZDL",
+      "sha256": "974dff061fc6a8cd242ee2abbc5a60c25d25052272ffe7f54bc8792d607f85f8"
+    },
+    {
+      "gid": 13,
+      "fxid": 16,
+      "name": "BASSDRV-v1.00-60bOnly",
+      "source": "Bass_Drive/BASSDRV-v1.00-60bOnly.ZDL",
+      "sha256": "41eed48a1cfab8cb6a2c95c7dff0073b2b3d14a3ced0d522a1a0875ff5dbd68e"
+    },
+    {
+      "gid": 22,
+      "fxid": 16,
+      "name": "BASSDRV-v1.00",
+      "source": "Bass_Drive/BASSDRV-v1.00.ZDL",
+      "sha256": "859926c3e3f41e61238885ad079d6b201ab78c2fec67cdf0405b07e6180f92fd"
+    },
+    {
+      "gid": 12,
+      "fxid": 48,
+      "name": "BASSMUFF-v1.00-60bOnly",
+      "source": "Bass_Drive/BASSMUFF-v1.00-60bOnly.ZDL",
+      "sha256": "123d0a4d609772e9eb6fe733eb261b9afd3e896e44a16c0fe1eaf9dd22491dd5"
+    },
+    {
+      "gid": 20,
+      "fxid": 48,
+      "name": "BASSMUFF-v1.00",
+      "source": "Bass_Drive/BASSMUFF-v1.00.ZDL",
+      "sha256": "0580d5695e827f79eecb5ae5944f1c1e39b69c1e49792be0e6266607ef87fb59"
+    },
+    {
+      "gid": 13,
+      "fxid": 64,
+      "name": "DI5-v1.00-60bOnly",
+      "source": "Bass_Drive/DI5-v1.00-60bOnly.ZDL",
+      "sha256": "d16b78c2314ab1a30a5d778a96619569bd83c84cdd9889ff1ac25990bb4819d3"
+    },
+    {
+      "gid": 22,
+      "fxid": 64,
+      "name": "DI5-v1.00",
+      "source": "Bass_Drive/DI5-v1.00.ZDL",
+      "sha256": "1329d2fa2741eceefb231230d295b5b41f20fb7c92b8d8c01ded2664850c750f"
+    },
+    {
+      "gid": 13,
+      "fxid": 32,
+      "name": "DI_PLUS-v1.00-60bOnly",
+      "source": "Bass_Drive/DI_PLUS-v1.00-60bOnly.ZDL",
+      "sha256": "a507f144f8c309ab596303fb4734d6623d7d3e4ddbdba9e0f035b7d92358d4bc"
+    },
+    {
+      "gid": 22,
+      "fxid": 32,
+      "name": "DI_PLUS-v1.00",
+      "source": "Bass_Drive/DI_PLUS-v1.00.ZDL",
+      "sha256": "e47024c265a084dc208162dd0510ce4ce6b81a9080bb7fb750fdabb8a803b97e"
+    },
+    {
+      "gid": 8,
+      "fxid": 48,
+      "name": "ANLGDLY-v1.00",
+      "source": "Delay/ANLGDLY-v1.00.ZDL",
+      "sha256": "111fcf336e18d1fc575a4f65ed28b15f75828a92b4b05493fe03118d85f5502f"
+    },
+    {
+      "gid": 8,
+      "fxid": 368,
+      "name": "APANDLY-v1.00",
+      "source": "Delay/APANDLY-v1.00.ZDL",
+      "sha256": "cfaf48ddf9f3846637302bd265d8b37a72395a9f0b0c2cd8a40f71c65989b051"
+    },
+    {
+      "gid": 8,
+      "fxid": 240,
+      "name": "CRBNDLY-1.00_GB1Xon",
+      "source": "Delay/CRBNDLY-1.00_GB1Xon.ZDL",
+      "sha256": "ee2428582df6074b4e647c611b045b14828d472087027935118563b205416f26"
+    },
+    {
+      "gid": 8,
+      "fxid": 240,
+      "name": "CRBNDLY-v1.00",
+      "source": "Delay/CRBNDLY-v1.00.ZDL",
+      "sha256": "d80b69b51773628d49e408a345a087d7727b33655ccb040643a15273b15f01b3"
+    },
+    {
+      "gid": 8,
+      "fxid": 8,
+      "name": "DELAY-1.00_GB1Xon",
+      "source": "Delay/DELAY-1.00_GB1Xon.ZDL",
+      "sha256": "0f049790ad7b2feabe1692f35fe7ce1c7d6ebb608f2e1e28a4b61d760ab238c5"
+    },
+    {
+      "gid": 8,
+      "fxid": 8,
+      "name": "DELAY-v1.00",
+      "source": "Delay/DELAY-v1.00.ZDL",
+      "sha256": "4f2eba7cbcc1a63c3eb796862c6e371dff5f1d56ccc3ba415dabad79d2d04c70"
+    },
+    {
+      "gid": 8,
+      "fxid": 256,
+      "name": "DRV_ECHO-v1.00",
+      "source": "Delay/DRV_ECHO-v1.00.ZDL",
+      "sha256": "fb4340491dc31490f13370462eeca21b4967dcca88a2bcbe8ba6ec85d28abad9"
+    },
+    {
+      "gid": 8,
+      "fxid": 224,
+      "name": "DUALDIGD-v1.00",
+      "source": "Delay/DUALDIGD-v1.00.ZDL",
+      "sha256": "7ede1ff2f6abf26c5651ae8bd69f9ea8d72cf273bd1a1ddd8726c82a081476ef"
+    },
+    {
+      "gid": 8,
+      "fxid": 96,
+      "name": "DYNADLY-v1.00",
+      "source": "Delay/DYNADLY-v1.00.ZDL",
+      "sha256": "4d4108f2c7c19dfec3c387378c622a191d7284ca734dc5565584c76906892c7b"
+    },
+    {
+      "gid": 8,
+      "fxid": 352,
+      "name": "FLTERPPD-v1.00",
+      "source": "Delay/FLTERPPD-v1.00.ZDL",
+      "sha256": "cc924f792d39544c72ccc4a04244555ba4fb0d006ef4240a982180c9929d0dd2"
+    },
+    {
+      "gid": 8,
+      "fxid": 112,
+      "name": "FLTRDLY-1.00_GB1Xon",
+      "source": "Delay/FLTRDLY-1.00_GB1Xon.ZDL",
+      "sha256": "8318221c42f36537fc0b4a07addbc6cb373de8e7b0d3fed5866731a24b32fba1"
+    },
+    {
+      "gid": 8,
+      "fxid": 112,
+      "name": "FLTRDLY-v1.00",
+      "source": "Delay/FLTRDLY-v1.00.ZDL",
+      "sha256": "19ea42ed3b37783abfb4440a527e12a6f7ef92f31ed24d881bbb5eed09364c8e"
+    },
+    {
+      "gid": 8,
+      "fxid": 384,
+      "name": "ICEDLY-v1.00",
+      "source": "Delay/ICEDLY-v1.00.ZDL",
+      "sha256": "ca804a7b1a92c537f7efc863457cec0e6a8dfb7da5dc73581d0e95b4fc39fc1e"
+    },
+    {
+      "gid": 8,
+      "fxid": 304,
+      "name": "LOFIDLY-v1.00",
+      "source": "Delay/LOFIDLY-v1.00.ZDL",
+      "sha256": "28c5941f369110f9c969ab5ad7a89e96a5f4e0766387c8eda05a29a3c89bb46c"
+    },
+    {
+      "gid": 8,
+      "fxid": 80,
+      "name": "MLTTPDLY-1.00_GB1Xon",
+      "source": "Delay/MLTTPDLY-1.00_GB1Xon.ZDL",
+      "sha256": "27f7db9d15f2625c4bb8ce992ec3470c4344b98052262c109a55b33d0166257b"
+    },
+    {
+      "gid": 8,
+      "fxid": 80,
+      "name": "MLTTPDLY-v1.00",
+      "source": "Delay/MLTTPDLY-v1.00.ZDL",
+      "sha256": "3073046e987f87739d998effce943e29c2cdf9ef425e0e51f2deb9b50045eb4b"
+    },
+    {
+      "gid": 8,
+      "fxid": 32,
+      "name": "MODDLY-v1.00",
+      "source": "Delay/MODDLY-v1.00.ZDL",
+      "sha256": "fee2d35bcdfd4fd157ac137476c9ef50a7dd52d30481c40834341760a9d721b5"
+    },
+    {
+      "gid": 8,
+      "fxid": 40,
+      "name": "MODDLY2-1.00_GB1Xon",
+      "source": "Delay/MODDLY2-1.00_GB1Xon.ZDL",
+      "sha256": "4460f6198c72846b3650c92229a8350fb279821284554e8985d6abc3fec9bd7f"
+    },
+    {
+      "gid": 8,
+      "fxid": 40,
+      "name": "MODDLY2-v1.00",
+      "source": "Delay/MODDLY2-v1.00.ZDL",
+      "sha256": "38ee52043b636fccaa2ffb3c1d577385bd18752e750657a437b18e07b8a65fe9"
+    },
+    {
+      "gid": 8,
+      "fxid": 160,
+      "name": "PHASEDLY-v1.00",
+      "source": "Delay/PHASEDLY-v1.00.ZDL",
+      "sha256": "ef64ace2c8c83666b49394cf5b55a371dc55408a3fbabecf349c52d44584bf7e"
+    },
+    {
+      "gid": 8,
+      "fxid": 128,
+      "name": "PITCHDLY-1.00_GB1Xon",
+      "source": "Delay/PITCHDLY-1.00_GB1Xon.ZDL",
+      "sha256": "a86299aff66b2cbca71d676f7a3e69f14e08096566335b6f5b7654d71ce7ac6c"
+    },
+    {
+      "gid": 8,
+      "fxid": 128,
+      "name": "PITCHDLY-v1.00",
+      "source": "Delay/PITCHDLY-v1.00.ZDL",
+      "sha256": "d053d1aefc2fc907b845454491fb061fcb37a788e0a0e892b2b19b00ecc8b2c3"
+    },
+    {
+      "gid": 8,
+      "fxid": 64,
+      "name": "RVRSDLY-1.00_GB1Xon",
+      "source": "Delay/RVRSDLY-1.00_GB1Xon.ZDL",
+      "sha256": "02b7ba9213efee28d8ef278d784b906446f5482b9c790fe4ca7dd3ae16581372"
+    },
+    {
+      "gid": 8,
+      "fxid": 64,
+      "name": "RVRSDLY-v1.00",
+      "source": "Delay/RVRSDLY-v1.00.ZDL",
+      "sha256": "02b7ba9213efee28d8ef278d784b906446f5482b9c790fe4ca7dd3ae16581372"
+    },
+    {
+      "gid": 8,
+      "fxid": 272,
+      "name": "SLAPBKD-v1.00",
+      "source": "Delay/SLAPBKD-v1.00.ZDL",
+      "sha256": "94a49f38699eea36edab0a6259e2e97919791bc6f3f13805e5efaf490f653edd"
+    },
+    {
+      "gid": 8,
+      "fxid": 320,
+      "name": "SLWATKDL-v1.00",
+      "source": "Delay/SLWATKDL-v1.00.ZDL",
+      "sha256": "cc2f6b25c72c8da76402ccb3d2c3d4aca82c11c4edced0c324052e97ae541bdb"
+    },
+    {
+      "gid": 8,
+      "fxid": 288,
+      "name": "SMS_DLY-v1.00",
+      "source": "Delay/SMS_DLY-v1.00.ZDL",
+      "sha256": "e9944899b1484b7bd7db2cbaa0bcf21008a8cee5fa2391a064bc8d70105b3b2d"
+    },
+    {
+      "gid": 8,
+      "fxid": 144,
+      "name": "STDELAY-1.00_GB1Xon",
+      "source": "Delay/STDELAY-1.00_GB1Xon.ZDL",
+      "sha256": "ded29f1695b5b9e609e651b0964aa077ec469ac2c618916de591aa81c90803d0"
+    },
+    {
+      "gid": 8,
+      "fxid": 144,
+      "name": "STDELAY-v1.00",
+      "source": "Delay/STDELAY-v1.00.ZDL",
+      "sha256": "cc8999fc7f36f8de50442b278a621f7f0a12b7e399b5ceba6a067ae6b2fc6037"
+    },
+    {
+      "gid": 8,
+      "fxid": 192,
+      "name": "STOMPDLY-1.00_GB1Xon",
+      "source": "Delay/STOMPDLY-1.00_GB1Xon.ZDL",
+      "sha256": "3a6863eafc0729a6ed2c7251fd4d267504576779708aaa7af3894f48b1b89769"
+    },
+    {
+      "gid": 8,
+      "fxid": 192,
+      "name": "STOMPDLY-v1.00",
+      "source": "Delay/STOMPDLY-v1.00.ZDL",
+      "sha256": "1f908c21c1f502e1b52506c8f592db3a7436e1ce7bd27184766b35ffc941b9af"
+    },
+    {
+      "gid": 8,
+      "fxid": 208,
+      "name": "TAPEECH3-v1.00",
+      "source": "Delay/TAPEECH3-v1.00.ZDL",
+      "sha256": "8bc98d0543fcaa840607b80a0cb9b5bbc9b4c71e2fc7baa9ed6bec10d863e267"
+    },
+    {
+      "gid": 8,
+      "fxid": 16,
+      "name": "TAPEECHO-1.00_GB1Xon",
+      "source": "Delay/TAPEECHO-1.00_GB1Xon.ZDL",
+      "sha256": "a38c7003f90951e8514d895e3b13afe3555c9ebdcebcbe0e0dae881eed5eb7c3"
+    },
+    {
+      "gid": 8,
+      "fxid": 16,
+      "name": "TAPEECHO-v1.00",
+      "source": "Delay/TAPEECHO-v1.00.ZDL",
+      "sha256": "d0e8aebba0095ab338287764eeb52eba1139c9fdfdd6b894c420c2b5b6ef9fd4"
+    },
+    {
+      "gid": 8,
+      "fxid": 176,
+      "name": "TGHLDDLY-1.00_GB1Xon",
+      "source": "Delay/TGHLDDLY-1.00_GB1Xon.ZDL",
+      "sha256": "9c1b26c876f63d5b5b7bb6a09c851bdaca83ec782e8b659350212357732b6fdf"
+    },
+    {
+      "gid": 8,
+      "fxid": 176,
+      "name": "TGHLDDLY-v1.00",
+      "source": "Delay/TGHLDDLY-v1.00.ZDL",
+      "sha256": "b177ec4582121ed2b475f7e69bf72ddafc1d43925ada97cb47a21a410797a7f0"
+    },
+    {
+      "gid": 8,
+      "fxid": 336,
+      "name": "TREMDLY-v1.00",
+      "source": "Delay/TREMDLY-v1.00.ZDL",
+      "sha256": "2d0f0f78af48282cb1cca653fbf19cb4533853da30f12bc11c5f95925913f484"
+    },
+    {
+      "gid": 3,
+      "fxid": 320,
+      "name": "ACOSIM-1.00_GB1Xon",
+      "source": "Drive/ACOSIM-1.00_GB1Xon.ZDL",
+      "sha256": "d0ec0208a4ab72f56a1b521cb42e8913f1451c248ecf16d6db7ee52a96503e7d"
+    },
+    {
+      "gid": 3,
+      "fxid": 320,
+      "name": "ACOSIM-v1.00",
+      "source": "Drive/ACOSIM-v1.00.ZDL",
+      "sha256": "f79f1e16bfa3bb205f1ba06a783afa5ab754a996a8fc830d680b686d071f82c2"
+    },
+    {
+      "gid": 3,
+      "fxid": 416,
+      "name": "BGGRID-v1.00",
+      "source": "Drive/BGGRID-v1.00.ZDL",
+      "sha256": "4bea9b765d562d6c7c0fd286e4214a01a7cb4bb497a3a6e779547cec0698be54"
+    },
+    {
+      "gid": 3,
+      "fxid": 384,
+      "name": "BGTHRTTL-v1.00",
+      "source": "Drive/BGTHRTTL-v1.00.ZDL",
+      "sha256": "abe95354df4dcbab3856ac279e8bee91cfc451800b369d5b8c5c3b5fbc292f2c"
+    },
+    {
+      "gid": 3,
+      "fxid": 8,
+      "name": "BOOSTER-1.00_GB1Xon",
+      "source": "Drive/BOOSTER-1.00_GB1Xon.ZDL",
+      "sha256": "57d4e1a21657ffc0d787163dfa7b3a3f48658ad334ff3fcbf494d02e991d08e8"
+    },
+    {
+      "gid": 3,
+      "fxid": 8,
+      "name": "BOOSTER-v1.00",
+      "source": "Drive/BOOSTER-v1.00.ZDL",
+      "sha256": "57d4e1a21657ffc0d787163dfa7b3a3f48658ad334ff3fcbf494d02e991d08e8"
+    },
+    {
+      "gid": 3,
+      "fxid": 336,
+      "name": "CENTAGLD-v1.00",
+      "source": "Drive/CENTAGLD-v1.00.ZDL",
+      "sha256": "d59068b7a02f6032fbe017c5bc5604d687ba0fa63647ced180d2c267622a21e8"
+    },
+    {
+      "gid": 3,
+      "fxid": 80,
+      "name": "DISTONE-1.00_GB1Xon",
+      "source": "Drive/DISTONE-1.00_GB1Xon.ZDL",
+      "sha256": "913f129ca17d09c8900fb034040302a51180eba51201669031a8c5739f04d5d2"
+    },
+    {
+      "gid": 3,
+      "fxid": 80,
+      "name": "DISTONE-v1.00",
+      "source": "Drive/DISTONE-v1.00.ZDL",
+      "sha256": "913f129ca17d09c8900fb034040302a51180eba51201669031a8c5739f04d5d2"
+    },
+    {
+      "gid": 3,
+      "fxid": 64,
+      "name": "DISTPLUS-1.00_GB1Xon",
+      "source": "Drive/DISTPLUS-1.00_GB1Xon.ZDL",
+      "sha256": "f82c46ab2ccb60a9cd17df43b2735ef7180d32c2b14adce8de2e8e1f11b352ea"
+    },
+    {
+      "gid": 3,
+      "fxid": 64,
+      "name": "DISTPLUS-v1.00",
+      "source": "Drive/DISTPLUS-v1.00.ZDL",
+      "sha256": "f82c46ab2ccb60a9cd17df43b2735ef7180d32c2b14adce8de2e8e1f11b352ea"
+    },
+    {
+      "gid": 3,
+      "fxid": 528,
+      "name": "DYNDRIVE-v1.00",
+      "source": "Drive/DYNDRIVE-v1.00.ZDL",
+      "sha256": "6cf1797b91db063fdd0e86ec1c9f1279afc7faf5328f5e8c96b64ba0887bf8c6"
+    },
+    {
+      "gid": 3,
+      "fxid": 304,
+      "name": "EXTRMDS-1.00_GB1Xon",
+      "source": "Drive/EXTRMDS-1.00_GB1Xon.ZDL",
+      "sha256": "08f219317acf88cf43e7826133b7de2914f3e6630d07bdb256f1c17f943dd2e0"
+    },
+    {
+      "gid": 3,
+      "fxid": 304,
+      "name": "EXTRMDS-v1.00",
+      "source": "Drive/EXTRMDS-v1.00.ZDL",
+      "sha256": "a77a9da6d554a1252d306a63967df565e1b49d0ea8fc762acb4fb485d9477fee"
+    },
+    {
+      "gid": 3,
+      "fxid": 112,
+      "name": "FUZZSML-1.00_GB1Xon",
+      "source": "Drive/FUZZSML-1.00_GB1Xon.ZDL",
+      "sha256": "695a551724c8fab37f9db1dc06751dc939670d7b7b6bd816eba7382989219e8e"
+    },
+    {
+      "gid": 3,
+      "fxid": 112,
+      "name": "FUZZSML-v1.00",
+      "source": "Drive/FUZZSML-v1.00.ZDL",
+      "sha256": "695a551724c8fab37f9db1dc06751dc939670d7b7b6bd816eba7382989219e8e"
+    },
+    {
+      "gid": 3,
+      "fxid": 48,
+      "name": "GOVERNOR-1.00_GB1Xon",
+      "source": "Drive/GOVERNOR-1.00_GB1Xon.ZDL",
+      "sha256": "a0d174f5e01ac6772e786b33182add4ea62f03182dbb3a2bb42d5ae0d54d17d4"
+    },
+    {
+      "gid": 3,
+      "fxid": 48,
+      "name": "GOVERNOR-v1.00",
+      "source": "Drive/GOVERNOR-v1.00.ZDL",
+      "sha256": "a0d174f5e01ac6772e786b33182add4ea62f03182dbb3a2bb42d5ae0d54d17d4"
+    },
+    {
+      "gid": 3,
+      "fxid": 128,
+      "name": "GRTMUFF-1.00_GB1Xon",
+      "source": "Drive/GRTMUFF-1.00_GB1Xon.ZDL",
+      "sha256": "f6212de133e47cb5eb2bd17d44533e622376baba1a97644c0e3628d57c5ce786"
+    },
+    {
+      "gid": 3,
+      "fxid": 128,
+      "name": "GRTMUFF-v1.00",
+      "source": "Drive/GRTMUFF-v1.00.ZDL",
+      "sha256": "f6212de133e47cb5eb2bd17d44533e622376baba1a97644c0e3628d57c5ce786"
+    },
+    {
+      "gid": 3,
+      "fxid": 160,
+      "name": "HOTBOX-1.00_GB1Xon",
+      "source": "Drive/HOTBOX-1.00_GB1Xon.ZDL",
+      "sha256": "508a3b886853a7588042d4de98be404b874fff513c4ebf7b3fd9aaab8c3339e0"
+    },
+    {
+      "gid": 3,
+      "fxid": 160,
+      "name": "HOTBOX-v1.00",
+      "source": "Drive/HOTBOX-v1.00.ZDL",
+      "sha256": "508a3b886853a7588042d4de98be404b874fff513c4ebf7b3fd9aaab8c3339e0"
+    },
+    {
+      "gid": 3,
+      "fxid": 288,
+      "name": "LEAD-1.00_GB1Xon",
+      "source": "Drive/LEAD-1.00_GB1Xon.ZDL",
+      "sha256": "7e39646481a3d6caf6c7a699d346787cff918e069a467435375efc65786793cd"
+    },
+    {
+      "gid": 3,
+      "fxid": 288,
+      "name": "LEAD-v1.00",
+      "source": "Drive/LEAD-v1.00.ZDL",
+      "sha256": "7e39646481a3d6caf6c7a699d346787cff918e069a467435375efc65786793cd"
+    },
+    {
+      "gid": 3,
+      "fxid": 144,
+      "name": "MTLWRLD-1.00_GB1Xon",
+      "source": "Drive/MTLWRLD-1.00_GB1Xon.ZDL",
+      "sha256": "4750efced2bb92fe0fcff4d47b896a463dee121abcebcc7b7401380f0377b6f2"
+    },
+    {
+      "gid": 3,
+      "fxid": 144,
+      "name": "MTLWRLD-v1.00",
+      "source": "Drive/MTLWRLD-v1.00.ZDL",
+      "sha256": "4750efced2bb92fe0fcff4d47b896a463dee121abcebcc7b7401380f0377b6f2"
+    },
+    {
+      "gid": 3,
+      "fxid": 352,
+      "name": "NYC_MUFF-v1.00",
+      "source": "Drive/NYC_MUFF-v1.00.ZDL",
+      "sha256": "e3ec337df691329284f63218854faa9efdd3cf2e081a28370933b733aebfaa62"
+    },
+    {
+      "gid": 3,
+      "fxid": 480,
+      "name": "OCDRIVE-v1.00",
+      "source": "Drive/OCDRIVE-v1.00.ZDL",
+      "sha256": "5525d5b8fc2e934fc0c572256745bf8249c5f9291a17e95391ad8b06a7b7c23b"
+    },
+    {
+      "gid": 3,
+      "fxid": 400,
+      "name": "OCTFUZZ-v1.00",
+      "source": "Drive/OCTFUZZ-v1.00.ZDL",
+      "sha256": "4128b211778a83b25e552d4c6c0dac395615d5ec11d57bd801352f5b3e8cde61"
+    },
+    {
+      "gid": 3,
+      "fxid": 16,
+      "name": "OVRDRV-1.00_GB1Xon",
+      "source": "Drive/OVRDRV-1.00_GB1Xon.ZDL",
+      "sha256": "a4afeeef159811a37d7fe8b49631bc2cfd737c0ad44906cf819ee7b6fa405c4d"
+    },
+    {
+      "gid": 3,
+      "fxid": 16,
+      "name": "OVRDRV-v1.00",
+      "source": "Drive/OVRDRV-v1.00.ZDL",
+      "sha256": "a4afeeef159811a37d7fe8b49631bc2cfd737c0ad44906cf819ee7b6fa405c4d"
+    },
+    {
+      "gid": 3,
+      "fxid": 496,
+      "name": "RCBOOST-v1.00",
+      "source": "Drive/RCBOOST-v1.00.ZDL",
+      "sha256": "d53f3b72452f57f6bc207b34898d321e2590f50a6d3cd2874361ed8447fb55e9"
+    },
+    {
+      "gid": 3,
+      "fxid": 432,
+      "name": "RED_CRU-v1.00",
+      "source": "Drive/RED_CRU-v1.00.ZDL",
+      "sha256": "7f2916f48e17e863f9409cfe670791eabe0efbc5d37bc3308c745bb9702467c7"
+    },
+    {
+      "gid": 3,
+      "fxid": 96,
+      "name": "SQUEAK-1.00_GB1Xon",
+      "source": "Drive/SQUEAK-1.00_GB1Xon.ZDL",
+      "sha256": "22ba2eef6ed4d2afbecb0195853c5b90b6450795d159604adb227cf33511ee35"
+    },
+    {
+      "gid": 3,
+      "fxid": 96,
+      "name": "SQUEAK-v1.00",
+      "source": "Drive/SQUEAK-v1.00.ZDL",
+      "sha256": "22ba2eef6ed4d2afbecb0195853c5b90b6450795d159604adb227cf33511ee35"
+    },
+    {
+      "gid": 3,
+      "fxid": 464,
+      "name": "SWEETDRV-v1.00",
+      "source": "Drive/SWEETDRV-v1.00.ZDL",
+      "sha256": "6a5509e07eeb7b76af1864d0ef93d38e830efb13c19cf55ca57632b62bd276e9"
+    },
+    {
+      "gid": 3,
+      "fxid": 32,
+      "name": "T_SCREAM-1.00_GB1Xon",
+      "source": "Drive/T_SCREAM-1.00_GB1Xon.ZDL",
+      "sha256": "52b1b1f979f6c2143e808b87d55eb6467d54d96dd2e4615fc4f7b01f895edb8e"
+    },
+    {
+      "gid": 3,
+      "fxid": 32,
+      "name": "T_SCREAM-v1.00",
+      "source": "Drive/T_SCREAM-v1.00.ZDL",
+      "sha256": "52b1b1f979f6c2143e808b87d55eb6467d54d96dd2e4615fc4f7b01f895edb8e"
+    },
+    {
+      "gid": 3,
+      "fxid": 448,
+      "name": "TB_MK15-v1.00",
+      "source": "Drive/TB_MK15-v1.00.ZDL",
+      "sha256": "8433a1adc4402c8bf7fc188a575849194571bcf8abff266f8d94bc94f778dbb0"
+    },
+    {
+      "gid": 3,
+      "fxid": 368,
+      "name": "TS_DRIVE-v1.00",
+      "source": "Drive/TS_DRIVE-v1.00.ZDL",
+      "sha256": "1d3c02e0b63c6e9cd0f68586ce7473be7a6a4ef40fe6aee319fe86483fc3ef91"
+    },
+    {
+      "gid": 3,
+      "fxid": 208,
+      "name": "Z_BOTTOM-v1.00",
+      "source": "Drive/Z_BOTTOM-v1.00.ZDL",
+      "sha256": "2f558bc1e905ea76e18bd6229f7422e31f932b29a3a4620f54c69f3f7a0e8c07"
+    },
+    {
+      "gid": 3,
+      "fxid": 176,
+      "name": "Z_CLEAN-1.00_GB1Xon",
+      "source": "Drive/Z_CLEAN-1.00_GB1Xon.ZDL",
+      "sha256": "8bb1886a65efd707d1d8efc826d523bc3bdbc648fec5db0a7d7b9a6a5eaf48d2"
+    },
+    {
+      "gid": 3,
+      "fxid": 176,
+      "name": "Z_CLEAN-v1.00",
+      "source": "Drive/Z_CLEAN-v1.00.ZDL",
+      "sha256": "352d222d341387af60ff1bbbd71edd2ea731093dfd76d35557a3af066d947605"
+    },
+    {
+      "gid": 3,
+      "fxid": 224,
+      "name": "Z_DREAM-v1.00",
+      "source": "Drive/Z_DREAM-v1.00.ZDL",
+      "sha256": "b27bf9cc1abd88560751cc62963c137006c490585e6d95ee479f2046a47c4b38"
+    },
+    {
+      "gid": 3,
+      "fxid": 192,
+      "name": "Z_MP1-1.00_GB1Xon",
+      "source": "Drive/Z_MP1-1.00_GB1Xon.ZDL",
+      "sha256": "4f4ab34dfad3f5c5597376babdc6de260a1d16a6fe935a2f6fd0a2be4f225986"
+    },
+    {
+      "gid": 3,
+      "fxid": 192,
+      "name": "Z_MP1-v1.00",
+      "source": "Drive/Z_MP1-v1.00.ZDL",
+      "sha256": "4cbab4ebacc40b782823cf48bf024b7f6c72654334197e9f4fdabce6b4f0968d"
+    },
+    {
+      "gid": 3,
+      "fxid": 256,
+      "name": "Z_NEOS-v1.00",
+      "source": "Drive/Z_NEOS-v1.00.ZDL",
+      "sha256": "ab79a41cec14c9e15554be383b1d7148bc3e107a716b698f50ee226affabe2e5"
+    },
+    {
+      "gid": 3,
+      "fxid": 240,
+      "name": "Z_SCREAM-1.00_GB1Xon",
+      "source": "Drive/Z_SCREAM-1.00_GB1Xon.ZDL",
+      "sha256": "b50ba4fabe100e4c206b06b596d4091c81569bed266e7f0444d398a7b721f0e4"
+    },
+    {
+      "gid": 3,
+      "fxid": 240,
+      "name": "Z_SCREAM-v1.00",
+      "source": "Drive/Z_SCREAM-v1.00.ZDL",
+      "sha256": "b50ba4fabe100e4c206b06b596d4091c81569bed266e7f0444d398a7b721f0e4"
+    },
+    {
+      "gid": 3,
+      "fxid": 272,
+      "name": "Z_WILD-1.00_GB1Xon",
+      "source": "Drive/Z_WILD-1.00_GB1Xon.ZDL",
+      "sha256": "baaec5447231a4cf531c45fc23d17c779fe492eb6f4616f035661d3d6cdd1a28"
+    },
+    {
+      "gid": 3,
+      "fxid": 272,
+      "name": "Z_WILD-v1.00",
+      "source": "Drive/Z_WILD-v1.00.ZDL",
+      "sha256": "baaec5447231a4cf531c45fc23d17c779fe492eb6f4616f035661d3d6cdd1a28"
+    },
+    {
+      "gid": 1,
+      "fxid": 53,
+      "name": "160_COMP-1.00_GB1Xon",
+      "source": "Dynamics/160_COMP-1.00_GB1Xon.ZDL",
+      "sha256": "7c7972e5006ef141a7dbf296fd09a4454ee7972d977fccaab2bf200927ca4216"
+    },
+    {
+      "gid": 1,
+      "fxid": 53,
+      "name": "160_COMP-v1.00",
+      "source": "Dynamics/160_COMP-v1.00.ZDL",
+      "sha256": "739da824cbaad146b943240f93249ea3d7cd8be14ab938c24629cd39a977dddf"
+    },
+    {
+      "gid": 1,
+      "fxid": 53,
+      "name": "160_COMP-v1.01",
+      "source": "Dynamics/160_COMP-v1.01.ZDL",
+      "sha256": "7c7972e5006ef141a7dbf296fd09a4454ee7972d977fccaab2bf200927ca4216"
+    },
+    {
+      "gid": 1,
+      "fxid": 8,
+      "name": "COMP-1.00_GB1Xon",
+      "source": "Dynamics/COMP-1.00_GB1Xon.ZDL",
+      "sha256": "7b88ad1fb5db68a6656d690b4db2994463ab8cff9e98a6c9fe222e772c681170"
+    },
+    {
+      "gid": 1,
+      "fxid": 8,
+      "name": "COMP-v1.00",
+      "source": "Dynamics/COMP-v1.00.ZDL",
+      "sha256": "7b88ad1fb5db68a6656d690b4db2994463ab8cff9e98a6c9fe222e772c681170"
+    },
+    {
+      "gid": 1,
+      "fxid": 24,
+      "name": "D_COMP-1.00_GB1Xon",
+      "source": "Dynamics/D_COMP-1.00_GB1Xon.ZDL",
+      "sha256": "2d5b6bd412f894f252c6fec2a4d2d0dd90f14460a4b7dccae0aa56e8d77d1970"
+    },
+    {
+      "gid": 1,
+      "fxid": 24,
+      "name": "D_COMP-v1.00",
+      "source": "Dynamics/D_COMP-v1.00.ZDL",
+      "sha256": "ef9a191945f13c814ff3f73c1d675c1f222c046fecbc3b4c7dcbaf95a7db56c6"
+    },
+    {
+      "gid": 1,
+      "fxid": 24,
+      "name": "D_COMP-v1.01",
+      "source": "Dynamics/D_COMP-v1.01.ZDL",
+      "sha256": "2d5b6bd412f894f252c6fec2a4d2d0dd90f14460a4b7dccae0aa56e8d77d1970"
+    },
+    {
+      "gid": 1,
+      "fxid": 112,
+      "name": "DIRTYGTE-v1.00",
+      "source": "Dynamics/DIRTYGTE-v1.00.ZDL",
+      "sha256": "687d3e41f3c0c5eaf48b66d4d18df454da5b86d2b0efb211944602d70ecd9dbd"
+    },
+    {
+      "gid": 1,
+      "fxid": 160,
+      "name": "DUAL_CMP-1.00_GB1Xon",
+      "source": "Dynamics/DUAL_CMP-1.00_GB1Xon.ZDL",
+      "sha256": "9314fc2e711fd86a73603c2b42976afb7247b3843d3d1fe75c9284672ed7b35d"
+    },
+    {
+      "gid": 1,
+      "fxid": 160,
+      "name": "DUAL_CMP-v1.00",
+      "source": "Dynamics/DUAL_CMP-v1.00.ZDL",
+      "sha256": "9314fc2e711fd86a73603c2b42976afb7247b3843d3d1fe75c9284672ed7b35d"
+    },
+    {
+      "gid": 1,
+      "fxid": 144,
+      "name": "GRAYCOMP-v1.00",
+      "source": "Dynamics/GRAYCOMP-v1.00.ZDL",
+      "sha256": "372bf67b876b5f51937f1fe1661f45ae188dee5419526f6cf1441478ca856378"
+    },
+    {
+      "gid": 1,
+      "fxid": 58,
+      "name": "LIMITER-1.00_GB1Xon",
+      "source": "Dynamics/LIMITER-1.00_GB1Xon.ZDL",
+      "sha256": "11517d8196a16d95344872256cc522c9178c32fd53b1bc6cdb8869d17284e955"
+    },
+    {
+      "gid": 1,
+      "fxid": 58,
+      "name": "LIMITER-v1.00",
+      "source": "Dynamics/LIMITER-v1.00.ZDL",
+      "sha256": "45c1866b2bd77302ca6a1445ad1e64909f36ebded0cfb075c60e8dd1028cb898"
+    },
+    {
+      "gid": 1,
+      "fxid": 58,
+      "name": "LIMITER-v1.01",
+      "source": "Dynamics/LIMITER-v1.01.ZDL",
+      "sha256": "11517d8196a16d95344872256cc522c9178c32fd53b1bc6cdb8869d17284e955"
+    },
+    {
+      "gid": 1,
+      "fxid": 32,
+      "name": "M_COMP-1.00_GB1Xon",
+      "source": "Dynamics/M_COMP-1.00_GB1Xon.ZDL",
+      "sha256": "543a5124543028e74a21f7ffef2481661118ac2a971a6c165f41291eff5851f2"
+    },
+    {
+      "gid": 1,
+      "fxid": 32,
+      "name": "M_COMP-v1.00",
+      "source": "Dynamics/M_COMP-v1.00.ZDL",
+      "sha256": "543a5124543028e74a21f7ffef2481661118ac2a971a6c165f41291eff5851f2"
+    },
+    {
+      "gid": 1,
+      "fxid": 96,
+      "name": "NOISEGTE-1.00_GB1Xon",
+      "source": "Dynamics/NOISEGTE-1.00_GB1Xon.ZDL",
+      "sha256": "a6918e4bf1eb202f44c7419541649467f316c065addce9597f88c715015fc2f3"
+    },
+    {
+      "gid": 1,
+      "fxid": 96,
+      "name": "NOISEGTE-v1.00",
+      "source": "Dynamics/NOISEGTE-v1.00.ZDL",
+      "sha256": "a6918e4bf1eb202f44c7419541649467f316c065addce9597f88c715015fc2f3"
+    },
+    {
+      "gid": 1,
+      "fxid": 48,
+      "name": "OPTCOMP-1.00_GB1Xon",
+      "source": "Dynamics/OPTCOMP-1.00_GB1Xon.ZDL",
+      "sha256": "47e7d036d42312282a33fda9a41c770cb1d0d15d861a481efd48a7299f7d774e"
+    },
+    {
+      "gid": 1,
+      "fxid": 48,
+      "name": "OPTCOMP-v1.00",
+      "source": "Dynamics/OPTCOMP-v1.00.ZDL",
+      "sha256": "47e7d036d42312282a33fda9a41c770cb1d0d15d861a481efd48a7299f7d774e"
+    },
+    {
+      "gid": 1,
+      "fxid": 128,
+      "name": "ORANGELM-v1.00",
+      "source": "Dynamics/ORANGELM-v1.00.ZDL",
+      "sha256": "5267faec5b3cdf11ef26dedf1e49fb0d185a5b0001931f77c4a5f157d693c86b"
+    },
+    {
+      "gid": 1,
+      "fxid": 16,
+      "name": "RACKCOMP-v1.00",
+      "source": "Dynamics/RACKCOMP-v1.00.ZDL",
+      "sha256": "d9268e7daff36b7e25af29fa50502752d20e5869ef938f6c9e6cc550db1c5743"
+    },
+    {
+      "gid": 1,
+      "fxid": 64,
+      "name": "SLWATK-1.00_GB1Xon",
+      "source": "Dynamics/SLWATK-1.00_GB1Xon.ZDL",
+      "sha256": "09922e7d89e0da67cebb92c9ed7ae4909221e31dc4c1d81507ff8421d9ee3ca2"
+    },
+    {
+      "gid": 1,
+      "fxid": 64,
+      "name": "SLWATK-v1.00",
+      "source": "Dynamics/SLWATK-v1.00.ZDL",
+      "sha256": "09922e7d89e0da67cebb92c9ed7ae4909221e31dc4c1d81507ff8421d9ee3ca2"
+    },
+    {
+      "gid": 1,
+      "fxid": 80,
+      "name": "ZNR-1.00_GB1Xon",
+      "source": "Dynamics/ZNR-1.00_GB1Xon.ZDL",
+      "sha256": "3662d4848669633b7af047c64aa138e504c1cdc1b3962e884e12231a18495fef"
+    },
+    {
+      "gid": 1,
+      "fxid": 80,
+      "name": "ZNR-v1.00",
+      "source": "Dynamics/ZNR-v1.00.ZDL",
+      "sha256": "3662d4848669633b7af047c64aa138e504c1cdc1b3962e884e12231a18495fef"
+    },
+    {
+      "gid": 2,
+      "fxid": 149,
+      "name": "A_FILTER-1.00_GB1Xon",
+      "source": "Filter/A_FILTER-1.00_GB1Xon.ZDL",
+      "sha256": "de2c3fc1c720b5684e654345010ef3f83e4610ae98e7f82a7fcdc4b19ae8c162"
+    },
+    {
+      "gid": 2,
+      "fxid": 149,
+      "name": "A_FILTER-v1.00",
+      "source": "Filter/A_FILTER-v1.00.ZDL",
+      "sha256": "72a8fe6562f1dab4393cb24b8ee55c2b31a217d478a2cdbc96c7512b0fb346ce"
+    },
+    {
+      "gid": 2,
+      "fxid": 149,
+      "name": "A_FILTER-v1.01",
+      "source": "Filter/A_FILTER-v1.01.ZDL",
+      "sha256": "de2c3fc1c720b5684e654345010ef3f83e4610ae98e7f82a7fcdc4b19ae8c162"
+    },
+    {
+      "gid": 2,
+      "fxid": 80,
+      "name": "AUTOWAH-1.00_GB1Xon",
+      "source": "Filter/AUTOWAH-1.00_GB1Xon.ZDL",
+      "sha256": "f3808c981579b396ccdb2ff800c624b5c3b609531997c2f8d99817bd986ce4cf"
+    },
+    {
+      "gid": 2,
+      "fxid": 80,
+      "name": "AUTOWAH-v1.00",
+      "source": "Filter/AUTOWAH-v1.00.ZDL",
+      "sha256": "f3808c981579b396ccdb2ff800c624b5c3b609531997c2f8d99817bd986ce4cf"
+    },
+    {
+      "gid": 2,
+      "fxid": 88,
+      "name": "B_ATWAH-1.00_GB1Xon",
+      "source": "Filter/B_ATWAH-1.00_GB1Xon.ZDL",
+      "sha256": "bbb5558f55a0340973f9e3b199c4ae15d1cc08587cc39fd78ff85e1135e003a6"
+    },
+    {
+      "gid": 2,
+      "fxid": 88,
+      "name": "B_ATWAH-v1.00",
+      "source": "Filter/B_ATWAH-v1.00.ZDL",
+      "sha256": "a8bfa557d6a0107e99d4f31fc3656a7a4699eda84cc94dccb702af352dc29b4a"
+    },
+    {
+      "gid": 2,
+      "fxid": 88,
+      "name": "B_ATWAH-v1.01",
+      "source": "Filter/B_ATWAH-v1.01.ZDL",
+      "sha256": "bbb5558f55a0340973f9e3b199c4ae15d1cc08587cc39fd78ff85e1135e003a6"
+    },
+    {
+      "gid": 2,
+      "fxid": 154,
+      "name": "B_CRY-1.00_GB1Xon",
+      "source": "Filter/B_CRY-1.00_GB1Xon.ZDL",
+      "sha256": "119f95e6ae538bbe8c2966c4bd909c7f8f2ae0ef394683f8ccfb6c7d7b40bf53"
+    },
+    {
+      "gid": 2,
+      "fxid": 154,
+      "name": "B_CRY-v1.00",
+      "source": "Filter/B_CRY-v1.00.ZDL",
+      "sha256": "8dfa15fb63404318a2cd99b628f56e538e3c50b669a08d9409756d44bcd4ca04"
+    },
+    {
+      "gid": 2,
+      "fxid": 154,
+      "name": "B_CRY-v1.01",
+      "source": "Filter/B_CRY-v1.01.ZDL",
+      "sha256": "119f95e6ae538bbe8c2966c4bd909c7f8f2ae0ef394683f8ccfb6c7d7b40bf53"
+    },
+    {
+      "gid": 2,
+      "fxid": 24,
+      "name": "B_GEQ-1.00_GB1Xon",
+      "source": "Filter/B_GEQ-1.00_GB1Xon.ZDL",
+      "sha256": "0e50e75bd1ab45035aa6942b24942349d2f26d2a66f72acf30ed34cdb87e7d60"
+    },
+    {
+      "gid": 2,
+      "fxid": 24,
+      "name": "B_GEQ-v1.00",
+      "source": "Filter/B_GEQ-v1.00.ZDL",
+      "sha256": "c37fc44a2565c8e12013f38c80a0193eb6f0c41f39a7b4c53eec1f51cb7805b6"
+    },
+    {
+      "gid": 2,
+      "fxid": 24,
+      "name": "B_GEQ-v1.01",
+      "source": "Filter/B_GEQ-v1.01.ZDL",
+      "sha256": "0e50e75bd1ab45035aa6942b24942349d2f26d2a66f72acf30ed34cdb87e7d60"
+    },
+    {
+      "gid": 2,
+      "fxid": 36,
+      "name": "B_PEQ-1.00_GB1Xon",
+      "source": "Filter/B_PEQ-1.00_GB1Xon.ZDL",
+      "sha256": "867e09cd031cdba6f6d1e0890ea0645835825bdf8ab7d8b9189cd004fe53d8b0"
+    },
+    {
+      "gid": 2,
+      "fxid": 36,
+      "name": "B_PEQ-v1.00",
+      "source": "Filter/B_PEQ-v1.00.ZDL",
+      "sha256": "bbaf7c6a921c9a7478c05ace3d586ddb8c4ac8986606bf4b803b0f658fd2e9ea"
+    },
+    {
+      "gid": 2,
+      "fxid": 36,
+      "name": "B_PEQ-v1.01",
+      "source": "Filter/B_PEQ-v1.01.ZDL",
+      "sha256": "867e09cd031cdba6f6d1e0890ea0645835825bdf8ab7d8b9189cd004fe53d8b0"
+    },
+    {
+      "gid": 2,
+      "fxid": 804,
+      "name": "B_PEQ_NM-v1.01",
+      "source": "Filter/B_PEQ_NM-v1.01.ZDL",
+      "sha256": "216b3f16838045237ca1c6c27ca9715c8b013e8f1b35e80c2b5abf178ef3988f"
+    },
+    {
+      "gid": 2,
+      "fxid": 44,
+      "name": "BOTTOM_B-1.00_GB1Xon",
+      "source": "Filter/BOTTOM_B-1.00_GB1Xon.ZDL",
+      "sha256": "abe43770cb6577394d539e010a0773c1402ce3fe89d3feb8f8accaa8a4279ea3"
+    },
+    {
+      "gid": 2,
+      "fxid": 44,
+      "name": "BOTTOM_B-v1.00",
+      "source": "Filter/BOTTOM_B-v1.00.ZDL",
+      "sha256": "051628068cf1370e7f9ab30e6488db345a520450795bc0700108efd63344d512"
+    },
+    {
+      "gid": 2,
+      "fxid": 44,
+      "name": "BOTTOM_B-v1.01",
+      "source": "Filter/BOTTOM_B-v1.01.ZDL",
+      "sha256": "abe43770cb6577394d539e010a0773c1402ce3fe89d3feb8f8accaa8a4279ea3"
+    },
+    {
+      "gid": 2,
+      "fxid": 64,
+      "name": "COMBFLTR-v1.00",
+      "source": "Filter/COMBFLTR-v1.00.ZDL",
+      "sha256": "31977a5427097ab78651f89960c885a6a7bd85d48a01460943ef7b4ab3ccdd19"
+    },
+    {
+      "gid": 2,
+      "fxid": 112,
+      "name": "CRY-1.00_GB1Xon",
+      "source": "Filter/CRY-1.00_GB1Xon.ZDL",
+      "sha256": "76467dabd093e800c673e88cea54cf6dceda73536692bff6ce0b4a6f32edbe65"
+    },
+    {
+      "gid": 2,
+      "fxid": 112,
+      "name": "CRY-v1.00",
+      "source": "Filter/CRY-v1.00.ZDL",
+      "sha256": "76467dabd093e800c673e88cea54cf6dceda73536692bff6ce0b4a6f32edbe65"
+    },
+    {
+      "gid": 2,
+      "fxid": 753,
+      "name": "Div0-v1.00",
+      "source": "Filter/Div0-v1.00.ZDL",
+      "sha256": "687a4103e6f7953b006ab789c52365c72c30dfa601e756162629a7c587b308df"
+    },
+    {
+      "gid": 2,
+      "fxid": 48,
+      "name": "EXCITER-1.00_GB1Xon",
+      "source": "Filter/EXCITER-1.00_GB1Xon.ZDL",
+      "sha256": "079a5cd4ba9c01d21fe03b15df0214c427c084b5aa376e01a4eeed49d29d8aac"
+    },
+    {
+      "gid": 2,
+      "fxid": 48,
+      "name": "EXCITER-v1.00",
+      "source": "Filter/EXCITER-v1.00.ZDL",
+      "sha256": "079a5cd4ba9c01d21fe03b15df0214c427c084b5aa376e01a4eeed49d29d8aac"
+    },
+    {
+      "gid": 2,
+      "fxid": 208,
+      "name": "FCYCLE-1.00_GB1Xon",
+      "source": "Filter/FCYCLE-1.00_GB1Xon.ZDL",
+      "sha256": "39d9e575d8d046a40f0158ee031d7860b80343222d027b5a56537200ae3bf7bf"
+    },
+    {
+      "gid": 2,
+      "fxid": 208,
+      "name": "FCYCLE-v1.00",
+      "source": "Filter/FCYCLE-v1.00.ZDL",
+      "sha256": "39d9e575d8d046a40f0158ee031d7860b80343222d027b5a56537200ae3bf7bf"
+    },
+    {
+      "gid": 2,
+      "fxid": 16,
+      "name": "GEQ-1.00_GB1Xon",
+      "source": "Filter/GEQ-1.00_GB1Xon.ZDL",
+      "sha256": "fe98f82bec8a7fb4cf7df7c2b356dad06b5a95e327ab1ca13775a0e31d026621"
+    },
+    {
+      "gid": 2,
+      "fxid": 16,
+      "name": "GEQ-v1.00",
+      "source": "Filter/GEQ-v1.00.ZDL",
+      "sha256": "fe98f82bec8a7fb4cf7df7c2b356dad06b5a95e327ab1ca13775a0e31d026621"
+    },
+    {
+      "gid": 2,
+      "fxid": 8,
+      "name": "LINESEL-v1.01",
+      "source": "Filter/LINESEL-v1.01.ZDL",
+      "sha256": "3773f220e5d8b4b7994a9bfd613f119471ae3b8d7085e161a027a4b602409be8"
+    },
+    {
+      "gid": 2,
+      "fxid": 144,
+      "name": "M_FILTER-1.00_GB1Xon",
+      "source": "Filter/M_FILTER-1.00_GB1Xon.ZDL",
+      "sha256": "6c4a1e856c85933570d73423d19e04c4e9636ad090ca6e81884d948875296ab5"
+    },
+    {
+      "gid": 2,
+      "fxid": 144,
+      "name": "M_FILTER-v1.00",
+      "source": "Filter/M_FILTER-v1.00.ZDL",
+      "sha256": "6c4a1e856c85933570d73423d19e04c4e9636ad090ca6e81884d948875296ab5"
+    },
+    {
+      "gid": 2,
+      "fxid": 32,
+      "name": "PEQ-1.00_GB1Xon",
+      "source": "Filter/PEQ-1.00_GB1Xon.ZDL",
+      "sha256": "c1f2614605c220128afd6864403ddb9e1d89cb50c2ebddeccb419f0b3b442f6f"
+    },
+    {
+      "gid": 2,
+      "fxid": 32,
+      "name": "PEQ-v1.00",
+      "source": "Filter/PEQ-v1.00.ZDL",
+      "sha256": "c1f2614605c220128afd6864403ddb9e1d89cb50c2ebddeccb419f0b3b442f6f"
+    },
+    {
+      "gid": 2,
+      "fxid": 241,
+      "name": "RAINSEL-v1.10",
+      "source": "Filter/RAINSEL-v1.10.ZDL",
+      "sha256": "37b84c2ddf96107a9c8006fe1dbfb4018b2aca394bd85259093742e2841f2e2e"
+    },
+    {
+      "gid": 2,
+      "fxid": 96,
+      "name": "RESONS-v1.00",
+      "source": "Filter/RESONS-v1.00.ZDL",
+      "sha256": "f13aa3c108441fa1b113fb1c75c9837156b612841767f1f9004ac084c46261df"
+    },
+    {
+      "gid": 2,
+      "fxid": 192,
+      "name": "RNDMFLTR-1.00_GB1Xon",
+      "source": "Filter/RNDMFLTR-1.00_GB1Xon.ZDL",
+      "sha256": "41c16c5230eac4166254f7f756695ddf84a0b94bba377f2fcf21591178a52e8f"
+    },
+    {
+      "gid": 2,
+      "fxid": 192,
+      "name": "RNDMFLTR-v1.00",
+      "source": "Filter/RNDMFLTR-v1.00.ZDL",
+      "sha256": "41c16c5230eac4166254f7f756695ddf84a0b94bba377f2fcf21591178a52e8f"
+    },
+    {
+      "gid": 2,
+      "fxid": 497,
+      "name": "RTFM-v1.10",
+      "source": "Filter/RTFM-v1.10.ZDL",
+      "sha256": "7f4a7f6476aaa41e949b228aca69404ca1621d3aacca40caf01dd55902231d80"
+    },
+    {
+      "gid": 2,
+      "fxid": 176,
+      "name": "SEQFLTR-1.00_GB1Xon",
+      "source": "Filter/SEQFLTR-1.00_GB1Xon.ZDL",
+      "sha256": "ac24791cdfe3858027ce5cebbbabc2e728ff862ce85729794cdf58e370553de6"
+    },
+    {
+      "gid": 2,
+      "fxid": 176,
+      "name": "SEQFLTR-v1.00",
+      "source": "Filter/SEQFLTR-v1.00.ZDL",
+      "sha256": "ac24791cdfe3858027ce5cebbbabc2e728ff862ce85729794cdf58e370553de6"
+    },
+    {
+      "gid": 2,
+      "fxid": 128,
+      "name": "SLOWFLTR-v1.00",
+      "source": "Filter/SLOWFLTR-v1.00.ZDL",
+      "sha256": "90963258a396f80761dc4547c933267c79282762cf8c44fb057d2782b8a19e96"
+    },
+    {
+      "gid": 2,
+      "fxid": 40,
+      "name": "SPLITTER-1.00_GB1Xon",
+      "source": "Filter/SPLITTER-1.00_GB1Xon.ZDL",
+      "sha256": "a8e1f6c1ef86bbc2dc83b02cb90405e08b3ddc4d2eb2562308dd923a91b9bd51"
+    },
+    {
+      "gid": 2,
+      "fxid": 40,
+      "name": "SPLITTER-v1.00",
+      "source": "Filter/SPLITTER-v1.00.ZDL",
+      "sha256": "4210d331f44d4cc9f067ec82520a46654cf7b30833c40920f34bbcc9885bf802"
+    },
+    {
+      "gid": 2,
+      "fxid": 40,
+      "name": "SPLITTER-v1.01",
+      "source": "Filter/SPLITTER-v1.01.ZDL",
+      "sha256": "a8e1f6c1ef86bbc2dc83b02cb90405e08b3ddc4d2eb2562308dd923a91b9bd51"
+    },
+    {
+      "gid": 2,
+      "fxid": 256,
+      "name": "ST_B_GEQ-v1.00",
+      "source": "Filter/ST_B_GEQ-v1.00.ZDL",
+      "sha256": "327add4b11d41b27895fed2203cb3f2f341ed31fa98fc21eedcaaf2b036f45cd"
+    },
+    {
+      "gid": 2,
+      "fxid": 224,
+      "name": "ST_G_GEQ-v1.00",
+      "source": "Filter/ST_G_GEQ-v1.00.ZDL",
+      "sha256": "d121e52e325c6f0a8ca0fc320d9810513d397d12e6173804606a7f67e26ee37e"
+    },
+    {
+      "gid": 2,
+      "fxid": 160,
+      "name": "STEP-1.00_GB1Xon",
+      "source": "Filter/STEP-1.00_GB1Xon.ZDL",
+      "sha256": "e37093b7d0d0b0df64538e06d52171e38f070fbaf35182ce0cbebac5fc6871fc"
+    },
+    {
+      "gid": 2,
+      "fxid": 160,
+      "name": "STEP-v1.00",
+      "source": "Filter/STEP-v1.00.ZDL",
+      "sha256": "e37093b7d0d0b0df64538e06d52171e38f070fbaf35182ce0cbebac5fc6871fc"
+    },
+    {
+      "gid": 2,
+      "fxid": 136,
+      "name": "Z_TRON-1.00_GB1Xon",
+      "source": "Filter/Z_TRON-1.00_GB1Xon.ZDL",
+      "sha256": "7161ce047c5868b1db893a9bad4aa60f00942f43e50856e10e031e729fff7a04"
+    },
+    {
+      "gid": 2,
+      "fxid": 136,
+      "name": "Z_TRON-v1.00",
+      "source": "Filter/Z_TRON-v1.00.ZDL",
+      "sha256": "6fb3634a3b22cde6376d0afb09b6d609d92c5df9076a89d792d9615adb7f0eca"
+    },
+    {
+      "gid": 2,
+      "fxid": 136,
+      "name": "Z_TRON-v1.01",
+      "source": "Filter/Z_TRON-v1.01.ZDL",
+      "sha256": "7161ce047c5868b1db893a9bad4aa60f00942f43e50856e10e031e729fff7a04"
+    },
+    {
+      "gid": 6,
+      "fxid": 496,
+      "name": "ANA234CH-v1.00",
+      "source": "Modulation/ANA234CH-v1.00.ZDL",
+      "sha256": "dedf39cecd6b4c00e65ce805776d0c7605f0894ed4aa1b13eb9a600f57091b7b"
+    },
+    {
+      "gid": 6,
+      "fxid": 120,
+      "name": "B_CHORUS-1.00_GB1Xon",
+      "source": "Modulation/B_CHORUS-1.00_GB1Xon.ZDL",
+      "sha256": "3b871ce1a1efca45b7810696ccb6214f742c6e90c003dd4dd0bcc0db6ac4091f"
+    },
+    {
+      "gid": 6,
+      "fxid": 120,
+      "name": "B_CHORUS-v1.00",
+      "source": "Modulation/B_CHORUS-v1.00.ZDL",
+      "sha256": "77dffdf72ec396d2641d700af6c8d3d211b0983266d964cadf32cb4b2797c532"
+    },
+    {
+      "gid": 6,
+      "fxid": 120,
+      "name": "B_CHORUS-v1.01",
+      "source": "Modulation/B_CHORUS-v1.01.ZDL",
+      "sha256": "3b871ce1a1efca45b7810696ccb6214f742c6e90c003dd4dd0bcc0db6ac4091f"
+    },
+    {
+      "gid": 6,
+      "fxid": 136,
+      "name": "B_DETUNE-1.00_GB1Xon",
+      "source": "Modulation/B_DETUNE-1.00_GB1Xon.ZDL",
+      "sha256": "2596a3cdd78920520bf9706d3d1b99abeff8f644068bb28324c5ed7ea6553155"
+    },
+    {
+      "gid": 6,
+      "fxid": 136,
+      "name": "B_DETUNE-v1.00",
+      "source": "Modulation/B_DETUNE-v1.00.ZDL",
+      "sha256": "7f2679c55e9d5aa4ba3d4f2846e9833abea6de6b54614f47bb49d53da64d0479"
+    },
+    {
+      "gid": 6,
+      "fxid": 136,
+      "name": "B_DETUNE-v1.01",
+      "source": "Modulation/B_DETUNE-v1.01.ZDL",
+      "sha256": "2596a3cdd78920520bf9706d3d1b99abeff8f644068bb28324c5ed7ea6553155"
+    },
+    {
+      "gid": 6,
+      "fxid": 184,
+      "name": "B_ENSMBL-1.00_GB1Xon",
+      "source": "Modulation/B_ENSMBL-1.00_GB1Xon.ZDL",
+      "sha256": "ed47153304f9b21d7b445d2edbc68eaeddd6051ff2980e61af60d2c847f1b54e"
+    },
+    {
+      "gid": 6,
+      "fxid": 184,
+      "name": "B_ENSMBL-v1.00",
+      "source": "Modulation/B_ENSMBL-v1.00.ZDL",
+      "sha256": "4ecd943a378a77539347fa49045d09351d7f0a141903b725cd400867d19015b3"
+    },
+    {
+      "gid": 6,
+      "fxid": 184,
+      "name": "B_ENSMBL-v1.01",
+      "source": "Modulation/B_ENSMBL-v1.01.ZDL",
+      "sha256": "ed47153304f9b21d7b445d2edbc68eaeddd6051ff2980e61af60d2c847f1b54e"
+    },
+    {
+      "gid": 6,
+      "fxid": 232,
+      "name": "B_FLNGR-1.00_GB1Xon",
+      "source": "Modulation/B_FLNGR-1.00_GB1Xon.ZDL",
+      "sha256": "6ee232537b8d7035081c60219b4c6b8cfb6c7b3d3da2817359516ee07ca95b1f"
+    },
+    {
+      "gid": 6,
+      "fxid": 232,
+      "name": "B_FLNGR-v1.00",
+      "source": "Modulation/B_FLNGR-v1.00.ZDL",
+      "sha256": "e49f3ce868f064ebd67ee924bfba253ff6f80f5cc579ee2991ee123d89100335"
+    },
+    {
+      "gid": 6,
+      "fxid": 232,
+      "name": "B_FLNGR-v1.01",
+      "source": "Modulation/B_FLNGR-v1.01.ZDL",
+      "sha256": "6ee232537b8d7035081c60219b4c6b8cfb6c7b3d3da2817359516ee07ca95b1f"
+    },
+    {
+      "gid": 6,
+      "fxid": 280,
+      "name": "B_OCTAVE-1.00_GB1Xon",
+      "source": "Modulation/B_OCTAVE-1.00_GB1Xon.ZDL",
+      "sha256": "fce9523ced3166f5805236ee631529710e02630292f5a9872207f37494d7ee70"
+    },
+    {
+      "gid": 6,
+      "fxid": 280,
+      "name": "B_OCTAVE-v1.00",
+      "source": "Modulation/B_OCTAVE-v1.00.ZDL",
+      "sha256": "67d7c278897b3a75b4b97256c674d8a330b8b6930a777a10a503aba377f865d0"
+    },
+    {
+      "gid": 6,
+      "fxid": 280,
+      "name": "B_OCTAVE-v1.01",
+      "source": "Modulation/B_OCTAVE-v1.01.ZDL",
+      "sha256": "fce9523ced3166f5805236ee631529710e02630292f5a9872207f37494d7ee70"
+    },
+    {
+      "gid": 6,
+      "fxid": 312,
+      "name": "B_PITCH-1.00_GB1Xon",
+      "source": "Modulation/B_PITCH-1.00_GB1Xon.ZDL",
+      "sha256": "4bbfb2169da0a46d5044f786d10ecdfd518f40e86546314d94c14b09186dcd6c"
+    },
+    {
+      "gid": 6,
+      "fxid": 312,
+      "name": "B_PITCH-v1.00",
+      "source": "Modulation/B_PITCH-v1.00.ZDL",
+      "sha256": "1d97230f5098c2e5f030313a8f5bf4bc8cf96a018ef0f699eb96a5664bfcc0a3"
+    },
+    {
+      "gid": 6,
+      "fxid": 336,
+      "name": "BENDCHO-1.00_GB1Xon",
+      "source": "Modulation/BENDCHO-1.00_GB1Xon.ZDL",
+      "sha256": "3c267cdf9b7d4d9167127bbf96dadd5f1c1dd2a972dd8101d0f343e765a15535"
+    },
+    {
+      "gid": 6,
+      "fxid": 336,
+      "name": "BENDCHO-v1.00",
+      "source": "Modulation/BENDCHO-v1.00.ZDL",
+      "sha256": "3c267cdf9b7d4d9167127bbf96dadd5f1c1dd2a972dd8101d0f343e765a15535"
+    },
+    {
+      "gid": 6,
+      "fxid": 432,
+      "name": "BF_FLG_2-v1.00",
+      "source": "Modulation/BF_FLG_2-v1.00.ZDL",
+      "sha256": "88ae89602344362dd79d182eb333a1d90ed5fa659cf1cadada483c748bdd12a4"
+    },
+    {
+      "gid": 6,
+      "fxid": 384,
+      "name": "CE_CHO5-v1.00",
+      "source": "Modulation/CE_CHO5-v1.00.ZDL",
+      "sha256": "89e652592d8921264987b81d27e3f034f7a80babe452d643c3e7aa18dc7542ba"
+    },
+    {
+      "gid": 6,
+      "fxid": 112,
+      "name": "CHORUS-1.00_GB1Xon",
+      "source": "Modulation/CHORUS-1.00_GB1Xon.ZDL",
+      "sha256": "7ebcf4d6d53f796678ce1bcc71c481e97d8fb2de26d1d13a71d087eebb1edb31"
+    },
+    {
+      "gid": 6,
+      "fxid": 112,
+      "name": "CHORUS-v1.00",
+      "source": "Modulation/CHORUS-v1.00.ZDL",
+      "sha256": "7ebcf4d6d53f796678ce1bcc71c481e97d8fb2de26d1d13a71d087eebb1edb31"
+    },
+    {
+      "gid": 6,
+      "fxid": 400,
+      "name": "CLONECHO-v1.00",
+      "source": "Modulation/CLONECHO-v1.00.ZDL",
+      "sha256": "30c8e394c830dc1b135b9d269a3b17703a636109971ecb02d903c886570c2209"
+    },
+    {
+      "gid": 6,
+      "fxid": 480,
+      "name": "CRN_CHO-v1.00",
+      "source": "Modulation/CRN_CHO-v1.00.ZDL",
+      "sha256": "2d018e7c74a01603608b4d653f3494ae83defe217350c69850f2a9e92c9dcb1a"
+    },
+    {
+      "gid": 6,
+      "fxid": 512,
+      "name": "CRN_TRI-1.00_GB1Xon",
+      "source": "Modulation/CRN_TRI-1.00_GB1Xon.ZDL",
+      "sha256": "dd5f0b696f2a83e794fd3085f45b10b81d6a167527d1f75077f9a886468d20d7"
+    },
+    {
+      "gid": 6,
+      "fxid": 512,
+      "name": "CRN_TRI-v1.00",
+      "source": "Modulation/CRN_TRI-v1.00.ZDL",
+      "sha256": "ce8f303bd00129873de050bed812398d6fe15b9346ab108a9150c45269fd37ed"
+    },
+    {
+      "gid": 6,
+      "fxid": 128,
+      "name": "DETUNE-1.00_GB1Xon",
+      "source": "Modulation/DETUNE-1.00_GB1Xon.ZDL",
+      "sha256": "d77b269e4a1515dc842f03fb007198d1d5b8119a006ccb68443a83b2f3dcabcf"
+    },
+    {
+      "gid": 6,
+      "fxid": 128,
+      "name": "DETUNE-v1.00",
+      "source": "Modulation/DETUNE-v1.00.ZDL",
+      "sha256": "33b098a5b34b458e2d25da45c33b90b87a75731e082429f19f21e29bcacddf26"
+    },
+    {
+      "gid": 6,
+      "fxid": 53,
+      "name": "DUOPHASE-1.00_GB1Xon",
+      "source": "Modulation/DUOPHASE-1.00_GB1Xon.ZDL",
+      "sha256": "50e1083648d081b57351797afcf4dcd02dd8427204c6928817b938310aac29ea"
+    },
+    {
+      "gid": 6,
+      "fxid": 53,
+      "name": "DUOPHASE-v1.00",
+      "source": "Modulation/DUOPHASE-v1.00.ZDL",
+      "sha256": "50e1083648d081b57351797afcf4dcd02dd8427204c6928817b938310aac29ea"
+    },
+    {
+      "gid": 6,
+      "fxid": 16,
+      "name": "DUOTREM-v1.00",
+      "source": "Modulation/DUOTREM-v1.00.ZDL",
+      "sha256": "e5f6cc31a8c5611a68a4845b08eac1fe4aeda9672ad2686a48b9d9c7a650c5e6"
+    },
+    {
+      "gid": 6,
+      "fxid": 240,
+      "name": "DYNFLNGR-v1.00",
+      "source": "Modulation/DYNFLNGR-v1.00.ZDL",
+      "sha256": "71e8d9099c4253a0d2fd115a47206822494692c5927ce6eb67bd64dd84b2f3f9"
+    },
+    {
+      "gid": 6,
+      "fxid": 176,
+      "name": "ENSEMBLE-1.00_GB1Xon",
+      "source": "Modulation/ENSEMBLE-1.00_GB1Xon.ZDL",
+      "sha256": "db2aa9c7d56426298698181525c9d8c44fba6e594f3e86db342eccdbd15a9118"
+    },
+    {
+      "gid": 6,
+      "fxid": 176,
+      "name": "ENSEMBLE-v1.00",
+      "source": "Modulation/ENSEMBLE-v1.00.ZDL",
+      "sha256": "db2aa9c7d56426298698181525c9d8c44fba6e594f3e86db342eccdbd15a9118"
+    },
+    {
+      "gid": 6,
+      "fxid": 224,
+      "name": "FLANGER-1.00_GB1Xon",
+      "source": "Modulation/FLANGER-1.00_GB1Xon.ZDL",
+      "sha256": "098e90cec420b7ae7ba0eaae2e82fd647a6860bfa84168b423f840ebab885627"
+    },
+    {
+      "gid": 6,
+      "fxid": 224,
+      "name": "FLANGER-v1.00",
+      "source": "Modulation/FLANGER-v1.00.ZDL",
+      "sha256": "098e90cec420b7ae7ba0eaae2e82fd647a6860bfa84168b423f840ebab885627"
+    },
+    {
+      "gid": 6,
+      "fxid": 320,
+      "name": "HPS-1.00_GB1Xon",
+      "source": "Modulation/HPS-1.00_GB1Xon.ZDL",
+      "sha256": "a4aa42df6b404eeb4fbb3378996a33695a885431708c3fe6cbb4df9cd5876160"
+    },
+    {
+      "gid": 6,
+      "fxid": 320,
+      "name": "HPS-v1.00",
+      "source": "Modulation/HPS-v1.00.ZDL",
+      "sha256": "a8b4ed98709b2d116e9a7f86ee05aca6c442ed82a4b7878f812b2f715a7c7733"
+    },
+    {
+      "gid": 6,
+      "fxid": 464,
+      "name": "MIRAGECH-v1.00",
+      "source": "Modulation/MIRAGECH-v1.00.ZDL",
+      "sha256": "d346f06a957b3067e7390ea10a565f5fbf3c15059be3cfb65ea53dfa40464b62"
+    },
+    {
+      "gid": 6,
+      "fxid": 352,
+      "name": "MJROLLE-1.00_GB1Xon",
+      "source": "Modulation/MJROLLE-1.00_GB1Xon.ZDL",
+      "sha256": "2a77bdd6ed1f51c3b370f6baef5d2422549e525381db056770ca66c33976ea2b"
+    },
+    {
+      "gid": 6,
+      "fxid": 352,
+      "name": "MJROLLE-v1.00",
+      "source": "Modulation/MJROLLE-v1.00.ZDL",
+      "sha256": "2a77bdd6ed1f51c3b370f6baef5d2422549e525381db056770ca66c33976ea2b"
+    },
+    {
+      "gid": 6,
+      "fxid": 304,
+      "name": "MNPIT-1.00_GB1Xon",
+      "source": "Modulation/MNPIT-1.00_GB1Xon.ZDL",
+      "sha256": "28f1dfa26fc3d3593559d011178ca063c173474cfa86de61b573de70dab74f37"
+    },
+    {
+      "gid": 6,
+      "fxid": 304,
+      "name": "MNPIT-v1.00",
+      "source": "Modulation/MNPIT-v1.00.ZDL",
+      "sha256": "28f1dfa26fc3d3593559d011178ca063c173474cfa86de61b573de70dab74f37"
+    },
+    {
+      "gid": 6,
+      "fxid": 272,
+      "name": "OCTAVE-1.00_GB1Xon",
+      "source": "Modulation/OCTAVE-1.00_GB1Xon.ZDL",
+      "sha256": "08f4ee240771277ac09f898e5363d0757135019c009608fa20db4e62710929a8"
+    },
+    {
+      "gid": 6,
+      "fxid": 272,
+      "name": "OCTAVE-v1.00",
+      "source": "Modulation/OCTAVE-v1.00.ZDL",
+      "sha256": "08f4ee240771277ac09f898e5363d0757135019c009608fa20db4e62710929a8"
+    },
+    {
+      "gid": 6,
+      "fxid": 48,
+      "name": "PHASER-1.00_GB1Xon",
+      "source": "Modulation/PHASER-1.00_GB1Xon.ZDL",
+      "sha256": "092e878aeac018195c72af172f19d07a408ce90978e8d033a1afdf5fe832e29f"
+    },
+    {
+      "gid": 6,
+      "fxid": 48,
+      "name": "PHASER-v1.00",
+      "source": "Modulation/PHASER-v1.00.ZDL",
+      "sha256": "69d83050367442806baff4361ac3ddf1878caefc94c0d11cbffa9e29e1bb37f4"
+    },
+    {
+      "gid": 6,
+      "fxid": 288,
+      "name": "PTCHSHFT-1.00_GB1Xon",
+      "source": "Modulation/PTCHSHFT-1.00_GB1Xon.ZDL",
+      "sha256": "babd97f7ed3dad1faa97d6f147cbd3875cf9e4a263e67e6a0992d928f4b078f5"
+    },
+    {
+      "gid": 6,
+      "fxid": 288,
+      "name": "PTCHSHFT-v1.00",
+      "source": "Modulation/PTCHSHFT-v1.00.ZDL",
+      "sha256": "babd97f7ed3dad1faa97d6f147cbd3875cf9e4a263e67e6a0992d928f4b078f5"
+    },
+    {
+      "gid": 6,
+      "fxid": 368,
+      "name": "RINGMOD-1.00_GB1Xon",
+      "source": "Modulation/RINGMOD-1.00_GB1Xon.ZDL",
+      "sha256": "a15cc89821415431509bde90ede4c5af52926c1269ac3387d78ddc3bccdbd17d"
+    },
+    {
+      "gid": 6,
+      "fxid": 368,
+      "name": "RINGMOD-v1.00",
+      "source": "Modulation/RINGMOD-v1.00.ZDL",
+      "sha256": "a15cc89821415431509bde90ede4c5af52926c1269ac3387d78ddc3bccdbd17d"
+    },
+    {
+      "gid": 6,
+      "fxid": 448,
+      "name": "SILKYCHO-v1.00",
+      "source": "Modulation/SILKYCHO-v1.00.ZDL",
+      "sha256": "48eafe5ad5e5c5f2c9090ebb9758776068398eb7fc202f36accdd205bff1b7da"
+    },
+    {
+      "gid": 6,
+      "fxid": 32,
+      "name": "SLICER-1.00_GB1Xon",
+      "source": "Modulation/SLICER-1.00_GB1Xon.ZDL",
+      "sha256": "daec9fc3cdb21d134d940531a5f9279a44469adad6fb366d1009a3d08f408d24"
+    },
+    {
+      "gid": 6,
+      "fxid": 32,
+      "name": "SLICER-v1.00",
+      "source": "Modulation/SLICER-v1.00.ZDL",
+      "sha256": "daec9fc3cdb21d134d940531a5f9279a44469adad6fb366d1009a3d08f408d24"
+    },
+    {
+      "gid": 6,
+      "fxid": 160,
+      "name": "STCHO-1.00_GB1Xon",
+      "source": "Modulation/STCHO-1.00_GB1Xon.ZDL",
+      "sha256": "2e08df3de9c51caf7c22414a9f5b3b3c1eaf16d25f05a2f795c00b677c9d39b4"
+    },
+    {
+      "gid": 6,
+      "fxid": 160,
+      "name": "STCHO-v1.00",
+      "source": "Modulation/STCHO-v1.00.ZDL",
+      "sha256": "2e08df3de9c51caf7c22414a9f5b3b3c1eaf16d25f05a2f795c00b677c9d39b4"
+    },
+    {
+      "gid": 6,
+      "fxid": 416,
+      "name": "STONEPHA-v1.00",
+      "source": "Modulation/STONEPHA-v1.00.ZDL",
+      "sha256": "92d1c607c367df45f359c58477159f3af8c74456528f9bd486d8a42a9d49cf63"
+    },
+    {
+      "gid": 6,
+      "fxid": 208,
+      "name": "SUPERCHO-1.00_GB1Xon",
+      "source": "Modulation/SUPERCHO-1.00_GB1Xon.ZDL",
+      "sha256": "91168e91b4546db36b03eb47b92fe4291ea4e7181bee1f6e45254308bed2b36c"
+    },
+    {
+      "gid": 6,
+      "fxid": 208,
+      "name": "SUPERCHO-v1.00",
+      "source": "Modulation/SUPERCHO-v1.00.ZDL",
+      "sha256": "08ba84fcdb7f289877fd27c23f2a34fc4e5016ecc609020e4d20eae6cb061413"
+    },
+    {
+      "gid": 6,
+      "fxid": 64,
+      "name": "THEVIBE-1.00_GB1Xon",
+      "source": "Modulation/THEVIBE-1.00_GB1Xon.ZDL",
+      "sha256": "b3abda00e4eb95bcee5df725e44fe4a2a653a2c3ed71bd31b6145725b1597238"
+    },
+    {
+      "gid": 6,
+      "fxid": 64,
+      "name": "THEVIBE-v1.00",
+      "source": "Modulation/THEVIBE-v1.00.ZDL",
+      "sha256": "3ddd1e69d66a95602a426e0602a1f56dd2ac7031d928dbd0eb83b0844208425d"
+    },
+    {
+      "gid": 6,
+      "fxid": 8,
+      "name": "TREMOLO-1.00_GB1Xon",
+      "source": "Modulation/TREMOLO-1.00_GB1Xon.ZDL",
+      "sha256": "7e15c47009e60c195e76f6424ede841ffa581fb766474bfd14a73294bb2c0b0c"
+    },
+    {
+      "gid": 6,
+      "fxid": 8,
+      "name": "TREMOLO-v1.00",
+      "source": "Modulation/TREMOLO-v1.00.ZDL",
+      "sha256": "7e15c47009e60c195e76f6424ede841ffa581fb766474bfd14a73294bb2c0b0c"
+    },
+    {
+      "gid": 6,
+      "fxid": 256,
+      "name": "VIBRATO-1.00_GB1Xon",
+      "source": "Modulation/VIBRATO-1.00_GB1Xon.ZDL",
+      "sha256": "ba5c098d58fdccef3bc3cef8ee693bc5f5f65381728bc93046af440b74f4edac"
+    },
+    {
+      "gid": 6,
+      "fxid": 256,
+      "name": "VIBRATO-v1.00",
+      "source": "Modulation/VIBRATO-v1.00.ZDL",
+      "sha256": "c0e723f76f2737c390ee365619abcf914451140c030e11bcc8327ff8eb928781"
+    },
+    {
+      "gid": 6,
+      "fxid": 216,
+      "name": "VINFLNGR-1.00_GB1Xon",
+      "source": "Modulation/VINFLNGR-1.00_GB1Xon.ZDL",
+      "sha256": "f1fdd123f69fa2ecf0c6839e6eb1401bb1285e70705df92e9f9fa145b0048c5d"
+    },
+    {
+      "gid": 6,
+      "fxid": 216,
+      "name": "VINFLNGR-v1.00",
+      "source": "Modulation/VINFLNGR-v1.00.ZDL",
+      "sha256": "f1fdd123f69fa2ecf0c6839e6eb1401bb1285e70705df92e9f9fa145b0048c5d"
+    },
+    {
+      "gid": 6,
+      "fxid": 144,
+      "name": "VTGCE-v1.00",
+      "source": "Modulation/VTGCE-v1.00.ZDL",
+      "sha256": "95204a8f5fc53df801382f4605ad9c11cd77e5dae7630cf93371926de1d972fb"
+    },
+    {
+      "gid": 6,
+      "fxid": 58,
+      "name": "WRPPHASE-1.00_GB1Xon",
+      "source": "Modulation/WRPPHASE-1.00_GB1Xon.ZDL",
+      "sha256": "d2a9493ba87bb46a5d751936eb2347ab77963c9eb5aba1f4661be7eacd6df6e9"
+    },
+    {
+      "gid": 6,
+      "fxid": 58,
+      "name": "WRPPHASE-v1.00",
+      "source": "Modulation/WRPPHASE-v1.00.ZDL",
+      "sha256": "d2a9493ba87bb46a5d751936eb2347ab77963c9eb5aba1f4661be7eacd6df6e9"
+    },
+    {
+      "gid": 11,
+      "fxid": 144,
+      "name": "B_PDLMNP-1.00_GB1Xon",
+      "source": "Pedal/B_PDLMNP-1.00_GB1Xon.ZDL",
+      "sha256": "23be5ee2f1045dde6cf9c85e1d4d96e5a11c9e558d2191d8d8a2aee16b7976e7"
+    },
+    {
+      "gid": 11,
+      "fxid": 144,
+      "name": "B_PDLMNP-v1.00",
+      "source": "Pedal/B_PDLMNP-v1.00.ZDL",
+      "sha256": "23be5ee2f1045dde6cf9c85e1d4d96e5a11c9e558d2191d8d8a2aee16b7976e7"
+    },
+    {
+      "gid": 11,
+      "fxid": 128,
+      "name": "B_PDLPIT-1.00_GB1Xon",
+      "source": "Pedal/B_PDLPIT-1.00_GB1Xon.ZDL",
+      "sha256": "52ff3c77f6149b3eb7b95316a568d2d8363c112e001c2bc79eb0641b48892148"
+    },
+    {
+      "gid": 11,
+      "fxid": 128,
+      "name": "B_PDLPIT-v1.00",
+      "source": "Pedal/B_PDLPIT-v1.00.ZDL",
+      "sha256": "52ff3c77f6149b3eb7b95316a568d2d8363c112e001c2bc79eb0641b48892148"
+    },
+    {
+      "gid": 11,
+      "fxid": 112,
+      "name": "PDL_RESO-1.00_GB1Xon",
+      "source": "Pedal/PDL_RESO-1.00_GB1Xon.ZDL",
+      "sha256": "c9bb72bdf40e946ae1a6fc1885f1b40fe3fd5c948b82bb4bc3ad121cd2d029b5"
+    },
+    {
+      "gid": 11,
+      "fxid": 112,
+      "name": "PDL_RESO-v1.00",
+      "source": "Pedal/PDL_RESO-v1.00.ZDL",
+      "sha256": "c9bb72bdf40e946ae1a6fc1885f1b40fe3fd5c948b82bb4bc3ad121cd2d029b5"
+    },
+    {
+      "gid": 11,
+      "fxid": 16,
+      "name": "PEDALCRY-1.00_GB1Xon",
+      "source": "Pedal/PEDALCRY-1.00_GB1Xon.ZDL",
+      "sha256": "a69d626cae2f67e2647245892cad801b7ea803d78f681ca26782f224b23e6133"
+    },
+    {
+      "gid": 11,
+      "fxid": 16,
+      "name": "PEDALCRY-v1.00",
+      "source": "Pedal/PEDALCRY-v1.00.ZDL",
+      "sha256": "a69d626cae2f67e2647245892cad801b7ea803d78f681ca26782f224b23e6133"
+    },
+    {
+      "gid": 11,
+      "fxid": 80,
+      "name": "PEDALMNP-1.00_GB1Xon",
+      "source": "Pedal/PEDALMNP-1.00_GB1Xon.ZDL",
+      "sha256": "803551f1fe06e1c081738fbdd2b19b1882d4cbec1084a784bbb64fc1642eb7aa"
+    },
+    {
+      "gid": 11,
+      "fxid": 80,
+      "name": "PEDALMNP-v1.00",
+      "source": "Pedal/PEDALMNP-v1.00.ZDL",
+      "sha256": "803551f1fe06e1c081738fbdd2b19b1882d4cbec1084a784bbb64fc1642eb7aa"
+    },
+    {
+      "gid": 11,
+      "fxid": 64,
+      "name": "PEDALPIT-1.00_GB1Xon",
+      "source": "Pedal/PEDALPIT-1.00_GB1Xon.ZDL",
+      "sha256": "eabd37bc784b079fcf1bf62f2d760e27ae03ceb58df4804480b31450827b726a"
+    },
+    {
+      "gid": 11,
+      "fxid": 64,
+      "name": "PEDALPIT-v1.00",
+      "source": "Pedal/PEDALPIT-v1.00.ZDL",
+      "sha256": "eabd37bc784b079fcf1bf62f2d760e27ae03ceb58df4804480b31450827b726a"
+    },
+    {
+      "gid": 11,
+      "fxid": 32,
+      "name": "PEDALVX-1.00_GB1Xon",
+      "source": "Pedal/PEDALVX-1.00_GB1Xon.ZDL",
+      "sha256": "e1d6dc68ef43f61a2ff9951b3e11faff8bf86f5d95a54f465f99036f0c8d9898"
+    },
+    {
+      "gid": 11,
+      "fxid": 32,
+      "name": "PEDALVX-v1.00",
+      "source": "Pedal/PEDALVX-v1.00.ZDL",
+      "sha256": "e1d6dc68ef43f61a2ff9951b3e11faff8bf86f5d95a54f465f99036f0c8d9898"
+    },
+    {
+      "gid": 11,
+      "fxid": 96,
+      "name": "PEDALWAH-1.00_GB1Xon",
+      "source": "Pedal/PEDALWAH-1.00_GB1Xon.ZDL",
+      "sha256": "09adcb84bc85940301e9e38971184404c95a9486608deb526ca615c14ab6214b"
+    },
+    {
+      "gid": 11,
+      "fxid": 96,
+      "name": "PEDALWAH-v1.00",
+      "source": "Pedal/PEDALWAH-v1.00.ZDL",
+      "sha256": "09adcb84bc85940301e9e38971184404c95a9486608deb526ca615c14ab6214b"
+    },
+    {
+      "gid": 11,
+      "fxid": 48,
+      "name": "WH100-1.00_GB1Xon",
+      "source": "Pedal/WH100-1.00_GB1Xon.ZDL",
+      "sha256": "6b9c6f03e8893f49645e72cc97c7114ea20b184051a82e22029a84da847890c5"
+    },
+    {
+      "gid": 11,
+      "fxid": 48,
+      "name": "WH100-v1.00",
+      "source": "Pedal/WH100-v1.00.ZDL",
+      "sha256": "6b9c6f03e8893f49645e72cc97c7114ea20b184051a82e22029a84da847890c5"
+    },
+    {
+      "gid": 9,
+      "fxid": 112,
+      "name": "AIR-1.00_GB1Xon",
+      "source": "Reverb/AIR-1.00_GB1Xon.ZDL",
+      "sha256": "2321ce73bcd86827bd52139a31cbae17e805ba26219b8ec13165de19a740ef1d"
+    },
+    {
+      "gid": 9,
+      "fxid": 112,
+      "name": "AIR-v1.00",
+      "source": "Reverb/AIR-v1.00.ZDL",
+      "sha256": "2321ce73bcd86827bd52139a31cbae17e805ba26219b8ec13165de19a740ef1d"
+    },
+    {
+      "gid": 9,
+      "fxid": 272,
+      "name": "AMBIENCE-v1.00",
+      "source": "Reverb/AMBIENCE-v1.00.ZDL",
+      "sha256": "1d8a1938448d409a933450073507b5aafcf4a49a04f5693971f5a71d9c5a9996"
+    },
+    {
+      "gid": 9,
+      "fxid": 80,
+      "name": "ARENA-1.00_GB1Xon",
+      "source": "Reverb/ARENA-1.00_GB1Xon.ZDL",
+      "sha256": "d0b35965350d7450d9778bfb7ee1417f836417258b7c50c22092d0435ea66876"
+    },
+    {
+      "gid": 9,
+      "fxid": 80,
+      "name": "ARENA-v1.00",
+      "source": "Reverb/ARENA-v1.00.ZDL",
+      "sha256": "bee9a3924e7bea4c53f13848b67c1434eb9baa971d601c699303d156626f8822"
+    },
+    {
+      "gid": 9,
+      "fxid": 256,
+      "name": "CAVE-v1.00",
+      "source": "Reverb/CAVE-v1.00.ZDL",
+      "sha256": "a0ad0a3d95011609ba896719e6ebcd4c1edab188a3676c9a8e8faabef3df1e7d"
+    },
+    {
+      "gid": 9,
+      "fxid": 208,
+      "name": "CHAMBER-v1.00",
+      "source": "Reverb/CHAMBER-v1.00.ZDL",
+      "sha256": "86223d6845af19f78ac8f9d9ef5dab4f41e4a0499f199a4aaa5c5ae2604b3744"
+    },
+    {
+      "gid": 9,
+      "fxid": 240,
+      "name": "CHURCH-v1.00",
+      "source": "Reverb/CHURCH-v1.00.ZDL",
+      "sha256": "4676ddcf97a685a25877f6670d8ecc3e1830afe5e4601ce1b6d69c70165e02d0"
+    },
+    {
+      "gid": 9,
+      "fxid": 448,
+      "name": "DUAL_REV-v1.00",
+      "source": "Reverb/DUAL_REV-v1.00.ZDL",
+      "sha256": "a960a2f67659cb328f70e115458079a55b9c15d7f5e4fda3f035af58c6e5282f"
+    },
+    {
+      "gid": 9,
+      "fxid": 368,
+      "name": "DYNAREV-v1.00",
+      "source": "Reverb/DYNAREV-v1.00.ZDL",
+      "sha256": "9734a2f52161c144e324a377dd0c9ee9979aadf08d449ba02689305242b70cc2"
+    },
+    {
+      "gid": 9,
+      "fxid": 96,
+      "name": "EARLYREF-1.00_GB1Xon",
+      "source": "Reverb/EARLYREF-1.00_GB1Xon.ZDL",
+      "sha256": "98268f730f73b96308f7f047b58d428aa32b52fa586d179fe761f56e22a724c5"
+    },
+    {
+      "gid": 9,
+      "fxid": 96,
+      "name": "EARLYREF-v1.00",
+      "source": "Reverb/EARLYREF-v1.00.ZDL",
+      "sha256": "8ddfafbaf7b3fcbb554dd5ab17b1864225c49f6249418b9d126dc5ae66519216"
+    },
+    {
+      "gid": 9,
+      "fxid": 320,
+      "name": "ECHO-v1.00",
+      "source": "Reverb/ECHO-v1.00.ZDL",
+      "sha256": "fea3c96dc73c699240d24c69079ec50581559f7eb09153f4453ffdf029ac983a"
+    },
+    {
+      "gid": 9,
+      "fxid": 288,
+      "name": "GATE_REV-v1.00",
+      "source": "Reverb/GATE_REV-v1.00.ZDL",
+      "sha256": "769f969d73b2b0ebcf1692508547787b163ec308c1440c3d1b958dad5ee30474"
+    },
+    {
+      "gid": 9,
+      "fxid": 16,
+      "name": "HALL-1.00_GB1Xon",
+      "source": "Reverb/HALL-1.00_GB1Xon.ZDL",
+      "sha256": "a4f1ae2bdfdb259b7040d55f589c1a3dfcfda205b8a53b70a8dda2056d9b48c4"
+    },
+    {
+      "gid": 9,
+      "fxid": 16,
+      "name": "HALL-v1.00",
+      "source": "Reverb/HALL-v1.00.ZDL",
+      "sha256": "582183cee351340d049ce40f2ff40eca81c97daab749dcf8d828a8f1fa828422"
+    },
+    {
+      "gid": 9,
+      "fxid": 12,
+      "name": "HD_REV-v1.00",
+      "source": "Reverb/HD_REV-v1.00.ZDL",
+      "sha256": "e38943b9798915789ff7c5b165bd99714231a28671a7f229db608722bc301f6a"
+    },
+    {
+      "gid": 9,
+      "fxid": 8,
+      "name": "HDHALL-1.00_GB1Xon",
+      "source": "Reverb/HDHALL-1.00_GB1Xon.ZDL",
+      "sha256": "7dcc42ad4ace4bf2fdc20f863f3612a36d444f36b0f93cb84810f5a651ec86ea"
+    },
+    {
+      "gid": 9,
+      "fxid": 8,
+      "name": "HDHALL-v1.00",
+      "source": "Reverb/HDHALL-v1.00.ZDL",
+      "sha256": "ce4a28c93a6b7440b25e60ffee3dd53a3d7cf7df051291dcd71224e63ecc8d4f"
+    },
+    {
+      "gid": 9,
+      "fxid": 352,
+      "name": "HolyFLRB-v1.00",
+      "source": "Reverb/HolyFLRB-v1.00.ZDL",
+      "sha256": "5c708b320370a96d1db8903007bbc9713c04d9d1d017ebd34ea108baa36a7320"
+    },
+    {
+      "gid": 9,
+      "fxid": 224,
+      "name": "LOFI_REV-v1.00",
+      "source": "Reverb/LOFI_REV-v1.00.ZDL",
+      "sha256": "014101e042f804412f04284946d32f87bc9e0c5616f3cbf81d1713b51c027bbe"
+    },
+    {
+      "gid": 9,
+      "fxid": 432,
+      "name": "MNGLD_SP-v1.00",
+      "source": "Reverb/MNGLD_SP-v1.00.ZDL",
+      "sha256": "cdd06f4b8509a678aca715e0d639661e9105a3676dfc37959de589feccb3eaf3"
+    },
+    {
+      "gid": 9,
+      "fxid": 160,
+      "name": "MODREV-1.00_GB1Xon",
+      "source": "Reverb/MODREV-1.00_GB1Xon.ZDL",
+      "sha256": "eae5d030f1c9a985f5720744d543c9395ce86ed93d2700386204a87446248be4"
+    },
+    {
+      "gid": 9,
+      "fxid": 160,
+      "name": "MODREV-v1.00",
+      "source": "Reverb/MODREV-v1.00.ZDL",
+      "sha256": "73786a002342fbe6d786e6a5b60286f37a6f6eb16fa4dce3c8a62b07545900c4"
+    },
+    {
+      "gid": 9,
+      "fxid": 480,
+      "name": "PARA_REV-v1.00",
+      "source": "Reverb/PARA_REV-v1.00.ZDL",
+      "sha256": "c44aa58390ed6f89d7059bfa74ba3e960601d474e2c468aa00746392dc5c5edb"
+    },
+    {
+      "gid": 9,
+      "fxid": 400,
+      "name": "PARTICLE-1.00_GB1Xon",
+      "source": "Reverb/PARTICLE-1.00_GB1Xon.ZDL",
+      "sha256": "f6e17eac58416859ae26c908d7017c468451596fbe4b574937f0061351b7d8a2"
+    },
+    {
+      "gid": 9,
+      "fxid": 400,
+      "name": "PARTICLE-v1.00",
+      "source": "Reverb/PARTICLE-v1.00.ZDL",
+      "sha256": "8bdf6670fa68c85ae7a99054fa6f33c7b0502c0d0de18f529e5c74a609c408b9"
+    },
+    {
+      "gid": 9,
+      "fxid": 144,
+      "name": "PLATE-1.00_GB1Xon",
+      "source": "Reverb/PLATE-1.00_GB1Xon.ZDL",
+      "sha256": "b49f6fdc0437a0f7771fd08dd01710a3b686a6a83d2ac720bb65926babbf3834"
+    },
+    {
+      "gid": 9,
+      "fxid": 144,
+      "name": "PLATE-v1.00",
+      "source": "Reverb/PLATE-v1.00.ZDL",
+      "sha256": "1b8cfeccd324606e7bebe656eef239f12e54ce0f76ddf3fd11dea051e80585e5"
+    },
+    {
+      "gid": 9,
+      "fxid": 32,
+      "name": "ROOM-1.00_GB1Xon",
+      "source": "Reverb/ROOM-1.00_GB1Xon.ZDL",
+      "sha256": "a64bbeec10cc9c9e15139a5ddb47c88435ffbfc769a981e8a44f55e59ddc8f63"
+    },
+    {
+      "gid": 9,
+      "fxid": 32,
+      "name": "ROOM-v1.00",
+      "source": "Reverb/ROOM-v1.00.ZDL",
+      "sha256": "a64bbeec10cc9c9e15139a5ddb47c88435ffbfc769a981e8a44f55e59ddc8f63"
+    },
+    {
+      "gid": 9,
+      "fxid": 464,
+      "name": "ROUGHVER-v1.00",
+      "source": "Reverb/ROUGHVER-v1.00.ZDL",
+      "sha256": "c05f1d805874047eb8d94ec2fcc12a348a4a1d0018aeef9bfc2141b87c84db0b"
+    },
+    {
+      "gid": 9,
+      "fxid": 304,
+      "name": "RVS_REV-v1.00",
+      "source": "Reverb/RVS_REV-v1.00.ZDL",
+      "sha256": "b78c643026232f7a68214a718608907519cdbac32fa5995d4105666c5bb2f89a"
+    },
+    {
+      "gid": 9,
+      "fxid": 384,
+      "name": "SHIMMER-v1.00",
+      "source": "Reverb/SHIMMER-v1.00.ZDL",
+      "sha256": "f1c4b122c09cb812a4508a74810ce93aa960a0560b1d4e6d4ccc92b5c299c256"
+    },
+    {
+      "gid": 9,
+      "fxid": 176,
+      "name": "SLAPBACK-1.00_GB1Xon",
+      "source": "Reverb/SLAPBACK-1.00_GB1Xon.ZDL",
+      "sha256": "16176698026f5b15bbd2c37578e27167c0b19f5de30227ccdcf05f9cd19be45b"
+    },
+    {
+      "gid": 9,
+      "fxid": 176,
+      "name": "SLAPBACK-v1.00",
+      "source": "Reverb/SLAPBACK-v1.00.ZDL",
+      "sha256": "e9d0b487c9aba202d7437dd3fa810a26cb6323867c0e2cfd889811733057ed87"
+    },
+    {
+      "gid": 9,
+      "fxid": 176,
+      "name": "SLAPBACK-v1.01",
+      "source": "Reverb/SLAPBACK-v1.01.ZDL",
+      "sha256": "16176698026f5b15bbd2c37578e27167c0b19f5de30227ccdcf05f9cd19be45b"
+    },
+    {
+      "gid": 9,
+      "fxid": 416,
+      "name": "SPC_HOLE-v1.00",
+      "source": "Reverb/SPC_HOLE-v1.00.ZDL",
+      "sha256": "7a4fdcf8c5a370e40cffff14298a51accd3b537c05b4db626330a4ffe30c64e2"
+    },
+    {
+      "gid": 9,
+      "fxid": 64,
+      "name": "SPRING-v1.00",
+      "source": "Reverb/SPRING-v1.00.ZDL",
+      "sha256": "49d7ce90607e3f192b4a2a1813c027881adf108eb0c20e9e69d8cc95b3edf0f6"
+    },
+    {
+      "gid": 9,
+      "fxid": 192,
+      "name": "SPRING63-1.00_GB1Xon",
+      "source": "Reverb/SPRING63-1.00_GB1Xon.ZDL",
+      "sha256": "1868695b947eef66378a67f8f9a5dd75f9ee3f5f50a6d33b367698b85d57d8a6"
+    },
+    {
+      "gid": 9,
+      "fxid": 192,
+      "name": "SPRING63-v1.00",
+      "source": "Reverb/SPRING63-v1.00.ZDL",
+      "sha256": "cc12d31b3f9fa75e21ebfdd944a87b456b5c8b4a3d21937fa9863f3e9188833e"
+    },
+    {
+      "gid": 9,
+      "fxid": 48,
+      "name": "TLDROOM-1.00_GB1Xon",
+      "source": "Reverb/TLDROOM-1.00_GB1Xon.ZDL",
+      "sha256": "e5cdbc08f777b1a0b97d4a297dbeace137e0fb07966063605f6de321d8fad9c1"
+    },
+    {
+      "gid": 9,
+      "fxid": 48,
+      "name": "TLDROOM-v1.00",
+      "source": "Reverb/TLDROOM-v1.00.ZDL",
+      "sha256": "ceb759b8f98241ef426ab1e4401423f45a6cff08daf174f44a4ab66fe6a3907c"
+    },
+    {
+      "gid": 9,
+      "fxid": 336,
+      "name": "TREM_REV-v1.00",
+      "source": "Reverb/TREM_REV-v1.00.ZDL",
+      "sha256": "ea3fd479d3c684f4a13292cdfc225e5c2531175499f61a3dc27a14da787d34c6"
+    },
+    {
+      "gid": 7,
+      "fxid": 208,
+      "name": "4V_SYN-1.00_GB1Xon",
+      "source": "SFX/4V_SYN-1.00_GB1Xon.ZDL",
+      "sha256": "c1b17e6dc83e727fd4e4f218fd566a7cc4a5364dea112054287882d48d4350a9"
+    },
+    {
+      "gid": 7,
+      "fxid": 208,
+      "name": "4V_SYN-v1.00",
+      "source": "SFX/4V_SYN-v1.00.ZDL",
+      "sha256": "c1b17e6dc83e727fd4e4f218fd566a7cc4a5364dea112054287882d48d4350a9"
+    },
+    {
+      "gid": 7,
+      "fxid": 80,
+      "name": "AUTOPAN-1.00_GB1Xon",
+      "source": "SFX/AUTOPAN-1.00_GB1Xon.ZDL",
+      "sha256": "567414480bda4e74599880ebdffa87e25e700db8873b547e461ae04bbf757820"
+    },
+    {
+      "gid": 7,
+      "fxid": 80,
+      "name": "AUTOPAN-v1.00",
+      "source": "SFX/AUTOPAN-v1.00.ZDL",
+      "sha256": "1fd6da0523ae2def27e3d28591d54304d12f9718dea189823c26b9d28307f766"
+    },
+    {
+      "gid": 7,
+      "fxid": 56,
+      "name": "B_SYNTH-1.00_GB1Xon",
+      "source": "SFX/B_SYNTH-1.00_GB1Xon.ZDL",
+      "sha256": "8e1b61b68b427644113ba60d83316b731a54e510fc71c132105b9814a7eb135e"
+    },
+    {
+      "gid": 7,
+      "fxid": 56,
+      "name": "B_SYNTH-v1.00",
+      "source": "SFX/B_SYNTH-v1.00.ZDL",
+      "sha256": "8e1b61b68b427644113ba60d83316b731a54e510fc71c132105b9814a7eb135e"
+    },
+    {
+      "gid": 7,
+      "fxid": 16,
+      "name": "BITCRUSH-1.00_GB1Xon",
+      "source": "SFX/BITCRUSH-1.00_GB1Xon.ZDL",
+      "sha256": "6b323bd609ca7af0502868ad9c47f45ec2cb2d07d0f112d434176d8c00e87409"
+    },
+    {
+      "gid": 7,
+      "fxid": 16,
+      "name": "BITCRUSH-v1.00",
+      "source": "SFX/BITCRUSH-v1.00.ZDL",
+      "sha256": "6b323bd609ca7af0502868ad9c47f45ec2cb2d07d0f112d434176d8c00e87409"
+    },
+    {
+      "gid": 7,
+      "fxid": 32,
+      "name": "BOMBER-1.00_GB1Xon",
+      "source": "SFX/BOMBER-1.00_GB1Xon.ZDL",
+      "sha256": "76a5ad4187f3fd1648652e6121b0815d3b6cb56fe23faa2f00fc9ef57a276242"
+    },
+    {
+      "gid": 7,
+      "fxid": 32,
+      "name": "BOMBER-v1.00",
+      "source": "SFX/BOMBER-v1.00.ZDL",
+      "sha256": "76a5ad4187f3fd1648652e6121b0815d3b6cb56fe23faa2f00fc9ef57a276242"
+    },
+    {
+      "gid": 7,
+      "fxid": 160,
+      "name": "DEFRET-1.00_GB1Xon",
+      "source": "SFX/DEFRET-1.00_GB1Xon.ZDL",
+      "sha256": "1f5c46726160edc3ef3506db6b80088ab83baf585169149b87852a6f26ca41ba"
+    },
+    {
+      "gid": 7,
+      "fxid": 160,
+      "name": "DEFRET-v1.00",
+      "source": "SFX/DEFRET-v1.00.ZDL",
+      "sha256": "1f5c46726160edc3ef3506db6b80088ab83baf585169149b87852a6f26ca41ba"
+    },
+    {
+      "gid": 7,
+      "fxid": 48,
+      "name": "MONOSYN-v1.00",
+      "source": "SFX/MONOSYN-v1.00.ZDL",
+      "sha256": "d9177aab4001727b6392d8d6220efd074387ad661e8bcf036eda1028c7a1ecc0"
+    },
+    {
+      "gid": 7,
+      "fxid": 96,
+      "name": "RTCLOSET-1.00_GB1Xon",
+      "source": "SFX/RTCLOSET-1.00_GB1Xon.ZDL",
+      "sha256": "6877445269b4de927f1bcfcf15338c6dffe2a45821ffdb8900c4cd0c863c9e4f"
+    },
+    {
+      "gid": 7,
+      "fxid": 96,
+      "name": "RTCLOSET-v1.00",
+      "source": "SFX/RTCLOSET-v1.00.ZDL",
+      "sha256": "33d276901ed225f68da990c6ccadb47d56186a611ca323f253241b5a23ef4511"
+    },
+    {
+      "gid": 7,
+      "fxid": 112,
+      "name": "STDSYN-1.00_GB1Xon",
+      "source": "SFX/STDSYN-1.00_GB1Xon.ZDL",
+      "sha256": "fa31014fc8b3f518a4019d74ae3dcc0bf298372666f752e11d19dbb4e4f6b559"
+    },
+    {
+      "gid": 7,
+      "fxid": 112,
+      "name": "STDSYN-v1.00",
+      "source": "SFX/STDSYN-v1.00.ZDL",
+      "sha256": "fa31014fc8b3f518a4019d74ae3dcc0bf298372666f752e11d19dbb4e4f6b559"
+    },
+    {
+      "gid": 7,
+      "fxid": 128,
+      "name": "SYNTLK-1.00_GB1Xon",
+      "source": "SFX/SYNTLK-1.00_GB1Xon.ZDL",
+      "sha256": "f75b39faaff47bc6b6a5183bb482546f6255f276d2c93bab25dee407d0ae3106"
+    },
+    {
+      "gid": 7,
+      "fxid": 128,
+      "name": "SYNTLK-v1.00",
+      "source": "SFX/SYNTLK-v1.00.ZDL",
+      "sha256": "f75b39faaff47bc6b6a5183bb482546f6255f276d2c93bab25dee407d0ae3106"
+    },
+    {
+      "gid": 7,
+      "fxid": 192,
+      "name": "V_SYN-1.00_GB1Xon",
+      "source": "SFX/V_SYN-1.00_GB1Xon.ZDL",
+      "sha256": "637e0f479554f48c26d64c0c6747f52c46974a7e9048a9bb5d4e49c2bea3d6b9"
+    },
+    {
+      "gid": 7,
+      "fxid": 192,
+      "name": "V_SYN-v1.00",
+      "source": "SFX/V_SYN-v1.00.ZDL",
+      "sha256": "637e0f479554f48c26d64c0c6747f52c46974a7e9048a9bb5d4e49c2bea3d6b9"
+    },
+    {
+      "gid": 7,
+      "fxid": 64,
+      "name": "Z_ORGAN-1.00_GB1Xon",
+      "source": "SFX/Z_ORGAN-1.00_GB1Xon.ZDL",
+      "sha256": "c3594d2e219d216bbe968733dce8975157dc4983a9b7482932f84ae6572a6c82"
+    },
+    {
+      "gid": 7,
+      "fxid": 64,
+      "name": "Z_ORGAN-v1.00",
+      "source": "SFX/Z_ORGAN-v1.00.ZDL",
+      "sha256": "c3594d2e219d216bbe968733dce8975157dc4983a9b7482932f84ae6572a6c82"
+    },
+    {
+      "gid": 7,
+      "fxid": 144,
+      "name": "Z_SYN-1.00_GB1Xon",
+      "source": "SFX/Z_SYN-1.00_GB1Xon.ZDL",
+      "sha256": "9f3d05118d0063be78d4447ac9cfc3fdd5667addf3e45771a5d26d55a1870065"
+    },
+    {
+      "gid": 7,
+      "fxid": 144,
+      "name": "Z_SYN-v1.00",
+      "source": "SFX/Z_SYN-v1.00.ZDL",
+      "sha256": "9f3d05118d0063be78d4447ac9cfc3fdd5667addf3e45771a5d26d55a1870065"
+    }
+  ]
+}

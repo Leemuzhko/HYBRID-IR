@@ -37,7 +37,7 @@ class ZoomPanel(ttk.Frame):
         settings=ttk.Frame(self);settings.grid(row=1,column=1,sticky='nsew')
         settings.columnconfigure(1,weight=1)
         for row,(key,label) in enumerate([('name','Display name'),('filename','ZDL basename'),('fxid','Effect ID'),
-                                           ('image','Card PNG'),('stock_folder','Stock ZDL folder'),('patched_folder','Patched folder')]):
+                                           ('image','Card PNG'),('patched_folder','ZEM custom ZDL folder')]):
             ttk.Label(settings,text=label).grid(row=row,column=0,sticky='w',padx=(0,8),pady=2)
             v=tk.StringVar(value=str(getattr(self.project,key)));self.variables[key]=v
             v.trace_add('write',lambda *_:self.mark_dirty())
@@ -181,10 +181,14 @@ class ZoomPanel(ttk.Frame):
         if not patch and os.environ.get('HYBRIDIR_ZDL_ENABLED') == '0':
             raise ValueError('ZDL building is disabled in this Trainer-only installation. Run full setup in a new folder.')
         self.sync();report=self.estimate()
+        if not self.project.patched_folder:
+            folder=filedialog.askdirectory(parent=self,title='Select the custom ZDL folder used by Zoom Effect Manager')
+            if not folder:return
+            self.project.patched_folder=folder;self.variables['patched_folder'].set(folder)
         conflicts=[e for e in catalog_entries(self.project) if (e['gid'],e['fxid'])==(self.project.gid,self.project.fxid)]
         replace_identity=False
         if conflicts:
-            if all(e['name']==self.project.name for e in conflicts):
+            if all(e['name']==self.project.name and not e.get('reserved') for e in conflicts):
                 if not messagebox.askyesno('Existing effect identity','This name and ID already exist. Build a replacement? Catalog files are not modified.',parent=self):return
                 replace_identity=True
             else:

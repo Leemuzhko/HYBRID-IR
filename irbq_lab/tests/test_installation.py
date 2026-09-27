@@ -2,6 +2,7 @@
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -20,6 +21,67 @@ installer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(installer)
 
 class TestInstallation(unittest.TestCase):
+    def test_standard_install_records_owned_files_and_uninstalls(self):
+        uninstall_path=installer_path.with_name('uninstaller.py')
+        with tempfile.TemporaryDirectory() as td:
+            source=Path(td)/'source';source.mkdir();destination=Path(td)/'installed'
+            for name in ('installer.py','launch.py','requirements-zoom-lock.txt'):
+                (source/name).write_bytes(b'fixture')
+            (source/'uninstaller.py').write_bytes(uninstall_path.read_bytes())
+            entries=[dict(path=p.name,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in source.iterdir()]
+            (source/'PUBLICATION_MANIFEST.json').write_text(json.dumps(dict(schema='hybridir-publication/1',files=entries)))
+            def make_venv(_self,path):
+                path=Path(path);path.mkdir();(path/'owned.txt').write_bytes(b'private environment')
+            with patch.object(installer.venv.EnvBuilder,'create',make_venv),patch.object(installer.subprocess,'run'),patch.object(installer,'create_desktop_shortcut') as shortcut:
+                installer.install(source,destination,full=False)
+                shortcut.assert_not_called()
+            self.assertTrue((destination/'Uninstall_HYBRIDIR.cmd').is_file())
+            spec=importlib.util.spec_from_file_location('installed_uninstall_test',destination/'uninstaller.py')
+            uninstaller=importlib.util.module_from_spec(spec);spec.loader.exec_module(uninstaller)
+            result=uninstaller.uninstall(destination)
+            self.assertFalse(result['errors']);self.assertFalse(destination.exists())
+            self.assertTrue((source/'uninstaller.py').exists())
+
+    @unittest.skipUnless(os.name=='nt','Windows shortcut')
+    def test_shortcut_real_com_and_existing_preserved(self):
+        with tempfile.TemporaryDirectory(prefix="hybrid space ' тест ") as td:
+            root=Path(td);app=root/'app';desktop=root/'desktop';desktop.mkdir()
+            for relative in ('.venv/Scripts/pythonw.exe','launch.py','assets/zoom-ms70cdr.ico'):
+                path=app/relative;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(b'fixture')
+            installer.create_desktop_shortcut(app,desktop)
+            link=desktop/'HYBRID IR.lnk'
+            before=link.read_bytes();self.assertGreater(len(before),100)
+            script=r'''[Console]::OutputEncoding = [Text.UTF8Encoding]::new(); $s = New-Object -ComObject WScript.Shell; $l = $s.CreateShortcut($env:HYBRID_TEST_LINK); @{target=$l.TargetPath; arguments=$l.Arguments; icon=$l.IconLocation; cwd=$l.WorkingDirectory} | ConvertTo-Json -Compress'''
+            result=installer.subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',
+                installer.base64.b64encode(script.encode('utf-16le')).decode('ascii')],
+                env={**os.environ,'HYBRID_TEST_LINK':str(link)},capture_output=True,check=True,timeout=30,
+                creationflags=installer.subprocess.CREATE_NO_WINDOW)
+            props=json.loads(result.stdout.decode('utf-8-sig'))
+            self.assertEqual(Path(props['target']),app/'.venv/Scripts/pythonw.exe')
+            self.assertEqual(props['arguments'],f'-B -X utf8 "{app / "launch.py"}"')
+            self.assertEqual(Path(props['cwd']),app)
+            self.assertEqual(props['icon'],str(app/'assets/zoom-ms70cdr.ico')+',0')
+            with self.assertRaises(installer.subprocess.CalledProcessError):
+                installer.create_desktop_shortcut(app,desktop)
+            self.assertEqual(link.read_bytes(),before)
+
+    @unittest.skipUnless(os.name=='nt','Windows GUI')
+    def test_setup_developer_visibility(self):
+        import tkinter as tk
+        from tkinter import ttk
+        def inspect(root):
+            root.withdraw()
+            widgets=list(root.winfo_children()[0].winfo_children())
+            labels={str(w.cget('text')):w for w in widgets if isinstance(w,(ttk.Label,ttk.Checkbutton))}
+            field=labels['TI C6000 compiler folder']
+            self.assertEqual(field.winfo_manager(),'')
+            toggle=next(w for label,w in labels.items() if label.startswith('Developer:'))
+            toggle.invoke();self.assertEqual(field.winfo_manager(),'grid')
+            toggle.invoke();self.assertEqual(field.winfo_manager(),'')
+            self.assertIn('Create a desktop shortcut',labels)
+            root.destroy()
+        with patch.object(tk.Tk,'mainloop',inspect):installer.main()
+
     def manifest(self, root, name='payload.txt', digest=None):
         (root/'PUBLICATION_MANIFEST.json').write_text(json.dumps({
             'schema':'hybridir-publication/1', 'files':[{

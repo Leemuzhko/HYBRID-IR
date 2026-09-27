@@ -2,6 +2,7 @@
 from __future__ import annotations
 import copy
 import csv
+import sys
 import json
 import queue
 import threading
@@ -139,6 +140,8 @@ class BaseApp(tk.Tk):
 
     def __init__(self):
         super().__init__()
+        icon=Path(__file__).resolve().parents[2]/'assets/zoom-ms70cdr.ico'
+        if sys.platform=='win32' and icon.is_file():self.iconbitmap(str(icon))
         self.title(_(f'IRBQ Lab {__version__} — Cabinet IR / FIR + Biquad'))
         self.geometry('1440x970')
         self.minsize(1060, 760)

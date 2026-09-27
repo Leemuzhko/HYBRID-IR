@@ -9,14 +9,44 @@ with your own bank, slot names, effect name, ID and card image. This builder
 targets the HYBRID IR effect; it does not turn arbitrary stock effects into
 IR loaders. Primary hardware target: Zoom MS-70CDR, firmware 2.10.
 
+## What is HYBRID IR, and why use it?
+
+A cabinet impulse response (IR) describes how a cabinet/microphone setup
+filters a signal. A conventional IR loader reproduces that response using
+convolution with the stored samples. Longer direct FIR filters require more
+work per audio sample, which matters on a pedal with a limited DSP budget.
+
+HYBRID IR combines a **FIR filter** with a **chain of biquad (IIR) filters**.
+The idea is to let efficient biquads reproduce part of the cabinet's response,
+leaving a shorter FIR to handle the remaining detail. This can offer a useful
+accuracy/CPU trade-off instead of spending the whole budget on a long FIR.
+Savings depend on FIR length, biquad count and the other effects in the chain;
+there is no universal performance or sound-equivalence guarantee.
+
+The desktop **IRBQ Trainer** fits this model to your WAV, lets you compare
+responses and audition the result, and exports the prepared model. “Training”
+here means numerical filter fitting on the computer, not a neural network
+running in the pedal. The **ZDL Patcher** packages your selected models into
+one effect with selectable slots. The pedal runs the prepared filters and
+provides routing, output level, presence and resonance controls.
+
+This is useful when you want your own cabinet sounds alongside an amp effect
+on a resource-limited MultiStomp. A fitted hybrid model is an **approximation**:
+matching a magnitude response does not alone establish identical phase,
+transients or sound. Compare and listen before exporting, then test the pedal
+chain. This is cabinet filtering, not an amp/distortion model or a claim that
+all long IRs can be replaced transparently. Importing a WAV directly into a
+bank does not automatically perform hybrid fitting; prepare it in Trainer first
+when you want that trade-off.
+
 ## Download — experimental Windows distribution
 
-[Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/255a300f96a70b20c3d87e0a38daf1bbbfc95ecc.zip)
+[Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/codex/initial-trainer-sdk.zip)
 
-This pinned snapshot includes the source, `.cmd` installer, dependencies list
+This development snapshot includes the source, `.cmd` installer, dependencies list
 and precompiled HYBRID4 template. It is a **source-based distribution, not a
-standalone EXE**, and contains no commercial cabinet IRs. The link stays on
-the initial patcher version (`255a300`); it does not track development changes.
+standalone EXE**, and contains no commercial cabinet IRs. The link follows
+the experimental development branch. Keep your downloaded archive for reproducibility.
 While the repository is private, sign in to a GitHub account with repository
 access before downloading. A 404 can mean that access is missing.
 
@@ -43,12 +73,14 @@ modify arbitrary ZDL effects or upload anything to the pedal.
 2. Download the ZIP above, use **Extract All**, and open the extracted folder
    containing `Install_HYBRIDIR.cmd`. Do not launch it from inside the ZIP.
 3. Double-click **Install_HYBRIDIR.cmd** and choose a new installation folder.
-   Leave **Developer: enable TI compilation** unchecked and leave the TI and
-   stock-folder fields empty. Click **Install** and wait for completion.
+   Leave **Developer: enable TI compilation** unchecked; TI and donor fields
+   only appear when enabled. Select **Create a desktop shortcut** if desired
+   (enabled by default). Click **Install** and wait for completion.
    Internet is needed to download Python packages from PyPI into the app's
    private environment; HYBRID IR itself does not require administrator rights.
 4. Open **Start_HYBRIDIR.cmd** in the installation folder, not the ZIP folder.
-   You can make a desktop shortcut to it. Source files and notices remain
+   Or use the **HYBRID IR** desktop shortcut with the supplied pedal icon.
+   An existing shortcut is preserved, not overwritten. Source files and notices remain
    accessible in the installation.
 
 If setup fails, check `installation.log` in the destination when present.
@@ -66,6 +98,42 @@ During a ZDL build, wait for completion before closing the application.
 
 The installer is a source/Tk setup wizard launched by `.cmd`, not a standalone
 signed `.exe`. Python remains a first-time prerequisite; TI is optional.
+
+## Uninstall
+
+Run **Uninstall_HYBRIDIR.cmd** from the installation folder. It uses system
+Python 3.14, not the private environment being removed. Close the application
+first, review the file counts, and confirm removal. No Windows Installed apps
+entry is registered in this version.
+
+The uninstaller removes recorded application files, its private `.venv` and
+`.test-cache`, and the unchanged desktop shortcut it created. New personal
+files and modified application sources are preserved. Do not store personal
+files inside the private environment/cache directories. If files are preserved,
+the installation folder remains and the result dialog says so. Shared IRBQ Lab
+language/theme settings are removed only if you tick the separate checkbox;
+it is off by default. ZEM folders and exported effects outside the installation
+are never deleted. A custom `IRBQ_SETTINGS_PATH` is left untouched.
+
+If a locked file prevents removal, close the application and retry. Older
+installations without an uninstall receipt cannot use this uninstaller: do not
+copy it into an old installation and guess ownership. Use the manual fallback:
+
+1. Close HYBRID IR and wait for any training/export operation to finish.
+2. Move any personal WAVs, models, bank projects and exported ZDLs stored inside
+   the installation folder to a safe location.
+3. Delete only the folder you selected when installing HYBRID IR. It contains
+   the application and its private `.venv` environment. Do not delete a parent
+   folder containing other applications or documents.
+4. Delete the **HYBRID IR** desktop shortcut if you created one.
+5. Optionally remove `%APPDATA%\IRBQ_Lab\settings.json` to reset language/theme
+   preferences. This file is shared with other IRBQ Lab installations; keep it
+   if you still use one. A custom `IRBQ_SETTINGS_PATH` overrides that location.
+
+Do not uninstall system Python or TI merely to remove this app; other programs
+may use them. Leave your Zoom Effect Manager custom-effects folder and its ZDLs
+untouched. Removing the desktop app does not remove an effect already installed
+on the pedal; manage pedal effects separately in Zoom Effect Manager.
 
 ## Stock files: developer setup only
 
@@ -87,7 +155,10 @@ The exact recipes and hashes are in `hybridir_sdk/sdk/runtime_setup.py`.
 1. Load your WAV in Trainer and fit the response, or open a prepared Trainer model.
 2. Open **Zoom ZDL**. Use **Current model** or import Trainer JSON exports;
    arrange the bank and set the slot labels, effect name and ID.
-3. Select your stock/Patched folders for ID-conflict checks. Resolve any
+3. Select **ZEM custom ZDL folder**: the same folder you configured in Zoom
+   Effect Manager to read custom effects, not necessarily your export folder.
+   Bundled reserved IDs are always checked; no stock ZDL folder is needed.
+   Resolve any
    conflict before exporting, then save the bank project for later editing.
 4. Click **Patch ZDL (no TI)** and choose an output folder. **Build ZDL** is the
    optional developer compiler path, not the button needed for normal use.
@@ -112,6 +183,18 @@ page instructs. Back up your presets first and do not disconnect USB or power
 during writing. Installing a file does not establish its DSP/RAM safety.
 
 English/dark is the default; language and theme controls are in the toolbar.
+
+The custom folder is scanned recursively by ZDL header identity (GID + FXID),
+not filename. It is saved with the bank project. The output folder is chosen
+separately; exporting elsewhere does not add the effect to ZEM's folder automatically.
+Reserved identities cannot be replaced, even with a matching name. Custom
+same-name/ID replacements require confirmation; conflicting names get a free-ID
+suggestion. The bundled catalog is a collection snapshot, not a live inventory
+of the pedal or a guarantee against future IDs.
+It reserves 255 identities from 450 ZEM original-effect files, including the
+bundled Other effects RainSel, RTFM and Div0 (stored under Filter in that collection).
+Source filenames and SHA-256 hashes are retained in `irbq_lab/irbq/stock_ids.json`;
+no donor ZDL files are bundled with the catalog.
 
 The experimental HYBRID4 template accepts 1–4 active slots plus OFF, at most
 2048 FIR taps per slot, a shared pool of 4096 distinct Q15 taps (identical FIRs
