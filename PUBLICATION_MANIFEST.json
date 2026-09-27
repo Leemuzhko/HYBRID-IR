@@ -51,6 +51,10 @@
   ],
   "files": [
     {
+      "path": ".github/FUNDING.yml",
+      "sha256": "9007410eb0fe57ffbbc3306ba0650fb8a8fe3a3636886e8f697bb72f5faf6fd5"
+    },
+    {
       "path": ".gitignore",
       "sha256": "bbd8d67f8a2ef1e063ab8d207a6d8fa79b33d797d345f5e4337ce3696ceb5eda"
     },
@@ -288,11 +292,11 @@
     },
     {
       "path": "README.md",
-      "sha256": "eb2716f8a7a2244bf1bf3781aa90761d9866153691ea953e1e868861f42bc356"
+      "sha256": "e03bd9104469263085796b450bef0371723d36617c8f23cf55add8059d32a257"
     },
     {
       "path": "README.ru.md",
-      "sha256": "96efd6c3c5174610905c724916f99f81470d3df313a08052468787a910055025"
+      "sha256": "544773c0103ba07c6e8864915e3a4dedba51438ee6071a65003211bf4bc17ba4"
     },
     {
       "path": "requirements-zoom-lock.txt",
