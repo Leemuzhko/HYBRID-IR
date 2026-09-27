@@ -1,0 +1,2 @@
+"""IRBQ Lab: offline impulse response / biquad authoring."""
+__version__ = '0.3.1'

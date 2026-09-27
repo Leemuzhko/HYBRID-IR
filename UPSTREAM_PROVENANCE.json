@@ -1,0 +1,38 @@
+{
+  "schema": "hybridir-upstream-provenance/1",
+  "verified_on": "2026-09-27",
+  "upstream": "https://github.com/repeat98/ZoomMultistompZDL",
+  "reference_commit": "4ec75eea32971f4cb7c76d96e2020908888dbfc2",
+  "license_evidence": "README.md#license: Repository code is MIT unless a file says otherwise.",
+  "source_files": [
+    {
+      "local": "hybridir_sdk/build/linker.py",
+      "upstream": "build/linker.py",
+      "upstream_sha256": "2e4e6f1057f4c8fa649cbf1167930afd2081f1b77bd5f9b34b060c8402d5bbae",
+      "comparison": "modified derivative; line SequenceMatcher ratio 0.886"
+    },
+    {
+      "local": "hybridir_sdk/build/screen_image.py",
+      "upstream": "build/screen_image.py",
+      "upstream_sha256": "708aab08ad7fadba2203246b32003fdb9306076837b0f4708df6564c236a52f2",
+      "comparison": "modified derivative; line SequenceMatcher ratio 0.879"
+    },
+    {
+      "local": "hybridir_sdk/build/zdl.py",
+      "upstream": "build/zdl.py",
+      "upstream_sha256": "acb7ffdfbafe59b94f64d3d7b7c1b8606ce527f333849250a24fb32b1436668b",
+      "comparison": "identical text after splitting lines",
+      "secondary_credit": "EffectType.java in Barsik-Barbosik/Zoom-Firmware-Editor; retained upstream MIT notice"
+    }
+  ],
+  "project_research_history": {
+    "repository": "https://github.com/Leemuzhko/ZoomMultistompZDL",
+    "sdk_smoke_headers_build_pipeline": "f4030cf",
+    "portable_ti_toolchain_discovery": "bcf94ad",
+    "author_recorded_in_local_history": "Leemuzhko"
+  },
+  "included_stock_derived_material": [{"file": "hybridir_sdk/build/linker.py", "symbol": "_DLL_WORDS", "bytes": 200, "source": "NoiseGate Dll entry function", "evidence": "Upstream comment and history; donor byte comparison not performed in this review", "license_scope": "Third-party material; not covered by the project's MIT declaration"}],
+  "compiled_template": {"file": "hybridir_sdk/templates/HYBRID4.zdl", "bank": "synthetic unit impulses", "contains_inherited_stock_runtime": true, "purpose": "interoperability and reverse-engineering research", "hardware_validated": false},
+  "excluded": ["three separate stock-derived .bin files (not embedded code in the template)", "TI compiler distribution", "commercial IRs and fitted models"],
+  "scope": "Source provenance and upstream license declaration; not a blanket license for vendor firmware or runtime data."
+}
