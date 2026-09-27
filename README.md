@@ -91,9 +91,25 @@ The exact recipes and hashes are in `hybridir_sdk/sdk/runtime_setup.py`.
    conflict before exporting, then save the bank project for later editing.
 4. Click **Patch ZDL (no TI)** and choose an output folder. **Build ZDL** is the
    optional developer compiler path, not the button needed for normal use.
-5. Keep the generated `.patch.json` report alongside the `.zdl`. Use Zoom
-   Effect Manager separately to transfer the effect and test it on your pedal.
+5. Keep the generated `.patch.json` report alongside the `.zdl`. Install the
+   effect using **Zoom Effect Manager**, as described below, then test it on the pedal.
    The app does not flash devices.
+
+## Install the ZDL on the pedal — Zoom Effect Manager required
+
+Use [Zoom Effect Manager (download)](https://zoomeffectmanager.com/en/download/)
+to install the generated HYBRID IR `.zdl` on the pedal. This is the required
+transfer tool for the workflow documented here, not an optional part of Trainer.
+Trainer/Patcher only creates the file; its installer installs the desktop app,
+not the effect on the pedal. Zoom Effect Manager is a separate third-party tool.
+
+Use version **2.3.3 or newer** for reading custom ZDL files from a folder;
+the project's release notes introduce that feature in 2.3.3. Put your generated
+ZDL in a dedicated folder and use the manager's folder-loading feature, then
+follow its instructions for your pedal model to write the effect. Connect the
+pedal before starting the manager and restart it after writing, as its download
+page instructs. Back up your presets first and do not disconnect USB or power
+during writing. Installing a file does not establish its DSP/RAM safety.
 
 English/dark is the default; language and theme controls are in the toolbar.
 
