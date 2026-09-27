@@ -5,17 +5,51 @@ with your own bank, slot names, effect name, ID and card image. This builder
 targets the HYBRID IR effect; it does not turn arbitrary stock effects into
 IR loaders. Primary hardware target: Zoom MS-70CDR, firmware 2.10.
 
+## Download — experimental Windows distribution
+
+[Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/255a300f96a70b20c3d87e0a38daf1bbbfc95ecc.zip)
+
+This pinned snapshot includes the source, `.cmd` installer, dependencies list
+and precompiled HYBRID4 template. It is a **source-based distribution, not a
+standalone EXE**, and contains no commercial cabinet IRs. The link stays on
+the initial patcher version (`255a300`); it does not track development changes.
+While the repository is private, sign in to a GitHub account with repository
+access before downloading. A 404 can mean that access is missing.
+
+The fixed template is experimental and still needs a fresh pedal test.
+Do not treat this download as a hardware-validated release.
+
+## What the patcher does
+
+Trainer fits your cabinet response; the integrated **Zoom ZDL** tab assembles
+the resulting models into a HYBRID IR effect. **Patch ZDL (no TI)** writes the
+bank and supported metadata into the bundled, verified template without
+recompiling DSP code. You do not need the TI compiler or stock donor files.
+
+You can select the bank contents, rename slots and the effect, choose its ID,
+and supply a compatible card bitmap. The patcher validates template identity
+and capacity before writing a `.zdl` and a `.patch.json` report. It does not
+modify arbitrary ZDL effects or upload anything to the pedal.
+
 ## Install on Windows
 
-1. Install official **64-bit Python 3.14 with Tcl/Tk**. If it is missing,
-   `Install_HYBRIDIR.cmd` opens the Python download page.
-2. Extract this archive and double-click **Install_HYBRIDIR.cmd**. Choose a new
-   installation folder. Leave the **Developer** option unchecked; no compiler
-   or stock files are needed for the template patcher.
-   Click **Install**. Internet is used to install Python packages into a private
-   environment; no administrator privileges are required for HYBRID IR.
-3. Start **Start_HYBRIDIR.cmd** in the installed folder. A shortcut to this file
-   can be placed on your desktop. Source files and notices remain accessible.
+1. Install [official 64-bit Python 3.14](https://www.python.org/downloads/windows/)
+   with **Tcl/Tk** and the **Python launcher** (`py`). If Python is missing,
+   `Install_HYBRIDIR.cmd` opens the download page; it does not install Python.
+2. Download the ZIP above, use **Extract All**, and open the extracted folder
+   containing `Install_HYBRIDIR.cmd`. Do not launch it from inside the ZIP.
+3. Double-click **Install_HYBRIDIR.cmd** and choose a new installation folder.
+   Leave **Developer: enable TI compilation** unchecked and leave the TI and
+   stock-folder fields empty. Click **Install** and wait for completion.
+   Internet is needed to download Python packages from PyPI into the app's
+   private environment; HYBRID IR itself does not require administrator rights.
+4. Open **Start_HYBRIDIR.cmd** in the installation folder, not the ZIP folder.
+   You can make a desktop shortcut to it. Source files and notices remain
+   accessible in the installation.
+
+If setup fails, check `installation.log` in the destination when present.
+Retry in a **new folder**: this installer does not update or overwrite existing
+installations. Keep exported models and bank projects before changing versions.
 
 For developer compilation only, install [TI C6000 CGT 8.5.0.LTS](https://www.ti.com/tool/C6000-CGT)
 and select the Developer checkbox, compiler folder and stock folder in Setup.
@@ -46,10 +80,17 @@ The exact recipes and hashes are in `hybridir_sdk/sdk/runtime_setup.py`.
 
 ## Everyday workflow
 
-Load your WAV in Trainer, fit the response and export a model. In the **Zoom**
-tab, use **Current model** or import Trainer JSON exports, assemble the bank,
-choose the name/ID, and click **Patch ZDL (no TI)**. Use Zoom Effect Manager separately
-to transfer the resulting effect to the pedal. The app does not flash devices.
+1. Load your WAV in Trainer and fit the response, or open a prepared Trainer model.
+2. Open **Zoom ZDL**. Use **Current model** or import Trainer JSON exports;
+   arrange the bank and set the slot labels, effect name and ID.
+3. Select your stock/Patched folders for ID-conflict checks. Resolve any
+   conflict before exporting, then save the bank project for later editing.
+4. Click **Patch ZDL (no TI)** and choose an output folder. **Build ZDL** is the
+   optional developer compiler path, not the button needed for normal use.
+5. Keep the generated `.patch.json` report alongside the `.zdl`. Use Zoom
+   Effect Manager separately to transfer the effect and test it on your pedal.
+   The app does not flash devices.
+
 English/dark is the default; language and theme controls are in the toolbar.
 
 The experimental HYBRID4 template accepts 1–4 active slots plus OFF, at most
