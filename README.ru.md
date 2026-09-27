@@ -1,15 +1,29 @@
-# HYBRID IR
+<p align="center">
+  <img src="assets/IR_CAB-1200x800.png" width="240" alt="HYBRID IR — карточка двухканального кабинетного эффекта">
+</p>
+<h1 align="center">HYBRID IR</h1>
+<p align="center"><strong>Ваш кабинет. Внутри вашего Zoom.</strong><br>
+Подготовка импульсов, гибридная FIR/IIR-аппроксимация и сборка собственных ZDL.</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Desktop-Windows-2563eb?style=flat-square" alt="Программа для Windows">
+  <img src="https://img.shields.io/badge/DSP-FIR_%2B_IIR-475569?style=flat-square" alt="DSP: FIR + IIR">
+  <img src="https://img.shields.io/badge/Patcher-No_TI_compiler-475569?style=flat-square" alt="Патчер без компилятора TI">
+  <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Экспериментальная версия">
+</p>
+<p align="center"><a href="README.md">English</a> · <strong>Русский</strong> · <a href="README.uk.md">Українська</a></p>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip">Скачать для Windows</a></h3>
+<p align="center"><a href="#installation">Установка</a> · <a href="#workflow">Создать первый эффект</a> · <a href="https://ko-fi.com/leemuzhko">Поддержать на Ko-fi</a></p>
+<p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
+<sub>Линейка устройств проекта. Аппаратная проверка зависит от модели и банка; ограничения — ниже.</sub></p>
 
-[English](README.md) | Русский
-
-[Поддержать HYBRID IR на Ko-fi](https://ko-fi.com/leemuzhko)
-
-![Карточка HYBRID IR с регуляторами левого и правого каналов](assets/IR_CAB-1200x800.png)
+---
 
 Подготовьте импульс кабинета в IRBQ Trainer и создайте эффект HYBRID IR ZDL
 со своим банком, названиями слотов, именем эффекта, ID и графикой карточки.
 Инструмент предназначен для HYBRID IR: он не превращает произвольный штатный
-эффект в IR-загрузчик. Основная целевая педаль — Zoom MS-70CDR с прошивкой 2.10.
+эффект в IR-загрузчик. Аппаратный ориентир описанных тестов прототипов — Zoom
+MS-70CDR с прошивкой 2.10. Перечень моделей выше не означает аппаратной проверки
+каждой модели и каждого созданного банка.
 
 ## Что такое HYBRID IR и зачем он нужен?
 
@@ -43,12 +57,12 @@ HYBRID IR сочетает **FIR-фильтр** и **цепочку биквад
 
 ## Скачать — экспериментальный дистрибутив для Windows
 
-[Скачать Trainer + ZDL Patcher для Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/codex/initial-trainer-sdk.zip)
+[Скачать Trainer + ZDL Patcher для Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip)
 
 Архив содержит исходники, установщик `.cmd`, список зависимостей и готовый
 шаблон HYBRID4. Это **дистрибутив на основе исходников, а не автономный EXE**.
 Коммерческие импульсы кабинетов в него не входят. Ссылка ведёт на текущую
-экспериментальную ветку разработки. Сохраняйте скачанный архив, чтобы можно
+ветку main, а не на версионированный релиз. Сохраняйте скачанный архив, чтобы можно
 было воспроизвести результат именно этой версии.
 Пока репозиторий приватный, для скачивания нужно войти в GitHub под аккаунтом
 с доступом к нему. Ошибка 404 может означать отсутствие доступа.
@@ -67,6 +81,8 @@ Trainer подгоняет модель под АЧХ вашего кабине�
 совместимое изображение карточки. Перед созданием `.zdl` и отчёта `.patch.json`
 патчер проверяет подлинность ожидаемого шаблона по хешу и вместимость банка.
 Он не изменяет произвольные ZDL и ничего не загружает в педаль.
+
+<a id="installation"></a>
 
 ## Установка в Windows
 
@@ -155,6 +171,8 @@ SHA-256. Подойдёт и локальная папка с уже извле�
 но скомпилированный шаблон содержит унаследованный штатный код. Несовместимые
 доноры отклоняются без угадывания смещений. Рецепты извлечения и хеши находятся
 в `hybridir_sdk/sdk/runtime_setup.py`.
+
+<a id="workflow"></a>
 
 ## Подготовка своего эффекта
 
