@@ -22,7 +22,7 @@ from .project import Session, export_model, import_models
 from .audio import Player, render_ab
 from . import __version__
 from .i18n import tr as _, trf as _tf, ChoiceVar, DisplayVar
-from .ui_theme import theme_widgets
+from .ui_theme import theme_widgets, theme_axes
 PLOTS = ['АЧХ', 'ΔАЧХ: модель − эталон', 'ФЧХ: без выравнивания', 'ΔФЧХ: относительно эталона', 'Групповая задержка', 'Импульс', 'BQ по секциям', 'Комплексная разность Hmodel − Href']
 PRESET = {'LowShelf + Resonance + Mid + Presence': False, 'LowCut + Resonance + Mid + Presence': True}
 MODE_NAMES = {'Попарно + совместный polish': 'pairs', 'Все BQ + FIR совместно': 'joint', 'Только BQ (с текущим состоянием FIR)': 'bq'}
@@ -411,7 +411,9 @@ class BaseApp(tk.Tk):
             self.player.stop()
             self.audio_render = None
             self.ax.clear()
-            self.ax.text(0.5, 0.5, 'Новый WAV — нажмите «Подготовить IR»', ha='center', transform=self.ax.transAxes)
+            self.ax.text(0.5, 0.5, _('Новый WAV — нажмите «Подготовить IR»'), ha='center', transform=self.ax.transAxes)
+            if hasattr(self, 'colors'):
+                theme_axes(self.figure, self.ax, self.colors)
             self.canvas.draw_idle()
             self.log('Открыт ' + str(p))
             self.status.set('Настройте подготовку и нажмите «Подготовить IR».')
