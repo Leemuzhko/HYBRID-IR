@@ -55,6 +55,10 @@
       "sha256": "bbd8d67f8a2ef1e063ab8d207a6d8fa79b33d797d345f5e4337ce3696ceb5eda"
     },
     {
+      "path": "assets/IR_CAB-1200x800.png",
+      "sha256": "f5b21c41c794d3de6c05fede13199e4366a28151cb2106acd43bf3d17039874a"
+    },
+    {
       "path": "hybridir_sdk/build/linker.py",
       "sha256": "3c7904673675ade2d6c8d6cb4c83e5a8f836889fd6f36b045bc35f5dcbd2c2c6"
     },
@@ -272,7 +276,7 @@
     },
     {
       "path": "README.md",
-      "sha256": "3319d0c8b7736891655089b5bd3b49338bd655ac484f54b94d640bbc0cdb743e"
+      "sha256": "5b8f4feea7fdfc7502ee1a5b9017f3ad858d9de9345713253566b3df76a9ca10"
     },
     {
       "path": "requirements-zoom-lock.txt",

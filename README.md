@@ -1,5 +1,7 @@
 # HYBRID IR
 
+![HYBRID IR effect card with left and right channel controls](assets/IR_CAB-1200x800.png)
+
 Fit your cabinet impulse responses in IRBQ Trainer and build a HYBRID IR ZDL
 with your own bank, slot names, effect name, ID and card image. This builder
 targets the HYBRID IR effect; it does not turn arbitrary stock effects into
