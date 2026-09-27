@@ -120,7 +120,7 @@ modify arbitrary ZDL effects or upload anything to the pedal.
 3. Double-click **Install_HYBRIDIR.cmd** and choose a new installation folder.
    Leave **Developer: enable TI compilation** unchecked; TI and donor fields
    only appear when enabled. Select **Create a desktop shortcut** if desired
-   (enabled by default). Click **Install** and wait for completion.
+   (enabled by default). Click **Install / Update** and wait for completion.
    Internet is needed to download Python packages from PyPI into the app's
    private environment; HYBRID IR itself does not require administrator rights.
 4. Open **Start_HYBRIDIR.cmd** in the installation folder, not the ZIP folder.
@@ -129,20 +129,56 @@ modify arbitrary ZDL effects or upload anything to the pedal.
    accessible in the installation.
 
 If setup fails, check `installation.log` in the destination when present.
-Retry in a **new folder**: this installer does not update or overwrite existing
-installations. Keep exported models and bank projects before changing versions.
+For a failed fresh installation, retry in a **new folder**. For an existing
+installation with an uninstall receipt, use the update procedure below.
+Keep exported models and bank projects before changing versions.
 
 For developer compilation only, install [TI C6000 CGT 8.5.0.LTS](https://www.ti.com/tool/C6000-CGT)
 and select the Developer checkbox, compiler folder and stock folder in Setup.
 No full CCS IDE is needed. Developer setup can later be made in a new folder.
 Prerequisite errors are shown before copying files. Errors after copying may
 leave a partial folder; `installation.log` is created when dependency installation
-starts. Existing installations are never overwritten by this first version.
+starts. Existing installations require the explicit update confirmation below.
 Standard setup enables **Patch ZDL (no TI)** and disables the developer **Build ZDL** button.
 During a ZDL build, wait for completion before closing the application.
 
 The installer is a source/Tk setup wizard launched by `.cmd`, not a standalone
 signed `.exe`. Python remains a first-time prerequisite; TI is optional.
+
+## Updating an existing installation
+
+Download and extract the new package **outside** your installed application.
+Close HYBRID IR, run the new `Install_HYBRIDIR.cmd`, choose the existing app
+folder and click **Install / Update**. The confirmation shows current/new bundle
+identifiers and how many application files have local modifications. Bundle IDs
+identify exact packages; they are not semantic version numbers or signatures.
+Existing Developer mode and compiler settings are retained during an update;
+the Setup Developer fields apply only to a new installation.
+
+The updater prepares and checks a separate candidate first. It then keeps the
+entire old installation in a sibling `APP.backup-*` folder and installs a fresh
+Python environment at the original path. This takes extra disk space and performs
+dependency installation twice; internet may be required for both passes.
+Personal IRs, banks, projects and exports are copied back without being enrolled
+as application-owned files. Shared preferences are not changed. Modified program
+files stay in the backup; the new version uses its own program files. If a personal
+file conflicts with a new application path, the update is rejected, not overwritten.
+Existing desktop shortcuts remain at the same target; modified shortcuts are not replaced.
+
+An ordinary failure during replacement restores the old folder. If rollback is
+blocked or power/process termination interrupts replacement, a sibling
+`APP.update.json` journal identifies the backup and recovery instructions.
+Close all app/setup processes before recovery; preserve the candidate folder,
+restore the backup to the original path, then remove the journal only after
+checking recovery. A pending journal blocks launch and lifecycle operations.
+Do not delete the backup merely to silence an error.
+
+Backup, `APP.staging-*` and failed-candidate `APP.failed-*` folders are retained
+for inspection, not automatically cleaned or removed by uninstall. After checking
+the updated app and your data, you may manually remove only those identified
+folders. Do not run the old backup in its renamed location: restore its original
+path first. Installations without receipts, incomplete installations and linked
+paths require a new installation folder or manual recovery instead of update.
 
 ## Uninstall
 
