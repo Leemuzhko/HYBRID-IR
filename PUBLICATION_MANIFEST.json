@@ -168,7 +168,7 @@
     },
     {
       "path": "irbq_lab/irbq/gui.py",
-      "sha256": "adf141ed7bcbe9d4898729264e99a6df3deef73c344c81fc5d67637ee4f55e82"
+      "sha256": "5025e3a821ed43ae1c1c9a8ea5e3d44de52dd2b4d9afe19cb4c9975d609249a7"
     },
     {
       "path": "irbq_lab/irbq/i18n.py",
@@ -240,7 +240,7 @@
     },
     {
       "path": "irbq_lab/tests/test_english_catalog.py",
-      "sha256": "de499c71e59e6a1fe0b45f0a2bc880dc315403f8530fa1908d132d24070da754"
+      "sha256": "eb143d86fc85a4d4d02283696b779cdb50bebc516634ae90f8c482042fc41072"
     },
     {
       "path": "irbq_lab/tests/test_gui.py",
