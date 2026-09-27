@@ -62,16 +62,53 @@ correction BQ. Length alone is not a guarantee: truncation can change the respon
 so compare the result. FIR + BQ fitting is an alternative when you want a shorter
 FIR supplemented by filters, not a required step for every IR.
 
-**RESO and PRES are separate from correction BQ.** The bank packer automatically
-adds two dedicated control sections to every slot, regardless of FIR length.
-Do not manually reserve or add two Trainer filters for them. With no correction
-BQ, the bank shows **BQ total = 2** and both controls remain available; with
-`K` imported correction sections, the total is `K + 2` (up to 30 + 2).
-Imported filters are preserved as corrections, not repurposed as PRES/RESO.
-These two sections do not subtract samples from the FIR length or coefficient pool.
-All existing template capacity limits still apply.
+**HVB4RBJ reuses trained RESO.** New Trainer presets explicitly
+tag Resonance as RESO. Its fitted frequency, Q and baseline gain remain; 0.0 on
+the pedal means zero adjustment relative to that baseline. Presence is now
+unlocked and trained as ordinary correction. A separate common PRES is added,
+so **128+8 gives 9 BQ**, not10.
+For an older unmarked model, the editor asks whether to reuse Resonance. No
+arbitrary SOS is guessed. Generic `K` correction filters give `K+2`; with no
+correction, **BQ total = 2**. A tagged model gives `K+1`, with at most32 total.
+These filters do not shorten the FIR. The legacy fixed patcher retains its old
+semantics and rejects tagged models: use Patch ZDL. The RBJ smoke banks passed
+user-reported functional tests on MS-70CDR; exact behaviour and DSP headroom in
+each effect chain still need checking.
 
 ## Everyday workflow
+
+### Projects, library and corrections
+
+Trainer 0.4.0 adds **Library**. Its default folder is
+`Documents/HYBRID IR/Library`; choose another folder if you prefer. Save a
+prepared model with **Save current to library**, or import `.irbq` projects/model
+JSON using **Import**. Search and type/max FIR/max BQ filters narrow the table.
+Select several rows and use **Add selected to bank**. Nothing is added if a
+role confirmation is cancelled; generated labels fit within five ASCII characters.
+
+In **Zoom ZDL**, **New bank** starts an empty bank. **Bank** holds Open, Save as,
+recent banks and Size estimate. **Save bank** writes to the existing path.
+The default `.hybridbank` file embeds each model's available source/reference,
+settings, snapshots and the card PNG, so you can move it without collecting
+separate files. Legacy JSON stores models only and asks before dropping references.
+Keep your own IR library/projects outside the application install folder.
+
+Double-click a bank slot or choose **Edit in Trainer**, adjust it, then return
+and click **Update slot**. The update follows that slot even if rows were moved.
+The bank is unchanged until you apply the update. A legacy slot without its WAV
+opens as model-only: manual editing and `.irbq` saving work, but training and
+reference comparison do not. Use **File → Attach reference WAV** to supply a
+real target without replacing the fitted model. A ZDL alone cannot reconstruct
+the original training project.
+
+**Open project / Save project**, Save as and recent projects are available in
+File. Unsaved changes offer Save/Discard/Cancel. The authoring v2 `.irbq` reader
+accepts old v1 projects; an older Trainer may not open new v2 files. Archive and
+library scan limits are documented in [ADR 0015](../adr/0015-portable-authoring-library.md).
+The graph and bank/library start at roughly half the height each; drag the
+divider as needed. Budget indicators are compact and right-aligned. They are
+storage/slot limits, not a DSP load meter. Use the [update procedure](installation.md)
+to replace an older installed version.
 
 1. For a plain FIR, use **Zoom ZDL → Import WAV** as described above. For a hybrid
    model, load the WAV in Trainer and fit the response, or open a prepared model.
@@ -81,16 +118,44 @@ All existing template capacity limits still apply.
    Keep slot labels to **5 ASCII characters or fewer**: longer names can extend
    beyond the pedal's display field, as observed on hardware. The file format
    accepts up to 7; that is a storage limit, not a display-fit guarantee.
-3. Select **ZEM custom ZDL folder**: the same folder you configured in Zoom
-   Effect Manager to read custom effects, not necessarily your export folder.
+3. Select **Zoom Effect Manager custom folder:**: the same folder you configured in Zoom
+   Effect Manager to read custom effects. Exports are saved directly into this folder.
    Bundled reserved IDs are always checked; no stock ZDL folder is needed.
    Resolve any
    conflict before exporting, then save the bank project for later editing.
-4. Click **Patch ZDL (no TI)** and choose an output folder. **Build ZDL** is the
+4. Click **Patch ZDL (no TI)**. A confirmation shows the saved ZDL path after export.
+   Existing files require overwrite confirmation. **Build ZDL** is the
    optional developer compiler path, not the button needed for normal use.
-5. Keep the generated `.patch.json` report alongside the `.zdl`. Install the
+5. Keep the generated effect subfolder intact. Install the
    effect using **Zoom Effect Manager**, as described below, then test it on the pedal.
    The app does not flash devices.
+
+### Export folder
+
+**Patch ZDL (no TI)** creates a subfolder named after the ZDL basename:
+
+```text
+Selected output folder/
+  MYCAB/
+    MYCAB.zdl
+    MYCAB.json
+    MYCAB.png
+    MYCAB.patch.json
+```
+
+`MYCAB.json` is Zoom Effect Manager metadata: effect name, device filename,
+icon filename and English/Russian descriptions. `MYCAB.png` copies the selected
+card image without changing its polarity. `.patch.json` is a separate technical
+report, not manager metadata. Keep all four files together. Existing files
+require confirmation before replacement; unrelated files are preserved.
+Choose an ordinary output path without symbolic links or Windows junctions.
+For old flat exports, move the previous ZDL outside the scanned folder before
+exporting again, so the recursive scan does not find two copies.
+
+Enable ZDL folder reading in Zoom Effect Manager, select the parent folder,
+then restart it after exporting or updating files. See the official
+[folder format and settings](https://zoomeffectmanager.com/en/posts/reading-effects-from-folder/).
+The optional developer **Build ZDL** path still uses its existing flat export.
 
 ## Install the ZDL on the pedal — Zoom Effect Manager required
 
@@ -111,13 +176,13 @@ during writing. Installing a file does not establish its DSP/RAM safety.
 English/dark is the default; language and theme controls are in the toolbar.
 
 The custom folder is scanned recursively by ZDL header identity (GID + FXID),
-not filename. It is saved with the bank project. The output folder is chosen
-separately; exporting elsewhere does not add the effect to ZEM's folder automatically.
+not filename. This folder is also the export destination; it is only requested
+if the field is empty. Portable banks omit local paths and use the current folder.
 Reserved identities cannot be replaced, even with a matching name. Custom
 same-name/ID replacements require confirmation; conflicting names get a free-ID
 suggestion. The bundled catalog is a collection snapshot, not a live inventory
 of the pedal or a guarantee against future IDs.
-It reserves 255 identities from 450 ZEM original-effect files, including the
+It reserves 255 identities from 450 Zoom Effect Manager original-effect files, including the
 bundled Other effects RainSel, RTFM and Div0 (stored under Filter in that collection).
 Source filenames and SHA-256 hashes are retained in `irbq_lab/irbq/stock_ids.json`;
 no donor ZDL files are bundled with the catalog.

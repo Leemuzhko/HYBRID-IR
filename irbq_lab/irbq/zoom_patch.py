@@ -2,10 +2,11 @@
 from pathlib import Path
 import hashlib
 import json
+import io
 import struct
 
-from .zoom_bank import (SDK, pack_bank, identity_conflicts, catalog_entries,
-                        atomic_write)
+from .zoom_bank import SDK, pack_bank, identity_conflicts, catalog_entries
+from .zoom_export import check_package_paths, publish_package
 
 TEMPLATES = SDK / 'templates'
 PROFILE = TEMPLATES / 'HYBRID4.json'
@@ -41,13 +42,10 @@ def patch_project(project, output, overwrite=False, allow_identity_replace=False
     project.validate()
     original, raw, profile = load_template(template_path)
     output = Path(output)
-    target = output / (project.filename + '.zdl')
-    if target.resolve() == original:
+    target = output / project.filename / (project.filename + '.zdl')
+    if target.resolve() == original or (output / (project.filename + '.zdl')).resolve() == original:
         raise ValueError('The original template must not be overwritten')
-    sidecar = output / (project.filename + '.patch.json')
-    for existing in (target, sidecar):
-        if existing.exists() and not overwrite:
-            raise FileExistsError(str(existing))
+    check_package_paths(project, output, overwrite)
     conflicts = identity_conflicts(project)
     if conflicts and not allow_identity_replace:
         raise ValueError('ID occupied; choose a free ID or confirm replacement')
@@ -61,7 +59,7 @@ def patch_project(project, output, overwrite=False, allow_identity_replace=False
     from screen_image import Canvas, encode_zoom_rle
     with Image.open(project.image) as source:
         image = source.convert('L')
-    if image.size != (128,64) or not set(image.getdata()) <= {0,255}:
+    if image.size != (128,64) or not set(image.tobytes()) <= {0,255}:
         raise ValueError('PNG must contain 128x64 black/white pixels')
     canvas = Canvas()
     canvas.pixels = [[int(image.getpixel((x,y)) == 0) for x in range(128)] for y in range(64)]
@@ -100,9 +98,9 @@ def patch_project(project, output, overwrite=False, allow_identity_replace=False
                   compiler_used=False, code_and_relocations_unchanged=True,
                   template_version=profile['version'], hardware_validated=False,
                   changed_regions=profile['regions'])
-    output.mkdir(parents=True,exist_ok=True)
-    atomic_write(target,result)
-    atomic_write(sidecar,json.dumps(report,indent=2).encode('utf-8'))
+    image_png = io.BytesIO()
+    image.save(image_png, format='PNG')
+    target = publish_package(project, output, result, image_png.getvalue(), report, overwrite)
     return target, report
 
 

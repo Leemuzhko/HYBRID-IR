@@ -1,6 +1,6 @@
 """User interface preferences, separate from portable DSP projects."""
 from __future__ import annotations
-from dataclasses import dataclass, asdict, fields
+from dataclasses import dataclass, asdict, fields, field
 from pathlib import Path
 import json
 import os
@@ -13,11 +13,18 @@ class Preferences:
     edit_enabled: bool = False
     show_bands: bool = False
     show_bq_sum: bool = False
+    library_folder: str = ''
+    recent_projects: list[str] = field(default_factory=list)
+    recent_banks: list[str] = field(default_factory=list)
     def validate(self):
         if self.language not in ('ru','en'): self.language='en'
         if self.theme not in ('light','dark'): self.theme='dark'
         for key in ('edit_enabled','show_bands','show_bq_sum'):
             if not isinstance(getattr(self,key),bool): setattr(self,key,False)
+        if not isinstance(self.library_folder, str): self.library_folder = ''
+        for key in ('recent_projects', 'recent_banks'):
+            value = getattr(self, key)
+            setattr(self, key, [p for p in value if isinstance(p, str)][:10] if isinstance(value, list) else [])
         return self
 
 def settings_path():

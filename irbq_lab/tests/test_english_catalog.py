@@ -40,6 +40,10 @@ class TestEnglishCatalog(unittest.TestCase):
             tree=ast.parse(path.read_text(encoding='utf-8'))
             parents={child:node for node in ast.walk(tree) for child in ast.iter_child_nodes(node)}
             for node in ast.walk(tree):
+                parent=parents.get(node)
+                if (path.name=='zoom_export.py' and isinstance(parent,ast.keyword)
+                        and parent.arg=='descriptionRus'):
+                    continue  # Language-specific manager metadata, never an English UI string.
                 if isinstance(node,ast.JoinedStr):
                     value=''.join(part.value if isinstance(part,ast.Constant) else '123' for part in node.values)
                     if re.search('[А-Яа-яЁё]',tr(value)):

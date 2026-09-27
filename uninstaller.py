@@ -178,7 +178,7 @@ def main():
         messagebox.showerror('Cannot uninstall',str(exc),parent=window);window.destroy();return
     body=ttk.Frame(window,padding=20);body.pack(fill='both',expand=True)
     ttk.Label(body,text='Uninstall HYBRID IR',font=('Segoe UI',18)).pack(anchor='w')
-    ttk.Label(body,text=f'{len(selected)} recorded files will be removed.\n{len(preserved)} new or modified files will be kept.\nClose HYBRID IR before continuing.\nPersonal IRs, banks and ZEM folders are not removed.',wraplength=570).pack(anchor='w',pady=16)
+    ttk.Label(body,text=f'{len(selected)} recorded files will be removed.\n{len(preserved)} new or modified files will be kept.\nClose HYBRID IR before continuing.\nPersonal IRs, banks and Zoom Effect Manager folders are not removed.',wraplength=570).pack(anchor='w',pady=16)
     prefs=tk.BooleanVar(value=False)
     ttk.Checkbutton(body,text='Also remove shared IRBQ Lab language/theme settings',variable=prefs).pack(anchor='w')
     def execute():

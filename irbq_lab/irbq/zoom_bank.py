@@ -10,6 +10,7 @@ import shutil
 import struct
 import sys
 import tempfile
+import uuid
 import numpy as np
 from .dsp import Model, Biquad, quantize_fir, sos_array, sos_stability
 
@@ -69,6 +70,8 @@ def import_irbq_package(path):
 class Slot:
     label: str
     model: Model
+    session: object = None
+    uid: str = field(default_factory=lambda: uuid.uuid4().hex)
 
 
 @dataclass
@@ -82,14 +85,17 @@ class BankProject:
     stock_folder: str = ''
     patched_folder: str = ''
 
-    def validate(self):
+    def validate(self, allow_empty=False):
         ascii_label(self.name, 12)
         if not re.fullmatch(r'[A-Za-z0-9_-]{1,8}', self.filename):
             raise ValueError('Filename must be 1..8 ASCII letters, digits, _ or -')
         if type(self.fxid) is not int or not 0 <= self.fxid <= 65535 or self.gid != 2:
             raise ValueError('Cabinet requires gid=2 and a uint16 ID')
-        if not 1 <= len(self.slots) <= 8:
+        if not (0 if allow_empty else 1) <= len(self.slots) <= 8:
             raise ValueError('Compatibility envelope is 1..8 active slots; not a hardware guarantee')
+        identifiers = [s.uid for s in self.slots]
+        if len(set(identifiers)) != len(identifiers) or any(not re.fullmatch('[0-9a-f]{32}', s) for s in identifiers):
+            raise ValueError('Invalid or duplicate bank slot identity')
         for slot in self.slots:
             ascii_label(slot.label)
             if slot.label == 'OFF':
@@ -97,7 +103,11 @@ class BankProject:
             validate_model(slot.model)
 
     def save(self, path):
-        self.validate()
+        if Path(path).suffix.lower() == '.hybridbank':
+            from .authoring import portable_bank_bytes
+            atomic_write(path, portable_bank_bytes(self))
+            return
+        self.validate(allow_empty=True)
         path = Path(path)
         payload = dict(schema=SCHEMA, name=self.name, fxid=self.fxid, gid=self.gid,
                        filename=self.filename, image=self.image,
@@ -108,6 +118,9 @@ class BankProject:
     @classmethod
     def load(cls, path):
         path = Path(path)
+        if path.suffix.lower() == '.hybridbank':
+            from .authoring import load_portable_bank
+            return load_portable_bank(path)
         if path.stat().st_size > 64_000_000:
             raise ValueError('Bank project too large')
         p = json.loads(path.read_text(encoding='utf-8-sig'))
@@ -115,7 +128,7 @@ class BankProject:
             raise ValueError('Unsupported bank project version')
         p['slots'] = [Slot(s['label'], Model.from_dict(s['model'])) for s in p['slots']]
         result = cls(**p)
-        result.validate()
+        result.validate(allow_empty=True)
         return result
 
 
@@ -127,8 +140,8 @@ def validate_model(model):
         raise ValueError('FIR must be non-empty, mono and finite')
     if model.fir_enabled and not 32 <= len(h) <= 4096:
         raise ValueError('Active FIR authoring envelope is 32..4096 taps; prepare/pad shorter IR first')
-    if len(model.sections) > 30:
-        raise ValueError('At most 30 correction BQ plus RESO/PRES = 32 sections')
+    from .zoom_rbj_bank import bq_count
+    bq_count(model)
     if not np.isfinite(model.output_gain_db) or abs(model.output_gain_db) > 60:
         raise ValueError('Overall Gain must be finite within +/-60 dB')
     sos = sos_array(model.sections, model.fs, True)
@@ -208,6 +221,8 @@ def _rows(rows):
 
 def pack_bank(project, capacity=None, binary=False):
     project.validate()
+    if any(b.control_role for slot in project.slots for b in slot.model.sections):
+        raise ValueError('Use the HVB4 role-aware patcher for models with RESO roles')
     models = [None] + [s.model for s in project.slots]
     fir_pool, bq_pool, desc = [], [], []
     fir_seen, bq_seen = {}, {}
@@ -290,7 +305,9 @@ def pack_bank(project, capacity=None, binary=False):
     lines += ['}, {'+','.join(str(x) for x in fir_pool)+'}, {', _rows(bq_pool), '}, {',
               ','.join(_f(10**(db/40)) for db in np.linspace(-15,15,61)), '}, {{',
               _rows(tables[0]), '}}, {{', _rows(tables[1]), '}}\n};\n#endif\n']
-    estimated_const = bank_bytes + 816 + 528 + 212 + 8
+    # Use the real RLE length, descriptor layout and section alignment.
+    from .zoom_budget import const_bytes, picture_bytes
+    estimated_const = const_bytes(bank_bytes, len(picture_bytes(project.image)))
     report = dict(schema='hybridir-bank-report/1', bank_bytes=bank_bytes,
                   active_slots=len(project.slots), entry_count=count, max_fir=max_fir, max_bq=max_bq,
                   fir_pool_samples=len(fir_pool), bq_pool_sections=len(bq_pool),

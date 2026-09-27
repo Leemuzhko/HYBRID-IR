@@ -125,6 +125,8 @@ class BQEditor(tk.Toplevel):
                 new.locked = True
             elif changed:
                 new.raw = None
+            if new.kind != self.b.kind:
+                new.control_role = ''
             if new.fmin <= 0 or new.qmin <= 0 or new.fmin >= new.fmax or (new.qmin >= new.qmax) or (new.gmin >= new.gmax):
                 raise ValueError(_('Min должен быть меньше Max.'))
             enabled = new.enabled
@@ -170,8 +172,9 @@ class BaseApp(tk.Tk):
         self._make_ui()
         self.protocol('WM_DELETE_WINDOW', self.close)
         self.after(100, self.poll)
-        self.bind('<Control-o>', lambda e: self.open_wav())
-        self.bind('<Control-s>', lambda e: self.save_project())
+        self.bind('<Control-o>', lambda e: self.open_project())
+        self.bind('<Control-s>', lambda e: self.save_active())
+        self.bind('<Control-Shift-S>', lambda e: self.save_project(True))
         self.bind('<Control-z>', lambda e: self.undo())
         self.bind('<Control-y>', lambda e: self.redo())
 
@@ -268,7 +271,7 @@ class BaseApp(tk.Tk):
             self.bqtree.item(iid, values=self._bq_values(self.session.model.sections[i]))
 
     def eq_neutral(self):
-        if not self.guard() or self.session.model is None:
+        if not self.guard_model():
             return
         i = self.selected_bq()
         if i is None:
@@ -337,6 +340,13 @@ class BaseApp(tk.Tk):
             return False
         return True
 
+    def guard_model(self):
+        if not self.guard(False):return False
+        if self.session.model is None:
+            messagebox.showinfo(_('IRBQ Lab'), _('No model to edit or save'), parent=self)
+            return False
+        return True
+
     def push_undo(self):
         if self.session.model:
             self.undo_stack.append(self.session.model.clone())
@@ -345,14 +355,14 @@ class BaseApp(tk.Tk):
         self.dirty = True
 
     def undo(self):
-        if not self.guard() or not self.undo_stack:
+        if not self.guard_model() or not self.undo_stack:
             return
         self.redo_stack.append(self.session.model.clone())
         self.session.model = self.undo_stack.pop()
         self.changed()
 
     def redo(self):
-        if not self.guard() or not self.redo_stack:
+        if not self.guard_model() or not self.redo_stack:
             return
         self.undo_stack.append(self.session.model.clone())
         self.session.model = self.redo_stack.pop()
@@ -394,14 +404,15 @@ class BaseApp(tk.Tk):
         p = filedialog.askopenfilename(title=_('Импульс кабинета'), filetypes=[('Audio', '*.wav *.flac *.aif *.aiff'), ('All', '*')])
         if not p:
             return
-        if self.dirty and (not messagebox.askyesno(_('Новый WAV'), _('Текущие несохранённые изменения будут потеряны. Продолжить?'), parent=self)):
-            return
+        if not self.confirm_session():return
         try:
             cfg = self.read_prep()
             s = Session(config=cfg)
             s.load_audio(p)
             self.session = s
             self.project_path = None
+            self.zoom_panel.edit_uid=None;self.zoom_panel.edit_digest=None;self.zoom_panel.refresh_titles()
+            self.dirty=False
             self.undo_stack = []
             self.redo_stack = []
             self.target_cache = {}
@@ -475,7 +486,7 @@ class BaseApp(tk.Tk):
         desired = bool(self.fir_enabled.get())
         if desired == bool(self.session.model.fir_enabled):
             return
-        if not self.guard():
+        if not self.guard_model():
             self.fir_enabled.set(bool(self.session.model.fir_enabled))
             return
         self.push_undo()
@@ -587,7 +598,7 @@ class BaseApp(tk.Tk):
         return int(sel[0]) if sel else None
 
     def add_bq(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         if len(self.session.model.sections) >= 32:
             self.error(ValueError(_('Максимум 32 секции.')))
@@ -600,7 +611,7 @@ class BaseApp(tk.Tk):
         BQEditor(self, Biquad(), self.session.config.fs, accept)
 
     def edit_bq(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         i = self.selected_bq()
         if i is None:
@@ -613,7 +624,7 @@ class BaseApp(tk.Tk):
         BQEditor(self, self.session.model.sections[i], self.session.config.fs, accept)
 
     def toggle_bq(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         i = self.selected_bq()
         if i is not None:
@@ -622,7 +633,7 @@ class BaseApp(tk.Tk):
             self.changed()
 
     def lock_bq(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         i = self.selected_bq()
         if i is not None:
@@ -631,7 +642,7 @@ class BaseApp(tk.Tk):
             self.changed()
 
     def remove_bq(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         i = self.selected_bq()
         if i is not None:
@@ -640,7 +651,7 @@ class BaseApp(tk.Tk):
             self.changed()
 
     def move_bq(self, d):
-        if not self.guard():
+        if not self.guard_model():
             return
         i = self.selected_bq()
         if i is None or not 0 <= i + d < len(self.session.model.sections):
@@ -666,7 +677,7 @@ class BaseApp(tk.Tk):
             self.sync_eq_quick()
 
     def snapshot(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         name = simpledialog.askstring(_('Снимок модели'), _('Название'), initialvalue=self.session.model.name, parent=self)
         if not name:
@@ -700,7 +711,7 @@ class BaseApp(tk.Tk):
             self.stree.insert('', 'end', iid=str(i), values=(m.name, taps, len(m.sections), f"{r['mag_rms_db']:.3f}", f"{r['phase_rms_deg']:.2f}"))
 
     def use_snapshot(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         selected = self.stree.selection()
         if not selected:
@@ -710,7 +721,7 @@ class BaseApp(tk.Tk):
         self.changed()
 
     def delete_snapshot(self):
-        if not self.guard():
+        if not self.guard_model():
             return
         for i in sorted([int(i) for i in self.stree.selection()], reverse=True):
             self.session.snapshots.pop(i)
@@ -1021,15 +1032,12 @@ class BaseApp(tk.Tk):
         if self.busy and not getattr(self, 'job_cancellable', True):
             messagebox.showinfo(_('IRBQ Lab'), _('Дождитесь завершения сборки ZDL.'), parent=self)
             return
-        if hasattr(self,'zoom_panel') and self.zoom_panel.dirty:
-            if not messagebox.askyesno(_('Выйти'),'Zoom bank has unsaved changes. Exit without saving?',parent=self):return
+        if not self.busy and hasattr(self,'zoom_panel') and not self.zoom_panel.confirm_bank():return
         if self.busy:
             if not messagebox.askyesno(_('Выйти'), _('Прервать текущую задачу и выйти?'), parent=self):
                 return
             self.cancel_event.set()
-        elif self.dirty:
-            if not messagebox.askyesno(_('Выйти'), _('Есть несохранённые изменения. Выйти без сохранения?'), parent=self):
-                return
+        elif not self.confirm_session():return
         self.player.close()
         self.destroy()
 

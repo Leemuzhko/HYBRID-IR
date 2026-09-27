@@ -11,14 +11,15 @@ I recommend starting with the standard installation. TI compilation is an option
 [Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip)
 
 This development snapshot includes the source, `.cmd` installer, dependencies list
-and precompiled HYBRID4 template. It is a **source-based distribution, not a
+and precompiled HVB4RBJ template (plus the legacy HYBRID4 CLI template). It is a **source-based distribution, not a
 standalone EXE**, and contains no commercial cabinet IRs. The link follows
 the main branch, not a versioned release. Keep your downloaded archive for reproducibility.
 While the repository is private, sign in to a GitHub account with repository
 access before downloading. A 404 can mean that access is missing.
 
-The fixed template is experimental and still needs a fresh pedal test.
-Do not treat this download as a hardware-validated release.
+Trainer 0.4.0 includes the variable-bank patcher, trained RESO/common PRES,
+switching fades and portable authoring library. Three HVB4RBJ test exports
+worked on MS-70CDR; test your own bank and full effect chain.
 
 ## Install on Windows
 
@@ -107,7 +108,7 @@ files and modified application sources are preserved. Do not store personal
 files inside the private environment/cache directories. If files are preserved,
 the installation folder remains and the result dialog says so. Shared IRBQ Lab
 language/theme settings are removed only if you tick the separate checkbox;
-it is off by default. ZEM folders and exported effects outside the installation
+it is off by default. Zoom Effect Manager folders and exported effects outside the installation
 are never deleted. A custom `IRBQ_SETTINGS_PATH` is left untouched.
 
 If a locked file prevents removal, close the application and retry. Older

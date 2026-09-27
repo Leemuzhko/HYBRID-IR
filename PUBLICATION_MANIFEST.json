@@ -1,6 +1,7 @@
 {
   "schema": "hybridir-publication/1",
-  "source_revision": "17eabac + ZEM catalog and install/uninstall",
+  "source_revision": "1aa6a79f891b88a31b333feb0c4c02a6fb6009c4",
+  "app_version": "0.4.0",
   "scope": "Trainer and compiler-free HYBRID IR patcher; optional TI developer builder",
   "transformations": [
     "unit-impulse bank replaces private coefficients",
@@ -18,7 +19,7 @@
     "max_bq": 2,
     "fir_pool_samples": 32,
     "bq_pool_sections": 2,
-    "estimated_const_bytes": 4496,
+    "estimated_const_bytes": 4592,
     "soft_const_budget": 22528,
     "estimated_state_bytes": 560,
     "warnings": [
@@ -40,6 +41,13 @@
     "bank": "synthetic unit impulses",
     "stock_derived_runtime": true,
     "hardware_validated": false
+  },
+  "variable_template": {
+    "sha256": "b21528b5a6444dbe6200cf73b450643da22082c0e865a6c86e4cb4b298357894",
+    "bank": "synthetic unit impulse",
+    "stock_derived_runtime": true,
+    "hardware_validated": false,
+    "code_const_cap": 28904
   },
   "excluded": [
     "Git history",
@@ -67,40 +75,52 @@
       "sha256": "1e324a740a21e97573b05be8e621066ae69821dc3798773f8f38380fbdbc73cf"
     },
     {
+      "path": "docs/adr/0014-trained-reso-and-runtime-rbj-controls.md",
+      "sha256": "687c3e8e9bce23427b9a436aaef4af5dab8b79023a22f0d41a50248d60e451e5"
+    },
+    {
+      "path": "docs/adr/0015-portable-authoring-library.md",
+      "sha256": "a2f3d290a8d6574041c2f134e5ceab251eba8d50ea073e42b31cf33d3234a80b"
+    },
+    {
       "path": "docs/en/installation.md",
-      "sha256": "95df9346cf4b463c0ffe873da40aa83a9170cb2b9b9d3c37a7fdbcf33a481839"
+      "sha256": "1aab93a588fbc21a5c0f3d5cd2050597359dd4bd1c6c6b49a3b8d18ffa4564bd"
     },
     {
       "path": "docs/en/technical.md",
-      "sha256": "9025fbf7549bde36560243b05abf9e391408797501f417555e7c4dd0d8e3dd9e"
+      "sha256": "fa7dd32750cafd4e783615d5fced047c8e2ee28e134aba7749887403677abcc8"
     },
     {
       "path": "docs/en/workflow.md",
-      "sha256": "038b54cc1aa964f7be709bfa6f242cd361f0a158063f73a8025db81f185e0953"
+      "sha256": "2bfb0b64a4a8b4fa970dec03a3b0fe0721f80ed424960fe3df74bf5c3816603f"
+    },
+    {
+      "path": "docs/HVB4_RBJ_RELEASE_CANDIDATE.md",
+      "sha256": "1f8e9de7590b26076fe062d78a411ea3fcd9ed862bd89ba03c1c201f820aefbe"
     },
     {
       "path": "docs/ru/installation.md",
-      "sha256": "65a54bd7850384784f35bccb3d254b31363c6ac43844820edea800dd5e673c22"
+      "sha256": "db3716bda6dc678020cd8843db6591a817c1c0d0edc18b1157d73db3bf38cf7b"
     },
     {
       "path": "docs/ru/technical.md",
-      "sha256": "be27f4fd43ea6f2d3e81e18077549a08ab3ab1c7fc2110ad5cf96abb6ad8ce46"
+      "sha256": "6be2511a5b1c61f97f3f546e79f5c892bea0b22417468b49a854840752aadc09"
     },
     {
       "path": "docs/ru/workflow.md",
-      "sha256": "fc297591f9313eab908161b38e9da59c92e248d48d9ab30d3ec0c1e015df1388"
+      "sha256": "c2974e70e3c4ac9db705ec8fe9ee0c617907622edf88107790f5ebfb785ab7db"
     },
     {
       "path": "docs/uk/installation.md",
-      "sha256": "a3e7484c3193f7030a5565e38312652e31f2c95cdd51dfed5a5aae82196a448c"
+      "sha256": "8025721b7aae15d9a27a9c9a44ee0bce94f3b76b8a3097396abfbf91eb1ea96a"
     },
     {
       "path": "docs/uk/technical.md",
-      "sha256": "47f27fd9a4402410a3bde733d14d62d03492999228b26fc38c1612131b40f113"
+      "sha256": "f44f8cbf72ca35758d170086e202df397af275303e18ffc781fc2a45c4640234"
     },
     {
       "path": "docs/uk/workflow.md",
-      "sha256": "f3c508e0f24a615f13a2d5ab0da8bc6f7e5ac866dc38af6c6e5407c4d0c0dcbc"
+      "sha256": "00e400a7901d65e661809cf8565d848fe0c72d9885adff2940f32ab107ec478b"
     },
     {
       "path": "hybridir_sdk/build/linker.py",
@@ -108,23 +128,23 @@
     },
     {
       "path": "hybridir_sdk/build/screen_image.py",
-      "sha256": "3c58f5660fd6d63678a3b974ba6d49868a06445ad4e847ed37a9a21770130a2b"
+      "sha256": "167a6c9500dd7a1878ad924bb7fc7a37d9df6d7c06cae03c95f3d9497508b243"
     },
     {
       "path": "hybridir_sdk/build/toolchain.py",
-      "sha256": "ec62141b0c5267b9cb95c3e241a0acb36ef738f4b61339d94fc296849959c7f3"
+      "sha256": "f7a7424c99ea38dc1e98f9d3959e136139f93f89fde44949311b235ea6a8ea8a"
     },
     {
       "path": "hybridir_sdk/build/zdl.py",
-      "sha256": "8085c3b63018945a94dc4e0178091d1da39cd0d3c63df5f34b925fd70a7ace7f"
+      "sha256": "acb7ffdfbafe59b94f64d3d7b7c1b8606ce527f333849250a24fb32b1436668b"
     },
     {
       "path": "hybridir_sdk/build/zdl_smoke.py",
-      "sha256": "5952fb97bbe58db5c698126312b06ae062d0b3cd02452f8ddc9c1b8f64f713ec"
+      "sha256": "23d08772bc0d366268c0f6868cf22a43e9e9307a1dbb0c21dc37e5c7f64f3280"
     },
     {
       "path": "hybridir_sdk/sdk/__init__.py",
-      "sha256": "2d88319a1d5ba5e18adb4d4d0a2fa563f70450832b48dcd422ecf8229a9bbd9b"
+      "sha256": "9a805f67a4a176d752ccd3de14e71c634bcec868e5668935cf2e9d54a4b8a943"
     },
     {
       "path": "hybridir_sdk/sdk/build_effect.py",
@@ -132,11 +152,11 @@
     },
     {
       "path": "hybridir_sdk/sdk/include/zoom_materialize_init.h",
-      "sha256": "3a02b842bdbe0732c696139abc43863c25a2bad0049d0cadce7fb9e794eec65f"
+      "sha256": "b590f8b53598e2b1fa20d0c35536c447df4dc904eae9f3655efc53befee7b405"
     },
     {
       "path": "hybridir_sdk/sdk/include/zoom_sdk.h",
-      "sha256": "f7974341a49bce88d5edb9f426dbcd8acfdf7f2f547da1959bc05464b3ec54cb"
+      "sha256": "2150d40159a5e9df623e828e9fd731cda802b691405ebf02a3ece4b615611717"
     },
     {
       "path": "hybridir_sdk/sdk/runtime_setup.py",
@@ -164,7 +184,39 @@
     },
     {
       "path": "hybridir_sdk/src/custom/hybridir/manifest.json",
-      "sha256": "686fedbec4660dd9f9526cf075112c9a374d817979739506e328fd3caeed4e59"
+      "sha256": "b7532617783bec008569be09f17d38f17f05e37c4097e6add093ec3d3cf9f0b3"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/bank_v4.h",
+      "sha256": "10d301af9d39c4deec20fc310edd85996f453e620dd3f4638d42f5251cc713d6"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/card.rle",
+      "sha256": "404963b7996505367ee4f78b4fd9a5c1a9becefcd0ff470694c9606a109fa01b"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/core.h",
+      "sha256": "9f64f2d45a3664d54dc3885f029a2badc49c01fd2a1fbdab6e06916a015c1088"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/effect.c",
+      "sha256": "ba47cc22046eda4a803f5f165980c75c278ccaf82052640151080c05d8a3667b"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/generated/kernel.h",
+      "sha256": "f149c0da8a72325551218df2a1b60ee4ccbfc8c3a379dabc1de3e584465468c6"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/manifest.json",
+      "sha256": "9c80ce7d7fd621f78d9be20c5d09765b5a046508207c4b45607f179b390e464b"
+    },
+    {
+      "path": "hybridir_sdk/src/custom/hybridir_roles/rbj_math.h",
+      "sha256": "39bdc862f749fc9963b9b20c5509648caa1c52e722991a1b3bd10cefc16ad09b"
+    },
+    {
+      "path": "hybridir_sdk/templates/HVB4RBJ.zdl",
+      "sha256": "b21528b5a6444dbe6200cf73b450643da22082c0e865a6c86e4cb4b298357894"
     },
     {
       "path": "hybridir_sdk/templates/HYBRID4.json",
@@ -192,11 +244,15 @@
     },
     {
       "path": "irbq_lab/irbq/__init__.py",
-      "sha256": "530cee98662ba67af0bb9136c8f6c75ac065a423f28428c4969e008f74f31bab"
+      "sha256": "c7c2dd0972e5ec922a67d731b85d44bc5f1f01b80ffa7a2f0312d8f015fc4e0d"
     },
     {
       "path": "irbq_lab/irbq/audio.py",
       "sha256": "f5deb265f6c095e978d7ea203d373a365fe38e09e8da3ce938a6a28ca3fccb05"
+    },
+    {
+      "path": "irbq_lab/irbq/authoring.py",
+      "sha256": "b3a3a141893e57d13b613c787f7c911d923d128387626faa482c42b3c974034e"
     },
     {
       "path": "irbq_lab/irbq/cli.py",
@@ -204,27 +260,31 @@
     },
     {
       "path": "irbq_lab/irbq/dsp.py",
-      "sha256": "7835dd2383ef0f8585e7845dc3078fd7e40f95f9b99ed6b7e0dd90c4c7899665"
+      "sha256": "3c6f6a7a4eea608f67d86379128f2e071886a7d41f9a48955e03ddad22d60504"
     },
     {
       "path": "irbq_lab/irbq/gui.py",
-      "sha256": "5025e3a821ed43ae1c1c9a8ea5e3d44de52dd2b4d9afe19cb4c9975d609249a7"
+      "sha256": "37d821c1de3f639ac8877088228fb6fbdff5b46044bbf1e69bee300e3077c6aa"
     },
     {
       "path": "irbq_lab/irbq/i18n.py",
       "sha256": "f6f2415ddb954e3e1fcf002ffa8ab67a8e2c2778a5bafae423ae10007204a2da"
     },
     {
+      "path": "irbq_lab/irbq/library_panel.py",
+      "sha256": "d1a7f877e66ef37adbb4ae8850aea7626e3205060c7440b128ae0fe3b6c874be"
+    },
+    {
       "path": "irbq_lab/irbq/preferences.py",
-      "sha256": "13ab397f47ccf8fe1c59530bc208ccf7d1bbf5699bf2593e1ae7c427040ff507"
+      "sha256": "e85244d00f5f4375edcdf502f8f94a0fa5d39b1e650ac895acc5341ec155b856"
     },
     {
       "path": "irbq_lab/irbq/project.py",
-      "sha256": "721af0eb99eddd346b5753cedc41427a91ae288d3402d53bd98c03f4ab4b9772"
+      "sha256": "a94f6784f211b31529b623db3b169d613dd3f9ca9d35629d9592ee90686aaaf7"
     },
     {
       "path": "irbq_lab/irbq/stock_ids.json",
-      "sha256": "dd3479813bc6287795704b77ae365211bc7106d2f9d9e1999c1bca534af85db3"
+      "sha256": "6efabbbfe93ad89d516830cf978bb96796c591ffc54bfd46386072d7a2351349"
     },
     {
       "path": "irbq_lab/irbq/trainer.py",
@@ -232,27 +292,51 @@
     },
     {
       "path": "irbq_lab/irbq/translations.json",
-      "sha256": "3b0fc9e1611f4bd3aef1d727a39b7b855910e7ac2ad4be662c7c7b0d6cdf0df3"
+      "sha256": "a84ef54d02eac2875913cd092b5b93fe5faa215852e7003933ab6161f14bd743"
     },
     {
       "path": "irbq_lab/irbq/ui_theme.py",
-      "sha256": "1e2b11e69f2aaa6a8f16c44c51b63c074f3b0a036db95ad34dca15847b410348"
+      "sha256": "44c8cbae3f84743b15061263a1cfd4d69ae13d8d59701bd1fb7d1bf599cf168e"
     },
     {
       "path": "irbq_lab/irbq/workspace.py",
-      "sha256": "03fb226a8e564e8cbb430136b2d798500154c8e38455328e3c3ff91c9172f0d4"
+      "sha256": "dc458607fcfa5859db61a25c63ef3509265d8fdd28bd6360b6e9d6abcee9a7f5"
     },
     {
       "path": "irbq_lab/irbq/zoom_bank.py",
-      "sha256": "1e16adadcbea2f0cfab029f8fae6e31c70a9cc685e16b2107cdb6683bc71ccf1"
+      "sha256": "800fc997ed7d4ba91aae68bbc2cdf7acc83a8201b23937a7352bd6172a236251"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_budget.py",
+      "sha256": "8c8be0d4aeb9f1e671fd800c046eb58bad48bdd5d750864c32dbc6b76747903d"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_export.py",
+      "sha256": "dc7a53d58471a5e125cea9c7827a6a4b13bcec7fbb6e7645e2a796bc4a96fbf8"
     },
     {
       "path": "irbq_lab/irbq/zoom_panel.py",
-      "sha256": "0566300faa6e1f2e056eca306a492c24ac7fd6a4320a1d1a0dbf09cdcb3597de"
+      "sha256": "21a1b39c7edfe2ff4cea902446d65e968add14ef4021a697e76516eaa8becd66"
     },
     {
       "path": "irbq_lab/irbq/zoom_patch.py",
-      "sha256": "ca460cb95d1e83a610189a1091fdf11141d3455a24293ad7ab24cc2f30ec670f"
+      "sha256": "76b755c136d18b5f555be9cb7bbbd955d6b46ba6189e36ec04c9f2827070bb01"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_rbj_bank.py",
+      "sha256": "5ed7eda25d2acf810655b662caa08129435b4486d31df23661ec21fe091cc387"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_variable_bank.py",
+      "sha256": "bd68e0d82ae3328de49d590179b227f6f77898da48a4851dfa4d5aa954b85ee5"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_variable_patch.py",
+      "sha256": "600518d4baa2293786bdc2f3fd2a6d22ef605bc347755e73bb7aad6d13a30ff2"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_variable_repack.py",
+      "sha256": "2b69c300523c3148d076284e2c067bd3138b8aa5e32154a72efbd93bb5fda049"
     },
     {
       "path": "irbq_lab/LICENSE.txt",
@@ -268,7 +352,11 @@
     },
     {
       "path": "irbq_lab/Start_IRBQ_Lab.cmd",
-      "sha256": "66de4b3dd69e7e9d89045b3d963d5fd4fea93bb36569a4e7fd22b42b9c98b27b"
+      "sha256": "83e4d4ce9d2329c4325a8fe260af9dfd419fed266926d119a2bbf4fa3542a666"
+    },
+    {
+      "path": "irbq_lab/tests/test_authoring.py",
+      "sha256": "4f6d29a7fbd8df43ccc4d45025172afe8ce8279b3c64897c2d8e8f9e57e33311"
     },
     {
       "path": "irbq_lab/tests/test_bootstrap.py",
@@ -280,15 +368,23 @@
     },
     {
       "path": "irbq_lab/tests/test_english_catalog.py",
-      "sha256": "eb143d86fc85a4d4d02283696b779cdb50bebc516634ae90f8c482042fc41072"
+      "sha256": "97908c81618cbdb6b90256c757614354066ff843eed3d528097638307b8b2098"
     },
     {
       "path": "irbq_lab/tests/test_gui.py",
       "sha256": "f16994c89edfbb8d7966490b207f219fa89063f4fe89111cf3e02a39b0bd8c9b"
     },
     {
+      "path": "irbq_lab/tests/test_hybrid_rbj_runtime.py",
+      "sha256": "d83a24b0961b4c08615bf7a2fba94c9b11b2bdc5a62a1f775314d761310fe44d"
+    },
+    {
       "path": "irbq_lab/tests/test_installation.py",
-      "sha256": "2534d40c1587c0b120dd059864b806f7a3e927f0f2afaa212cf3deff9b503426"
+      "sha256": "51c913ace3a9406b0e61e6b677cef3107d98fa1e9690e4b84fc09058cf0c7351"
+    },
+    {
+      "path": "irbq_lab/tests/test_library_gui.py",
+      "sha256": "cbe9769103758d1141406b117b253fd1b979c946a99bdc8d830d4dcc3d8ef082"
     },
     {
       "path": "irbq_lab/tests/test_training_preview.py",
@@ -311,12 +407,28 @@
       "sha256": "f3d977dca2a50f4e3e8c6b6b098eb8442f47180587c6ee364f3f9d164d63d0cd"
     },
     {
+      "path": "irbq_lab/tests/test_zoom_budget.py",
+      "sha256": "55eaba5c6d3e9cf8501798b6ef71c09553ed2250aca2ef6f0f62216c0c3252e3"
+    },
+    {
       "path": "irbq_lab/tests/test_zoom_gui.py",
-      "sha256": "ddda244b578c01966c003f9d215a6b986ab7ce9b2b15ac1d794f3c35ffa700c0"
+      "sha256": "f38a378d04764342578a715c71ebbbf47191b9345a105509ef4d12cbcf8091eb"
     },
     {
       "path": "irbq_lab/tests/test_zoom_patch.py",
-      "sha256": "951ffe033fdc01be54606450f8f6bd3bcd023a1abb5f78ade423ca2005342c31"
+      "sha256": "95b6b52ca16c7d9920a60746f3be984fa5847728186f8c06451b4943b863cb73"
+    },
+    {
+      "path": "irbq_lab/tests/test_zoom_roles.py",
+      "sha256": "07d26fb15d7aeaf9aae55956c5266a072bc65ef343d7f4a326b3e530d652af10"
+    },
+    {
+      "path": "irbq_lab/tests/test_zoom_variable_bank.py",
+      "sha256": "b10b149eb4be47be0705fc6b7bb078a845bb6e9fbcbb276ec908ebb52370db30"
+    },
+    {
+      "path": "irbq_lab/tests/test_zoom_variable_patch.py",
+      "sha256": "3f391ccaab8ff7ad8a10bef3b9180c247ba176ede036aba4c66d4d68390f6a46"
     },
     {
       "path": "launch.py",
@@ -336,19 +448,27 @@
     },
     {
       "path": "README.md",
-      "sha256": "d9513ae1f47ca39fb02118a310ec384d7d9ccec71de82f2efe33a8f19bc69155"
+      "sha256": "813694907836cd0662b9ed0f3a7e4ce1fbce9cb114ec5ad482b9c2f8f7d41de9"
     },
     {
       "path": "README.ru.md",
-      "sha256": "0f9dce362a9a40ab8197def655e6587f36ae061c91174c273b8433c3d184f567"
+      "sha256": "85d985d3f3f826fa7fc00d75d3ca5e8711321efcbe8aaf5bd4f7f9338c01c747"
     },
     {
       "path": "README.uk.md",
-      "sha256": "4061c9217488924301618fce4ad3edd89e5b4fb2fa2c8277619edb41359e4323"
+      "sha256": "624dbf0d525e4c71fbe4fcbc773cc79bec746ae1fa8765aee07c41c5687b09ee"
+    },
+    {
+      "path": "RELEASE_CANDIDATE.md",
+      "sha256": "7827a5c5f211cd4f8f24b805423d264781dbd8b2c1cb13110133850f5ab6e2f4"
     },
     {
       "path": "requirements-zoom-lock.txt",
       "sha256": "76f0bccd65b49181c704affc0eb6973772bc836d7f28d09a1713faa7bd60fe76"
+    },
+    {
+      "path": "scripts/build_hvb4_rbj_template.py",
+      "sha256": "2d75cc7d5cca518475b857986963d4b362e98e30b3f2f3863cb637d40b881b3d"
     },
     {
       "path": "scripts/build_hybrid_patch_template.py",
@@ -356,19 +476,19 @@
     },
     {
       "path": "scripts/build_stock_id_catalog.py",
-      "sha256": "f4c8b9ccd2f6453579849bfd97897dc2d0f5a079dc3b082648aa3fa2d8e7cc40"
+      "sha256": "ae2b830a9c33c3ccb965c4bc3c9427c3af84052081d14b0fa2acb7d0c4e5ee69"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "fdefc2d91baba56d142cf93a249c40df5b74aec5ca8a3b8813cb7dc26bf84514"
+      "sha256": "a6585dc06213425f7705abf4f153e511786acd04f281cfcfce10eaa72a531637"
     },
     {
       "path": "THIRD_PARTY_NOTICES.uk.md",
-      "sha256": "53aefc526d70cdf7920404923d4a923592d836c0cb74aefb44ffbc13de97b340"
+      "sha256": "b342f6e2240423c6344f443f2976ab298b15678d1171e9c4e2027d1794332e48"
     },
     {
       "path": "uninstaller.py",
-      "sha256": "dc6d5620a43406e8db79ff033f0db2a23da25640654920afaef25b49cc2d0491"
+      "sha256": "83b9bf33d205b20b11a9d5f4fe63d81ddbc848a99c69137cb6d662ee763ed9cc"
     },
     {
       "path": "updater.py",
@@ -376,7 +496,7 @@
     },
     {
       "path": "UPSTREAM_PROVENANCE.json",
-      "sha256": "279992d3d8aecd0a28497f78d9c64634ce5c52240992939a0454f0309c795110"
+      "sha256": "2d4c45b0a18ada5a1b8975c3239519a8098f3de65b1fd6a225bd20ed9c360bb5"
     }
   ]
 }
