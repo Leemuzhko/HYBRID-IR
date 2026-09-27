@@ -7,7 +7,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parent
 
-def main():
+def run_application():
     configuration = ROOT / 'installation.json'
     if configuration.exists():
         settings = json.loads(configuration.read_text(encoding='utf-8'))
@@ -18,6 +18,19 @@ def main():
     sys.path.insert(0, str(app))
     os.environ.setdefault('MPLCONFIGDIR', str(ROOT / '.test-cache' / 'matplotlib'))
     runpy.run_path(str(app / 'run.py'), run_name='__main__')
+
+
+def main():
+    from installation_guard import installation_lock
+    try:
+        with installation_lock(ROOT):
+            run_application()
+    except ValueError as exc:
+        import tkinter as tk
+        from tkinter import messagebox
+        window=tk.Tk();window.withdraw()
+        messagebox.showerror('HYBRID IR',str(exc),parent=window)
+        window.destroy()
 
 if __name__ == '__main__':
     main()

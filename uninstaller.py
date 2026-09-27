@@ -91,9 +91,17 @@ def plan(root):
     return root,record,selected,sorted(set(preserved))
 
 def uninstall(root, remove_preferences=False):
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('hybrid_installation_guard',Path(__file__).with_name('installation_guard.py'))
+    guard=importlib.util.module_from_spec(spec);spec.loader.exec_module(guard)
+    with guard.installation_lock(root):
+        return _uninstall(root,remove_preferences)
+
+
+def _uninstall(root, remove_preferences=False):
     root,record,selected,preserved=plan(root)
     errors=[];removed=0
-    controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd'}
+    controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd','installation_guard.py'}
     deferred=[item for item in selected if item[0].relative_to(root).as_posix() in controls]
     for path,sha in selected:
         if path.relative_to(root).as_posix() in controls:continue
@@ -125,13 +133,29 @@ def uninstall(root, remove_preferences=False):
                     except OSError:pass
                 else:preserved.append('Linked preferences file')
             except OSError as exc:errors.append('Preferences: '+str(exc))
+    deleted_controls=[]
     if not errors:
         for path,sha in deferred:
             try:
-                if plain_path(path,root) and digest(path)==sha:path.unlink();removed+=1
+                if plain_path(path,root) and digest(path)==sha:
+                    content=path.read_bytes()
+                    if hashlib.sha256(content).hexdigest()!=sha:
+                        preserved.append(path.name);continue
+                    path.unlink();removed+=1
+                    deleted_controls.append((path,content))
                 else:preserved.append(path.name)
             except OSError as exc:errors.append(f'{path.name}: {exc}');break
-    if not errors:(root/RECEIPT).unlink()
+    if not errors:
+        try:(root/RECEIPT).unlink()
+        except OSError as exc:errors.append(f'{RECEIPT}: {exc}')
+    if errors:
+        # A late lock must not remove the entry point or its guard dependency.
+        # Exclusive creation also preserves any concurrently-created replacement.
+        for path,content in deleted_controls:
+            try:
+                with path.open('xb') as stream:stream.write(content)
+                removed-=1
+            except OSError as exc:errors.append(f'Restore {path.name}: {exc}')
     # rmdir removes only empty directories; never recursively delete a tree.
     for path in sorted(walk(root),key=lambda p:len(p.parts),reverse=True):
         if plain_path(path,root) and path.is_dir():

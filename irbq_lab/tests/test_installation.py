@@ -28,6 +28,7 @@ class TestInstallation(unittest.TestCase):
             for name in ('installer.py','launch.py','requirements-zoom-lock.txt'):
                 (source/name).write_bytes(b'fixture')
             (source/'uninstaller.py').write_bytes(uninstall_path.read_bytes())
+            (source/'installation_guard.py').write_bytes(uninstall_path.with_name('installation_guard.py').read_bytes())
             entries=[dict(path=p.name,sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for p in source.iterdir()]
             (source/'PUBLICATION_MANIFEST.json').write_text(json.dumps(dict(schema='hybridir-publication/1',files=entries)))
             def make_venv(_self,path):
