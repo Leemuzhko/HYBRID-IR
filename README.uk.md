@@ -12,7 +12,7 @@
 </p>
 <p align="center"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <strong>Українська</strong></p>
 <h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip">Завантажити для Windows</a></h3>
-<p align="center"><a href="#installation">Встановлення</a> · <a href="#workflow">Створити перший ефект</a> · <a href="https://ko-fi.com/leemuzhko">Підтримати на Ko-fi</a></p>
+<p align="center"><a href="docs/uk/installation.md">Встановлення</a> · <a href="docs/uk/workflow.md">Створити перший ефект</a> · <a href="https://ko-fi.com/leemuzhko">Підтримати на Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
 <sub>Лінійка пристроїв проєкту. Перевірка на обладнанні залежить від моделі й банку; див. технічний посібник.</sub></p>
 
@@ -33,7 +33,7 @@
 
 ## Швидкий старт
 
-Встановіть програму, відкрийте **Zoom ZDL**, додайте імпульс через **Import WAV** і зберіть ефект кнопкою **Patch ZDL (no TI)**. Готовий ZDL завантажте через [Zoom Effect Manager](https://zoomeffectmanager.com/en/download/). Налаштування та перевірки описано в посібниках нижче.
+Встановіть програму, відкрийте **Zoom ZDL**, додайте імпульс через **Import WAV** і зберіть ефект кнопкою **Patch ZDL (no TI)**. Готовий ZDL завантажте через [Zoom Effect Manager](https://zoomeffectmanager.com/en/download/). Налаштування та перевірки описано в посібниках вище.
 
 ## Перед початком
 
