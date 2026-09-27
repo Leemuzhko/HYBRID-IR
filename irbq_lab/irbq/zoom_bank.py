@@ -141,8 +141,13 @@ def validate_model(model):
 
 def catalog_entries(project):
     """Read wrapper IDs, not filenames. Invalid stock files fail closed."""
-    found = []
-    for folder in (project.stock_folder, project.patched_folder):
+    catalog=json.loads(Path(__file__).with_name('stock_ids.json').read_text(encoding='utf-8'))
+    if catalog.get('schema')!='hybridir-reserved-ids/1' or not catalog.get('entries'):
+        raise ValueError('Missing or invalid bundled identity catalog')
+    found = [dict(path='reserved:'+e['source'],gid=e['gid'],fxid=e['fxid'],
+                  name=e['name'],reserved=True) for e in catalog['entries']]
+    # stock_folder is retained only for loading older saved projects.
+    for folder in (project.patched_folder,):
         if not folder:
             continue
         root = Path(folder)
@@ -174,13 +179,16 @@ def catalog_entries(project):
                     break
             except (ValueError,KeyError,struct.error,IndexError) as exc:
                 raise ValueError(f'Invalid ZDL catalog ELF: {path}: {exc}') from exc
-            found.append(dict(path=str(path), gid=gid, fxid=fxid, name=name))
+            found.append(dict(path=str(path), gid=gid, fxid=fxid, name=name,reserved=False))
     return found
 
 
 def identity_conflicts(project):
-    return [e['path'] for e in catalog_entries(project)
-            if (e['gid'],e['fxid']) == (project.gid,project.fxid)]
+    conflicts=[e for e in catalog_entries(project)
+               if (e['gid'],e['fxid']) == (project.gid,project.fxid)]
+    if any(e.get('reserved') for e in conflicts):
+        raise ValueError('ID reserved by the bundled catalog; choose a free ID')
+    return [e['path'] for e in conflicts]
 
 
 def suggest_free_id(project):

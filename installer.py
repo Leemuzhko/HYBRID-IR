@@ -5,6 +5,7 @@ selected destination. Runtime fragments are provisioned from user files.
 """
 from __future__ import annotations
 import hashlib
+import base64
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -17,6 +18,40 @@ import venv
 import webbrowser
 
 SOURCE = Path(__file__).resolve().parent
+
+def create_desktop_shortcut(destination, desktop=None):
+    """Resolve the real Windows Desktop (including redirection), preserve existing links."""
+    if os.name!='nt':raise OSError('Desktop shortcuts require Windows')
+    destination=Path(destination).resolve()
+    for file in (destination/'.venv/Scripts/pythonw.exe',destination/'launch.py',destination/'assets/zoom-ms70cdr.ico'):
+        if not file.is_file():raise ValueError(f'Shortcut target missing: {file.name}')
+    script=r'''
+$ErrorActionPreference = 'Stop'
+$shell = New-Object -ComObject WScript.Shell
+$desktopPath = $env:HYBRIDIR_SHORTCUT_DESKTOP
+if (-not $desktopPath) { $desktopPath = $shell.SpecialFolders.Item('Desktop') }
+if (-not (Test-Path -LiteralPath $desktopPath -PathType Container)) { throw 'Desktop folder missing' }
+$linkPath = Join-Path $desktopPath 'HYBRID IR.lnk'
+if (Test-Path -LiteralPath $linkPath) { throw 'HYBRID IR desktop shortcut already exists; preserved' }
+$appPath = $env:HYBRIDIR_SHORTCUT_APP
+$link = $shell.CreateShortcut($linkPath)
+$link.TargetPath = Join-Path $appPath '.venv\Scripts\pythonw.exe'
+$link.Arguments = '-B -X utf8 "' + (Join-Path $appPath 'launch.py') + '"'
+$link.WorkingDirectory = $appPath
+$link.IconLocation = (Join-Path $appPath 'assets\zoom-ms70cdr.ico') + ',0'
+$link.Description = 'HYBRID IR Trainer and ZDL Patcher'
+$link.Save()
+[Console]::OutputEncoding = [Text.UTF8Encoding]::new()
+Write-Output $linkPath
+'''
+    result=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',
+                    base64.b64encode(script.encode('utf-16le')).decode('ascii')],
+                   env={**os.environ,'HYBRIDIR_SHORTCUT_APP':str(destination),
+                        'HYBRIDIR_SHORTCUT_DESKTOP':str(desktop) if desktop else ''},
+                   check=True,capture_output=True,timeout=30,
+                   creationflags=subprocess.CREATE_NO_WINDOW)
+    link=Path(result.stdout.decode('utf-8-sig').strip())
+    return dict(path=str(link),sha256=hashlib.sha256(link.read_bytes()).hexdigest())
 
 def checked_payload(source):
     source = Path(source).resolve()
@@ -40,7 +75,7 @@ def checked_payload(source):
         paths.append((name, path))
     return paths
 
-def install(source, destination, ti_root='', donor_folder='', full=True, progress=lambda text: None):
+def install(source, destination, ti_root='', donor_folder='', full=True, progress=lambda text: None, *, desktop_shortcut=False):
     source, destination = Path(source).resolve(), Path(destination).resolve()
     if destination.exists():
         raise ValueError('Choose a new empty installation path. Existing installations are preserved.')
@@ -100,6 +135,20 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
     (destination / 'Start_HYBRIDIR.cmd').write_text(
         '@echo off\r\ncd /d "%~dp0"\r\n".venv\\Scripts\\python.exe" -B -X utf8 launch.py %*\r\n'
         'if errorlevel 1 pause\r\n', encoding='utf-8')
+    (destination / 'Uninstall_HYBRIDIR.cmd').write_text(
+        '@echo off\r\nsetlocal\r\ncd /d "%TEMP%"\r\n'
+        'py -3.14 -B -X utf8 "%~dp0uninstaller.py"\r\n',encoding='utf-8')
+    shortcut_record=None
+    if desktop_shortcut:
+        try:shortcut_record=create_desktop_shortcut(destination)
+        except (OSError,ValueError,subprocess.SubprocessError) as exc:
+            warning='Application installed, but desktop shortcut was not created. Use Start_HYBRIDIR.cmd. Existing shortcuts are preserved. '+type(exc).__name__
+            with log.open('a',encoding='utf-8') as stream:stream.write('\n'+warning+'\n')
+            progress(warning)
+    import importlib.util
+    spec=importlib.util.spec_from_file_location('hybrid_uninstaller',destination/'uninstaller.py')
+    uninstaller=importlib.util.module_from_spec(spec);spec.loader.exec_module(uninstaller)
+    uninstaller.write_receipt(destination,shortcut_record)
     marker.unlink()
     progress('Installed. Open Start_HYBRIDIR.cmd in the installation folder.')
     return destination
@@ -109,8 +158,10 @@ def main():
     from tkinter import ttk, filedialog, messagebox
     root = tk.Tk()
     root.title('HYBRID IR Setup')
-    root.geometry('720x400')
-    root.minsize(680, 380)
+    icon=SOURCE/'assets/zoom-ms70cdr.ico'
+    if icon.is_file():root.iconbitmap(str(icon))
+    root.geometry('720x480')
+    root.minsize(680, 460)
     body = ttk.Frame(root, padding=22)
     body.pack(fill='both', expand=True)
     body.columnconfigure(1, weight=1)
@@ -122,8 +173,10 @@ def main():
     donors = tk.StringVar()
     fields = [('Install to',destination),('TI C6000 compiler folder',ti),('Stock ZDL / runtime folder',donors)]
     controls = []
+    developer_controls = []
     for row,(label,variable) in enumerate(fields,2):
-        ttk.Label(body,text=label).grid(row=row,column=0,sticky='w',padx=(0,12),pady=5)
+        caption=ttk.Label(body,text=label)
+        caption.grid(row=row,column=0,sticky='w',padx=(0,12),pady=5)
         entry=ttk.Entry(body,textvariable=variable)
         entry.grid(row=row,column=1,sticky='ew',pady=5)
         def browse(v=variable):
@@ -134,35 +187,48 @@ def main():
         button=ttk.Button(body,text='Browse...',command=browse)
         button.grid(row=row,column=2,padx=(8,0))
         controls.extend((entry,button))
+        if variable is not destination:developer_controls.extend((caption,entry,button))
     full=tk.BooleanVar(value=False)
-    choice=ttk.Checkbutton(body,text='Developer: enable TI compilation (not needed for Patch ZDL)',variable=full)
+    def toggle_developer():
+        for widget in developer_controls:
+            widget.grid() if full.get() else widget.grid_remove()
+    choice=ttk.Checkbutton(body,text='Developer: enable TI compilation (not needed for Patch ZDL)',variable=full,command=toggle_developer)
     choice.grid(row=5,column=0,columnspan=3,sticky='w',pady=(12,4));controls.append(choice)
-    ttk.Button(body,text='Get TI compiler...',command=lambda:webbrowser.open('https://www.ti.com/tool/C6000-CGT')).grid(row=6,column=0,sticky='w')
-    ttk.Label(body,text='Stock files: LineSel, ANA234CH, Exciter',wraplength=400).grid(
-        row=6,column=1,columnspan=2,sticky='w',padx=(8,0))
+    ti_link=ttk.Button(body,text='Get TI compiler...',command=lambda:webbrowser.open('https://www.ti.com/tool/C6000-CGT'))
+    ti_link.grid(row=6,column=0,sticky='w')
+    stock_hint=ttk.Label(body,text='Stock files: LineSel, ANA234CH, Exciter',wraplength=400)
+    stock_hint.grid(row=6,column=1,columnspan=2,sticky='w',padx=(8,0))
+    developer_controls.extend((ti_link,stock_hint));controls.append(ti_link)
+    toggle_developer()
+    shortcut=tk.BooleanVar(value=True)
+    shortcut_control=ttk.Checkbutton(body,text='Create a desktop shortcut',variable=shortcut)
+    shortcut_control.grid(row=7,column=0,columnspan=3,sticky='w',pady=(12,4));controls.append(shortcut_control)
     status=tk.StringVar(value='Dependencies are downloaded from PyPI during installation.')
-    ttk.Label(body,textvariable=status,wraplength=660).grid(row=7,column=0,columnspan=3,sticky='w',pady=15)
+    ttk.Label(body,textvariable=status,wraplength=660).grid(row=8,column=0,columnspan=3,sticky='w',pady=15)
     events=queue.Queue()
     busy=False
     def begin():
         nonlocal busy
         arguments=(SOURCE,destination.get(),ti.get(),donors.get(),full.get())
+        make_shortcut=shortcut.get()
         busy=True
         for control in controls:control.configure(state='disabled')
         def worker():
             try:
-                installed=install(*arguments,progress=lambda text:events.put(('progress',text)))
+                installed=install(*arguments,progress=lambda text:events.put(('progress',text)),desktop_shortcut=make_shortcut)
                 events.put(('done',str(installed)))
             except Exception as error:events.put(('error',str(error)))
         threading.Thread(target=worker,daemon=False).start()
     install_button=ttk.Button(body,text='Install',command=begin)
-    install_button.grid(row=8,column=2,sticky='e');controls.append(install_button)
+    install_button.grid(row=9,column=2,sticky='e');controls.append(install_button)
     def poll():
         nonlocal busy
         while True:
             try:kind,text=events.get_nowait()
             except queue.Empty:break
             status.set(text)
+            if kind=='progress' and text.startswith('Application installed, but'):
+                messagebox.showwarning('Desktop shortcut',text,parent=root)
             if kind in ('done','error'):
                 busy=False
                 for control in controls:control.configure(state='normal')

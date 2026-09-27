@@ -9,6 +9,17 @@ from irbq.zoom_bank import BankProject, Slot, pack_bank, validate_model, identit
 
 
 class TestZoomBank(unittest.TestCase):
+    def test_bundled_reserved_and_legacy_stock_folder(self):
+        from irbq.zoom_bank import catalog_entries,suggest_free_id
+        p=BankProject(stock_folder='missing-legacy-folder')
+        entries=catalog_entries(p)
+        identities={(e['gid'],e['fxid']) for e in entries}
+        self.assertTrue({(2,241),(2,497),(2,753)} <= identities)  # RainSel, RTFM, Div0 (ZEM Other)
+        reserved=next(e for e in entries if e['gid']==2)
+        p.fxid=reserved['fxid'];p.name=reserved['name'][:12]
+        with self.assertRaisesRegex(ValueError,'reserved'):identity_conflicts(p)
+        self.assertNotIn(suggest_free_id(p),{e['fxid'] for e in entries if e['gid']==2})
+
     def model(self):
         return Model(44100, np.r_[1.,np.zeros(31)], [], output_gain_db=-6.)
 
