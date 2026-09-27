@@ -16,8 +16,15 @@ import sys
 import threading
 import venv
 import webbrowser
+import importlib.util
 
 SOURCE = Path(__file__).resolve().parent
+
+def helper(name):
+    spec = importlib.util.spec_from_file_location('hybrid_' + name, SOURCE / (name + '.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 def create_desktop_shortcut(destination, desktop=None):
     """Resolve the real Windows Desktop (including redirection), preserve existing links."""
@@ -64,7 +71,9 @@ def checked_payload(source):
         name = item['path']
         relative = PurePosixPath(name)
         if (not name or '\\' in name or ':' in name or relative.is_absolute()
-                or '..' in relative.parts or name.casefold() in seen):
+                or '..' in relative.parts or relative.as_posix() != name
+                or any(part.rstrip(' .') != part for part in relative.parts)
+                or name.casefold() in seen):
             raise ValueError('Invalid or duplicate manifest path')
         seen.add(name.casefold())
         path = source.joinpath(*relative.parts)
@@ -75,8 +84,11 @@ def checked_payload(source):
         paths.append((name, path))
     return paths
 
-def install(source, destination, ti_root='', donor_folder='', full=True, progress=lambda text: None, *, desktop_shortcut=False):
+def install(source, destination, ti_root='', donor_folder='', full=True, progress=lambda text: None, *, desktop_shortcut=False, _allow_pending_update=False):
     source, destination = Path(source).resolve(), Path(destination).resolve()
+    journal = destination.parent / (destination.name + '.update.json')
+    if journal.exists() and not _allow_pending_update:
+        raise ValueError('Interrupted update: recover the backup before installing. See ' + str(journal))
     if destination.exists():
         raise ValueError('Choose a new empty installation path. Existing installations are preserved.')
     if destination.is_relative_to(source) or source.is_relative_to(destination):
@@ -114,9 +126,14 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
     subprocess.run([str(python), '-B', '-c',
                     'import tkinter,numpy,scipy,matplotlib,soundfile,PIL; '
                     'from irbq import gui,zoom_bank; '
-                    'from sdk import build_effect'],
-                   cwd=destination, env={**os.environ, 'PYTHONPATH':os.pathsep.join(
-                       [str(destination/'irbq_lab'), str(destination/'hybridir_sdk')])}, check=True)
+                    'from sdk import build_effect; '
+                    'app=gui.App(); app.withdraw(); app.update_idletasks(); app.dirty=False; app.close()'],
+                   cwd=destination, env={**os.environ,
+                       'IRBQ_SETTINGS_PATH':str(destination/'.test-cache/install-smoke-settings.json'),
+                       'MPLCONFIGDIR':str(destination/'.test-cache/matplotlib'),
+                       'HYBRIDIR_ZDL_ENABLED':'1' if full else '0',
+                       'PYTHONPATH':os.pathsep.join(
+                       [str(destination/'irbq_lab'), str(destination/'hybridir_sdk')])}, check=True, timeout=120)
     if full:
         progress('Checking ZDL building with a temporary synthetic impulse...')
         code = ('import tempfile\nfrom pathlib import Path\nimport numpy as np\n'
@@ -130,7 +147,8 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
                                 'PYTHONPATH':str(destination/'irbq_lab')},
                            stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=120)
     (destination / 'installation.json').write_text(json.dumps(
-        {'schema':'hybridir-install/1', 'ti_root':str(Path(ti_root).resolve()) if full else '',
+        {'schema':'hybridir-install/1', 'bundle_id':hashlib.sha256((source/'PUBLICATION_MANIFEST.json').read_bytes()).hexdigest()[:12],
+         'ti_root':str(Path(ti_root).resolve()) if full else '',
          'zdl_enabled':full}, indent=2), encoding='utf-8')
     (destination / 'Start_HYBRIDIR.cmd').write_text(
         '@echo off\r\ncd /d "%~dp0"\r\n".venv\\Scripts\\python.exe" -B -X utf8 launch.py %*\r\n'
@@ -182,8 +200,8 @@ def main():
         def browse(v=variable):
             path=filedialog.askdirectory(parent=root)
             if path:
-                # Destination is a NEW subfolder; prerequisite folders are used as selected.
-                v.set(str(Path(path)/'HYBRIDIR') if v is destination else path)
+                selected=Path(path)
+                v.set(str(selected if (selected/'uninstall-receipt.json').is_file() else selected/'HYBRIDIR') if v is destination else path)
         button=ttk.Button(body,text='Browse...',command=browse)
         button.grid(row=row,column=2,padx=(8,0))
         controls.extend((entry,button))
@@ -211,15 +229,35 @@ def main():
         nonlocal busy
         arguments=(SOURCE,destination.get(),ti.get(),donors.get(),full.get())
         make_shortcut=shortcut.get()
+        updating=Path(destination.get()).exists()
+        if updating:
+            try:
+                details=helper('updater').describe(SOURCE,destination.get(),checked_payload)
+            except Exception as error:
+                messagebox.showerror('Cannot update',str(error),parent=root)
+                return
+            prompt=(f"Current bundle: {details['old_revision']}\nNew bundle: {details['new_revision']}\n\n"
+                    f"Modified application files: {len(details['modified'])}. They will be backed up, not reused.\n"
+                    'Personal files and existing developer configuration are preserved.\n'
+                    'Close HYBRID IR. The complete old folder will be kept beside the installation.\n'
+                    'Preparation and final installation each create a fresh Python environment.\n\nUpdate this installation?')
+            if not messagebox.askyesno('Update HYBRID IR',prompt,parent=root):return
         busy=True
         for control in controls:control.configure(state='disabled')
         def worker():
             try:
-                installed=install(*arguments,progress=lambda text:events.put(('progress',text)),desktop_shortcut=make_shortcut)
+                progress=lambda text:events.put(('progress',text))
+                if updating:
+                    result=helper('updater').update(SOURCE,arguments[1],install,checked_payload,progress,desktop_shortcut=make_shortcut)
+                    events.put(('update-details',f"Backup: {result['backup']}\nPrepared candidate: {result['stage']}\n"
+                               'These folders are retained; remove them manually only after checking your files.'))
+                    installed=result['destination']
+                else:
+                    installed=install(*arguments,progress=progress,desktop_shortcut=make_shortcut)
                 events.put(('done',str(installed)))
             except Exception as error:events.put(('error',str(error)))
         threading.Thread(target=worker,daemon=False).start()
-    install_button=ttk.Button(body,text='Install',command=begin)
+    install_button=ttk.Button(body,text='Install / Update',command=begin)
     install_button.grid(row=9,column=2,sticky='e');controls.append(install_button)
     def poll():
         nonlocal busy
@@ -229,13 +267,14 @@ def main():
             status.set(text)
             if kind=='progress' and text.startswith('Application installed, but'):
                 messagebox.showwarning('Desktop shortcut',text,parent=root)
+            if kind=='update-details':messagebox.showinfo('Update backup',text,parent=root)
             if kind in ('done','error'):
                 busy=False
                 for control in controls:control.configure(state='normal')
                 if kind=='done':
                     messagebox.showinfo('Installed','Open Start_HYBRIDIR.cmd in:\n'+text,parent=root)
                     if os.name=='nt':os.startfile(text)
-                else:messagebox.showerror('Installation failed',text+'\n\nIf files were copied, details are in installation.log. Choose a new destination to retry.',parent=root)
+                else:messagebox.showerror('Installation failed',text+'\n\nCheck installation.log and any recovery paths shown above before retrying.',parent=root)
         root.after(100,poll)
     def close():
         if busy:messagebox.showinfo('Installation in progress','Please wait for installation to finish.',parent=root)
