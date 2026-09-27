@@ -292,15 +292,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "5e28009f57bcc69e0386bbdc6f8ad94b7814b1f05dcd2e16ef75fe2bff7bd286"
+      "sha256": "4ff3095e46d521ddd51417c369ab6f59535629505472f0196e104b712129719d"
     },
     {
       "path": "README.ru.md",
-      "sha256": "be05c2b5ad9c2826caad3ed6ce6a54711f6e3d2ad74e8d292e2cd7aeb0874437"
+      "sha256": "9afdecbdb88cf3fe138c48c8b7255107f9763621b2a4a650d1c6f8fc3d1dda20"
     },
     {
       "path": "README.uk.md",
-      "sha256": "9b8c9a270c2159e411813f222945a5dca5b8a54076b41a5751c7b546ac71d707"
+      "sha256": "77e0ff470b78e2763fbba1006599243d5f4046e9974e94b189d16cdbb695c643"
     },
     {
       "path": "requirements-zoom-lock.txt",
