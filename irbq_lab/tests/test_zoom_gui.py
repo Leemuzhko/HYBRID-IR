@@ -18,7 +18,27 @@ class TestZoomGUI(unittest.TestCase):
             app=App();app.withdraw()
             try:
                 self.assertIn('disabled',app.zoom_panel.build_button.state())
+                self.assertNotIn('disabled',app.zoom_panel.patch_button.state())
                 with self.assertRaisesRegex(ValueError,'disabled'):app.zoom_panel.build()
+                app.zoom_panel.append(Model(44100,np.r_[.1,np.zeros(31)],[]),'TEST')
+                with tempfile.TemporaryDirectory() as td, patch('irbq.zoom_panel.filedialog.askdirectory',return_value=td), patch.object(app,'run_job') as job, patch('irbq.zoom_patch.patch_project') as patcher:
+                    app.zoom_panel.build(patch=True)
+                    job.assert_called_once()
+                    job.call_args.args[0]()
+                    patcher.assert_called_once()
+                    self.assertFalse(job.call_args.kwargs['cancellable'])
+                    sidecar=Path(td)/(app.zoom_panel.project.filename+'.patch.json')
+                    sidecar.write_text('keep',encoding='utf-8')
+                    job.reset_mock()
+                    with patch('irbq.zoom_panel.messagebox.askyesno',return_value=False) as confirm:
+                        app.zoom_panel.build(patch=True)
+                        confirm.assert_called_once()
+                        self.assertIn(str(sidecar),confirm.call_args.args[1])
+                        job.assert_not_called()
+                    with patch('irbq.zoom_panel.messagebox.askyesno',return_value=True):
+                        app.zoom_panel.build(patch=True)
+                        job.call_args.args[0]()
+                        self.assertTrue(patcher.call_args.args[2])
                 app.busy=True;app.job_cancellable=False
                 with patch('irbq.gui.messagebox.showinfo') as notice, patch.object(app,'destroy') as destroy:
                     app.close();notice.assert_called_once();destroy.assert_not_called()

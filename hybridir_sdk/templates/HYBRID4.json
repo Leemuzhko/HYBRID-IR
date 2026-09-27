@@ -1,0 +1,41 @@
+{
+  "schema": "hybridir-patch-template/1",
+  "version": "hybrid4-v1",
+  "control_tables": {"depth": 1, "presence": 1, "steps": 61},
+  "sha256": "5e7872717662a1f334a67e7de21ebd4cfcbd975cf32b7f43e4effdff6c607eff",
+  "capacity": {
+    "entry_count": 5,
+    "max_fir": 2048,
+    "max_bq": 32,
+    "fir_pool_samples": 4096,
+    "bq_pool_sections": 130
+  },
+  "provenance": "Synthetic unit impulses; compiled HYBRID IR source with inherited stock runtime. See THIRD_PARTY_NOTICES.md.",
+  "hardware_validated": false,
+  "regions": {
+    "bank": [
+      17220,
+      13788
+    ],
+    "name": [
+      16460,
+      12
+    ],
+    "id": [
+      64,
+      2
+    ],
+    "ir_a_max": [
+      16664,
+      4
+    ],
+    "ir_b_max": [
+      16808,
+      4
+    ],
+    "image": [
+      15564,
+      848
+    ]
+  }
+}

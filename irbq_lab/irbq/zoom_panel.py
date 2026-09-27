@@ -49,6 +49,8 @@ class ZoomPanel(ttk.Frame):
             ttk.Button(bottom,text=text,command=lambda fn=command:self.guarded(fn)).pack(side='left',padx=(0,4))
         self.build_button = ttk.Button(bottom,text='Build ZDL',style='Accent.TButton',command=lambda:self.guarded(self.build))
         self.build_button.pack(side='right')
+        self.patch_button = ttk.Button(bottom,text='Patch ZDL (no TI)',style='Accent.TButton',command=lambda:self.guarded(lambda:self.build(patch=True)))
+        self.patch_button.pack(side='right',padx=(4,8))
         if os.environ.get('HYBRIDIR_ZDL_ENABLED') == '0':
             self.build_button.state(['disabled'])
         self.report=tk.StringVar(value='Add prepared models. Generic fitting remains unchanged. PNG title is baked into the image.')
@@ -175,8 +177,8 @@ class ZoomPanel(ttk.Frame):
                         + '; '.join(r['warnings']))
         return r
 
-    def build(self):
-        if os.environ.get('HYBRIDIR_ZDL_ENABLED') == '0':
+    def build(self, patch=False):
+        if not patch and os.environ.get('HYBRIDIR_ZDL_ENABLED') == '0':
             raise ValueError('ZDL building is disabled in this Trainer-only installation. Run full setup in a new folder.')
         self.sync();report=self.estimate()
         conflicts=[e for e in catalog_entries(self.project) if (e['gid'],e['fxid'])==(self.project.gid,self.project.fxid)]
@@ -194,9 +196,16 @@ class ZoomPanel(ttk.Frame):
         destination=filedialog.askdirectory(parent=self,title='ZDL output folder')
         if not destination:return
         target=Path(destination)/(self.project.filename+'.zdl')
-        overwrite=target.exists()
-        if overwrite and not messagebox.askyesno('Overwrite',f'Replace {target}?',parent=self):return
+        outputs=[target]
+        if patch:outputs.append(Path(destination)/(self.project.filename+'.patch.json'))
+        existing=[str(path) for path in outputs if path.exists()]
+        overwrite=bool(existing)
+        if overwrite and not messagebox.askyesno('Overwrite','Replace existing files?\n'+'\n'.join(existing),parent=self):return
         project=copy.deepcopy(self.project)
-        self.app.run_job(lambda:build_project(project,destination,overwrite,replace_identity),
+        builder=build_project
+        if patch:
+            from .zoom_patch import patch_project
+            builder=patch_project
+        self.app.run_job(lambda:builder(project,destination,overwrite,replace_identity),
                          lambda result:self.report.set(f'Built {result[0]} · SHA256 {result[1]["sha256"]} · hardware unverified'),
-                         'Building HYBRIDIR bank…', cancellable=False)
+                         'Patching HYBRIDIR bank…' if patch else 'Building HYBRIDIR bank…', cancellable=False)

@@ -32,6 +32,7 @@
     "author_recorded_in_local_history": "Leemuzhko"
   },
   "included_stock_derived_material": [{"file": "hybridir_sdk/build/linker.py", "symbol": "_DLL_WORDS", "bytes": 200, "source": "NoiseGate Dll entry function", "evidence": "Upstream comment and history; donor byte comparison not performed in this review", "license_scope": "Third-party material; not covered by the project's MIT declaration"}],
-  "excluded": ["three separate stock-derived .bin files (not all stock-derived material)", "TI compiler distribution", "commercial IRs and fitted models"],
+  "compiled_template": {"file": "hybridir_sdk/templates/HYBRID4.zdl", "bank": "synthetic unit impulses", "contains_inherited_stock_runtime": true, "purpose": "interoperability and reverse-engineering research", "hardware_validated": false},
+  "excluded": ["three separate stock-derived .bin files (not embedded code in the template)", "TI compiler distribution", "commercial IRs and fitted models"],
   "scope": "Source provenance and upstream license declaration; not a blanket license for vendor firmware or runtime data."
 }

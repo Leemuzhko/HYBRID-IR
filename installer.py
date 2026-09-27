@@ -134,8 +134,8 @@ def main():
         button=ttk.Button(body,text='Browse...',command=browse)
         button.grid(row=row,column=2,padx=(8,0))
         controls.extend((entry,button))
-    full=tk.BooleanVar(value=True)
-    choice=ttk.Checkbutton(body,text='Enable ZDL building (requires the compiler and stock files)',variable=full)
+    full=tk.BooleanVar(value=False)
+    choice=ttk.Checkbutton(body,text='Developer: enable TI compilation (not needed for Patch ZDL)',variable=full)
     choice.grid(row=5,column=0,columnspan=3,sticky='w',pady=(12,4));controls.append(choice)
     ttk.Button(body,text='Get TI compiler...',command=lambda:webbrowser.open('https://www.ti.com/tool/C6000-CGT')).grid(row=6,column=0,sticky='w')
     ttk.Label(body,text='Stock files: LineSel, ANA234CH, Exciter',wraplength=400).grid(

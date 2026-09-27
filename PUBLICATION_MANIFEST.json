@@ -1,7 +1,7 @@
 {
   "schema": "hybridir-publication/1",
-  "source_revision": "ed65bd6 + licensed SDK and installer",
-  "scope": "Trainer and HYBRID IR builder; user-provided TI compiler and runtime fragments",
+  "source_revision": "a01515a + fixed-template patcher",
+  "scope": "Trainer and compiler-free HYBRID IR patcher; optional TI developer builder",
   "transformations": [
     "unit-impulse bank replaces private coefficients",
     "card PNG re-encoded without metadata",
@@ -35,11 +35,17 @@
       "UNIT"
     ]
   },
+  "included_template": {
+    "sha256": "5e7872717662a1f334a67e7de21ebd4cfcbd975cf32b7f43e4effdff6c607eff",
+    "bank": "synthetic unit impulses",
+    "stock_derived_runtime": true,
+    "hardware_validated": false
+  },
   "excluded": [
     "Git history",
     "commercial IRs and derivative banks",
-    "prebuilt ZDLs",
-    "stock-derived binary handlers",
+    "other prebuilt ZDLs",
+    "separate stock-derived binary handler files",
     "TI compiler",
     "private settings, caches, credentials"
   ],
@@ -113,12 +119,20 @@
       "sha256": "686fedbec4660dd9f9526cf075112c9a374d817979739506e328fd3caeed4e59"
     },
     {
+      "path": "hybridir_sdk/templates/HYBRID4.json",
+      "sha256": "842e830bafb42b92da4038560e8ab8839969b88925515d8b876472c5039f690f"
+    },
+    {
+      "path": "hybridir_sdk/templates/HYBRID4.zdl",
+      "sha256": "5e7872717662a1f334a67e7de21ebd4cfcbd975cf32b7f43e4effdff6c607eff"
+    },
+    {
       "path": "Install_HYBRIDIR.cmd",
       "sha256": "2d308fe0a2e6d0bc18176bed7f29036513c9d67a48cd9e65985da7b1d2cf3b30"
     },
     {
       "path": "installer.py",
-      "sha256": "0fa3a58d1d19a9837677fdcacceea9394e5015544938c8f3fbe55433589a1f3c"
+      "sha256": "dcd6d5de1d6449fd18ea228a0f82daea4407aef3e3fd8cd029fbc9c464663ae2"
     },
     {
       "path": "irbq_lab/bootstrap.py",
@@ -174,11 +188,15 @@
     },
     {
       "path": "irbq_lab/irbq/zoom_bank.py",
-      "sha256": "e1da09d02b62dce9a2e60e3a8ac377d4b3906a6d2074a6e4b8ae830c0d3ea374"
+      "sha256": "5efbcf3bdd97808ab49fed792a8dc75d2ce59447e50abf9a8974f22e2898ee0d"
     },
     {
       "path": "irbq_lab/irbq/zoom_panel.py",
-      "sha256": "e25a8a789ddfb25a4924117db0af52fe3dc917e0ef52d29a3d0927a6f44a8d5c"
+      "sha256": "2f9574f95d6c48884c8450b7ca1cde1f45ed4c242c4f8d4a5b455e13a4c39fab"
+    },
+    {
+      "path": "irbq_lab/irbq/zoom_patch.py",
+      "sha256": "ca460cb95d1e83a610189a1091fdf11141d3455a24293ad7ab24cc2f30ec670f"
     },
     {
       "path": "irbq_lab/LICENSE.txt",
@@ -230,7 +248,11 @@
     },
     {
       "path": "irbq_lab/tests/test_zoom_gui.py",
-      "sha256": "bb2204dc5823ac2da031c1b1468bc827884f2d7cada07175361f8a6096e4a655"
+      "sha256": "ddda244b578c01966c003f9d215a6b986ab7ce9b2b15ac1d794f3c35ffa700c0"
+    },
+    {
+      "path": "irbq_lab/tests/test_zoom_patch.py",
+      "sha256": "96f1d8bfa492e724e54de8c65abfe15fbcf7f49394dc4a76356268ad5fb7902d"
     },
     {
       "path": "launch.py",
@@ -250,19 +272,23 @@
     },
     {
       "path": "README.md",
-      "sha256": "f64e1c69d0c1cf59af2bff16555d0dc9131de064a1fbead6f2411424b0fe9cb5"
+      "sha256": "b4bb3e973b4bde04eb0ac2bf5f93cf4a059c89dc5a87bb587056fa8aefb13517"
     },
     {
       "path": "requirements-zoom-lock.txt",
       "sha256": "76f0bccd65b49181c704affc0eb6973772bc836d7f28d09a1713faa7bd60fe76"
     },
     {
+      "path": "scripts/build_hybrid_patch_template.py",
+      "sha256": "bbd6a4e31b176e76ce1b96be67762ac01cd86becc67f683220f65b977f416e5b"
+    },
+    {
       "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "f9f763dde06ed46553e82a4ef9a5d3375edc40c3913d562a7c63593600521c1c"
+      "sha256": "62bdf8929d76200a60d887af9cfb6fded15fd45dcdcc458eb3bdc11111a64d66"
     },
     {
       "path": "UPSTREAM_PROVENANCE.json",
-      "sha256": "0cbeaf69d19e063e9e2c0736a282d1d9fdecff183453cda5131e9aa9af6e838c"
+      "sha256": "279992d3d8aecd0a28497f78d9c64634ce5c52240992939a0454f0309c795110"
     }
   ]
 }

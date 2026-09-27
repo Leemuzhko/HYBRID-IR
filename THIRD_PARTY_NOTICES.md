@@ -73,5 +73,12 @@ used for interoperability and reverse-engineering research, following the
 distinction in the upstream README's License section. HYBRID IR is independent
 and is not affiliated with or endorsed by Zoom Corporation or Texas Instruments.
 Neither the repository MIT declaration nor these notices grant
-rights to redistribute Zoom firmware or stock-effect code. No commercial IR,
-fitted commercial cabinet model, or prebuilt ZDL is included.
+rights to redistribute Zoom firmware or stock-effect code. No commercial IR
+or fitted commercial cabinet model is included.
+
+The experimental `hybridir_sdk/templates/HYBRID4.zdl` is a compiled template
+with synthetic unit impulses and the inherited stock-derived runtime described
+above. It is included for interoperability and reverse-engineering research;
+the project's MIT license does not relicense those embedded third-party portions.
+It is not a wholly original/MIT-only binary. Its hash and fixed patch regions
+are documented in the accompanying HYBRID4.json. New hardware validation is pending.

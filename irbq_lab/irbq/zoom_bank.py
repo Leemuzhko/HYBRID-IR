@@ -198,7 +198,7 @@ def _rows(rows):
     return ',\n'.join('{' + ','.join(_f(x) for x in row) + '}' for row in rows)
 
 
-def pack_bank(project):
+def pack_bank(project, capacity=None, binary=False):
     project.validate()
     models = [None] + [s.model for s in project.slots]
     fir_pool, bq_pool, desc = [], [], []
@@ -248,6 +248,22 @@ def pack_bank(project):
                     raise ValueError('Unstable interpolated control table')
         tables.append(table)
     count = len(models)
+    labels = ['OFF'] + [s.label for s in project.slots]
+    if capacity is not None:
+        for key in ('entry_count', 'max_fir', 'max_bq', 'fir_pool_samples', 'bq_pool_sections'):
+            if type(capacity.get(key)) is not int or capacity[key] <= 0:
+                raise ValueError('Invalid template capacity: '+key)
+        actual = (count, max_fir, max_bq, len(fir_pool), len(bq_pool))
+        limits = tuple(capacity[k] for k in ('entry_count','max_fir','max_bq','fir_pool_samples','bq_pool_sections'))
+        if any(a > b for a,b in zip(actual,limits)):
+            raise ValueError(f'Bank exceeds template capacity: required {actual}, available {limits}')
+        count,max_fir,max_bq,fir_size,bq_size = limits
+        if count > 9 or max_fir > 4096 or max_fir % 4 or max_bq > 32 or fir_size > 65534 or fir_size % 2 or bq_size > 65535:
+            raise ValueError('Unsupported template capacity')
+        while len(desc) < count:
+            desc.append(list(desc[0])); labels.append('EMPTY')
+        fir_pool.extend([0] * (fir_size-len(fir_pool)))
+        bq_pool.extend([IDENTITY] * (bq_size-len(bq_pool)))
     bank_bytes = 32 + 48*count + 8*count + 2*len(fir_pool) + 20*len(bq_pool) + 244 + 2440
     original = (TEMPLATE / 'generated/bank_u1.h').read_text()
     declaration = original.split('const GjBankBlob gj_bank = {')[0]
@@ -261,25 +277,38 @@ def pack_bank(project):
     for d in desc:
         lines.append('{'+','.join(str(x) for x in d[:5])+','+','.join(_f(x) for x in d[5:])+'},')
     lines += ['}, {']
-    for label in ['OFF'] + [s.label for s in project.slots]:
+    for label in labels:
         lines.append('{'+','.join(str(b) for b in label.encode('ascii'))+',0},')
     lines += ['}, {'+','.join(str(x) for x in fir_pool)+'}, {', _rows(bq_pool), '}, {',
               ','.join(_f(10**(db/40)) for db in np.linspace(-15,15,61)), '}, {{',
               _rows(tables[0]), '}}, {{', _rows(tables[1]), '}}\n};\n#endif\n']
     estimated_const = bank_bytes + 816 + 528 + 212 + 8
     report = dict(schema='hybridir-bank-report/1', bank_bytes=bank_bytes,
-                  active_slots=count-1, entry_count=count, max_fir=max_fir, max_bq=max_bq,
+                  active_slots=len(project.slots), entry_count=count, max_fir=max_fir, max_bq=max_bq,
                   fir_pool_samples=len(fir_pool), bq_pool_sections=len(bq_pool),
                   estimated_const_bytes=estimated_const, soft_const_budget=SOFT_CONST_BYTES,
                   estimated_state_bytes=8+2*(4*max_fir+132+8*max_bq),
                   warnings=['Hardware slot count not validated', 'Cost is not measured CPU percent'] +
                   (['Estimated .const exceeds conservative 22 KiB soft budget'] if estimated_const > SOFT_CONST_BYTES else []),
                   roles=['RESO','PRES','exact imported correction sections'],
-                  labels=['OFF']+[s.label for s in project.slots])
+                  labels=labels)
+    if binary:
+        data = bytearray(struct.pack('<IHHHHBBHHHHHII', 0x32425249,1,32,count,max_fir,max_bq,8,1,
+                                     len(fir_pool),len(bq_pool),48,61,bank_bytes,0))
+        for d in desc:
+            data.extend(struct.pack('<HBBHH10f', *d))
+        for label in labels:
+            data.extend(label.encode('ascii').ljust(8,b'\0'))
+        data.extend(np.asarray(fir_pool,dtype='<i2').tobytes())
+        data.extend(np.asarray(bq_pool,dtype='<f4').tobytes())
+        data.extend(np.asarray([10**(db/40) for db in np.linspace(-15,15,61)],dtype='<f4').tobytes())
+        for table in tables:data.extend(table.astype('<f4').tobytes())
+        if len(data) != bank_bytes:raise ValueError('Internal bank size mismatch')
+        return bytes(data), report
     return '\n'.join(lines), report
 
 
-def build_project(project, output, overwrite=False, allow_identity_replace=False):
+def build_project(project, output, overwrite=False, allow_identity_replace=False, *, capacity=None):
     """Stage privately, validate, then publish a distinct rebuilt ZDL."""
     project.validate()
     conflicts = identity_conflicts(project)
@@ -292,7 +321,7 @@ def build_project(project, output, overwrite=False, allow_identity_replace=False
     target = output / (project.filename + '.zdl')
     if target.exists() and not overwrite:
         raise FileExistsError(str(target))
-    source, report = pack_bank(project)
+    source, report = pack_bank(project, capacity=capacity)
     output.mkdir(parents=True, exist_ok=True)
     sys.path[:0] = [str(SDK), str(SDK / 'build')]
     from sdk.runtime_setup import verify_runtime
