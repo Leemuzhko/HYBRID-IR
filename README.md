@@ -2,6 +2,8 @@
 
 English | [Русский](README.ru.md)
 
+[Support HYBRID IR on Ko-fi](https://ko-fi.com/leemuzhko)
+
 ![HYBRID IR effect card with left and right channel controls](assets/IR_CAB-1200x800.png)
 
 Fit your cabinet impulse responses in IRBQ Trainer and build a HYBRID IR ZDL
@@ -217,6 +219,14 @@ The developer builder accepts 1–8 active slots, but this is a software envelop
 hardware slot guarantee. The 22 KiB `.const` warning is a conservative
 heuristic. No universal 32 KiB ZDL limit or dynamic DSP-budget guarantee is
 claimed. The included bank is a synthetic unit impulse, not a commercial IR.
+
+## Support the project
+
+HYBRID IR is free to use. If it helps you create your sound, you can
+[support development on Ko-fi](https://ko-fi.com/leemuzhko).
+Voluntary support helps fund development, testing and documentation.
+No payment is required to use the tools; support does not purchase features,
+priority assistance or a commitment to a release date.
 
 ## Source, tests and licenses
 
