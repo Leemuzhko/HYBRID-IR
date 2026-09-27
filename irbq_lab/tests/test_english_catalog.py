@@ -9,6 +9,30 @@ from irbq.i18n import tr,set_language
 class TestEnglishCatalog(unittest.TestCase):
     def tearDown(self):set_language('ru')
 
+    def test_open_wav_plot_hint_uses_language_and_theme(self):
+        from unittest.mock import MagicMock, patch
+        from matplotlib.figure import Figure
+        from matplotlib.colors import to_rgba
+        from irbq.gui import BaseApp
+        from irbq.ui_theme import PALETTES
+        for language, expected in [('en', 'New WAV — click Prepare IR'),
+                                   ('ru', 'Новый WAV — нажмите «Подготовить IR»')]:
+            for theme in ('light', 'dark'):
+                with self.subTest(language=language, theme=theme):
+                    set_language(language)
+                    app = MagicMock()
+                    app.dirty = False
+                    app.figure = Figure()
+                    app.ax = app.figure.subplots()
+                    app.colors = PALETTES[theme]
+                    with patch('irbq.gui.filedialog.askopenfilename', return_value='fixture.wav'), \
+                         patch('irbq.gui.Session'):
+                        BaseApp.open_wav(app)
+                    app.error.assert_not_called()
+                    hint = app.ax.texts[0]
+                    self.assertEqual(hint.get_text(), expected)
+                    self.assertEqual(to_rgba(hint.get_color()), to_rgba(app.colors['fg']))
+
     def test_source_literals_have_english_translation(self):
         set_language('en');missing=[]
         for path in sorted((Path(__file__).resolve().parents[1]/'irbq').glob('*.py')):
