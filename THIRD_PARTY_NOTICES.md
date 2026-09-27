@@ -1,5 +1,7 @@
 # Third-party code and provenance
 
+English | [Українська](THIRD_PARTY_NOTICES.uk.md)
+
 Original HYBRID IR project code is MIT; third-party exceptions are listed below.
 Keep this file and `licenses/` with source and
 binary distributions. These notices do not license user IRs or stock Zoom code.

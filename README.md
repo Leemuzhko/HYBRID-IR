@@ -1,13 +1,29 @@
-# HYBRID IR
+<p align="center">
+  <img src="assets/IR_CAB-1200x800.png" width="240" alt="HYBRID IR — dual-channel cabinet effect card">
+</p>
+<h1 align="center">HYBRID IR</h1>
+<p align="center"><strong>Your cabinet sound. Inside your Zoom.</strong><br>
+Prepare cabinet responses, fit hybrid FIR/IIR models and build your own ZDL effects.</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Desktop-Windows-2563eb?style=flat-square" alt="Desktop: Windows">
+  <img src="https://img.shields.io/badge/DSP-FIR_%2B_IIR-475569?style=flat-square" alt="DSP: FIR + IIR">
+  <img src="https://img.shields.io/badge/Patcher-No_TI_compiler-475569?style=flat-square" alt="Patcher: no TI compiler">
+  <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Status: experimental">
+</p>
+<p align="center"><strong>English</strong> · <a href="README.ru.md">Русский</a> · <a href="README.uk.md">Українська</a></p>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip">Download for Windows</a></h3>
+<p align="center"><a href="#installation">Installation</a> · <a href="#workflow">Build your first effect</a> · <a href="https://ko-fi.com/leemuzhko">Support on Ko-fi</a></p>
+<p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
+<sub>Project device family. Hardware validation varies by model and bank; see limits below.</sub></p>
 
-English | [Русский](README.ru.md)
-
-![HYBRID IR effect card with left and right channel controls](assets/IR_CAB-1200x800.png)
+---
 
 Fit your cabinet impulse responses in IRBQ Trainer and build a HYBRID IR ZDL
 with your own bank, slot names, effect name, ID and card image. This builder
 targets the HYBRID IR effect; it does not turn arbitrary stock effects into
-IR loaders. Primary hardware target: Zoom MS-70CDR, firmware 2.10.
+IR loaders. Hardware reference for the documented prototype tests: Zoom MS-70CDR,
+firmware 2.10. The broader device family above is not a claim that every model
+and every generated bank has been hardware-validated.
 
 ## What is HYBRID IR, and why use it?
 
@@ -41,12 +57,12 @@ when you want that trade-off.
 
 ## Download — experimental Windows distribution
 
-[Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/codex/initial-trainer-sdk.zip)
+[Download Trainer + ZDL Patcher for Windows (ZIP)](https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip)
 
 This development snapshot includes the source, `.cmd` installer, dependencies list
 and precompiled HYBRID4 template. It is a **source-based distribution, not a
 standalone EXE**, and contains no commercial cabinet IRs. The link follows
-the experimental development branch. Keep your downloaded archive for reproducibility.
+the main branch, not a versioned release. Keep your downloaded archive for reproducibility.
 While the repository is private, sign in to a GitHub account with repository
 access before downloading. A 404 can mean that access is missing.
 
@@ -64,6 +80,8 @@ You can select the bank contents, rename slots and the effect, choose its ID,
 and supply a compatible card bitmap. The patcher validates template identity
 and capacity before writing a `.zdl` and a `.patch.json` report. It does not
 modify arbitrary ZDL effects or upload anything to the pedal.
+
+<a id="installation"></a>
 
 ## Install on Windows
 
@@ -150,6 +168,8 @@ precompiled template does contain inherited stock runtime. Other donor revisions
 fail with a precise missing-file message rather than guessing code offsets.
 The exact recipes and hashes are in `hybridir_sdk/sdk/runtime_setup.py`.
 
+<a id="workflow"></a>
+
 ## Everyday workflow
 
 1. Load your WAV in Trainer and fit the response, or open a prepared Trainer model.
@@ -217,6 +237,14 @@ The developer builder accepts 1–8 active slots, but this is a software envelop
 hardware slot guarantee. The 22 KiB `.const` warning is a conservative
 heuristic. No universal 32 KiB ZDL limit or dynamic DSP-budget guarantee is
 claimed. The included bank is a synthetic unit impulse, not a commercial IR.
+
+## Support the project
+
+HYBRID IR is free to use. If it helps you create your sound, you can
+[support development on Ko-fi](https://ko-fi.com/leemuzhko).
+Voluntary support helps fund development, testing and documentation.
+No payment is required to use the tools; support does not purchase features,
+priority assistance or a commitment to a release date.
 
 ## Source, tests and licenses
 
