@@ -99,8 +99,12 @@ class TestUninstall(unittest.TestCase):
                 for name in ('uninstaller.py','installation_guard.py','Uninstall_HYBRIDIR.cmd',module.RECEIPT):
                     self.assertTrue((root/name).is_file(),name)
                 retry_spec=importlib.util.spec_from_file_location('retry_uninstall',root/'uninstaller.py')
-                retry=importlib.util.module_from_spec(retry_spec);retry_spec.loader.exec_module(retry)
-                self.assertFalse(retry.uninstall(root)['folder_remains'])
+                retry=importlib.util.module_from_spec(retry_spec)
+                # Match installed entry points' -B without relying on test invocation.
+                import sys
+                with patch.object(sys,'dont_write_bytecode',True):
+                    retry_spec.loader.exec_module(retry)
+                    self.assertFalse(retry.uninstall(root)['folder_remains'])
 
     @unittest.skipUnless(os.name=='nt','Windows shortcut')
     def test_shortcut_only_if_recorded_and_unchanged(self):
