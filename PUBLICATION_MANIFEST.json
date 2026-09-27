@@ -148,7 +148,7 @@
     },
     {
       "path": "installer.py",
-      "sha256": "a75df6d16650bc8354edab7b1ca1467643b2b99dde13bafcd9ffff5f36f227e3"
+      "sha256": "0740ac99e51d245f3aad41714bcd156ec94519f21b21bf9588a6cb5a34dd4e47"
     },
     {
       "path": "irbq_lab/bootstrap.py",
@@ -260,11 +260,11 @@
     },
     {
       "path": "irbq_lab/tests/test_uninstall.py",
-      "sha256": "6c48479467c79062dbc8d6ac8a122206f0ab7e79021d1744ad507d6e559540d0"
+      "sha256": "616afcfe9553c314bf3e7f2162002c15aeeb425d225f67de012677df8ec6b07f"
     },
     {
       "path": "irbq_lab/tests/test_update.py",
-      "sha256": "eaa20e11172afe4d9044dc901038173f153d3ae412aa095bc527ce14005ed089"
+      "sha256": "2bc9113dbf5ba4c7a6da72aff3d17646327042cecd10614316561457a4d3394b"
     },
     {
       "path": "irbq_lab/tests/test_workspace.py",
@@ -300,15 +300,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "2ee66f55eac397252ecc5784203608931d493644b99dd790e15bdfb1fc59fe2d"
+      "sha256": "c1dd9e31ca43437c9ae0a93f831979ed5d2c3b0f0786bd756b861ebbcd172c03"
     },
     {
       "path": "README.ru.md",
-      "sha256": "3aafede3d5b372cb6e3f4c542f06e543b5930a07d2781ce95bf42de91c3634d8"
+      "sha256": "f1caa79700bd321075061be5907eee95ad26a786c71645b90431b9f3ebe75f90"
     },
     {
       "path": "README.uk.md",
-      "sha256": "266ed8bf7cf9ed1eb71a304dd3a9a2161827912f7ec276f94fc0062bcc31f06f"
+      "sha256": "e178326c5ddf1ebe4eaa1a35d6b607e1275fa9b8234ef30677d4cbdc34d82394"
     },
     {
       "path": "requirements-zoom-lock.txt",
@@ -336,7 +336,7 @@
     },
     {
       "path": "updater.py",
-      "sha256": "1775fdafc3ec233542f54a5332c27edf27c29a0ff142012c1c14deb16e79da58"
+      "sha256": "2189d4fe0f8a4dfab6166345cc7bdf0dbd6d4e702f1a9e6a311f642623cea97c"
     },
     {
       "path": "UPSTREAM_PROVENANCE.json",
