@@ -336,15 +336,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "402d27a1df63ba34b862317d36accffcc03cb8aecdf7b8a4095851ee2e436c63"
+      "sha256": "d9513ae1f47ca39fb02118a310ec384d7d9ccec71de82f2efe33a8f19bc69155"
     },
     {
       "path": "README.ru.md",
-      "sha256": "23e57b2c28d9a4d5570051ecac4bfdbb3a9e1d0c62494d3148b69c678c99d15f"
+      "sha256": "0f9dce362a9a40ab8197def655e6587f36ae061c91174c273b8433c3d184f567"
     },
     {
       "path": "README.uk.md",
-      "sha256": "ddbd47915fe407155dc1a1936d02822793c7f2a227730da45f6d217155c73671"
+      "sha256": "4061c9217488924301618fce4ad3edd89e5b4fb2fa2c8277619edb41359e4323"
     },
     {
       "path": "requirements-zoom-lock.txt",
