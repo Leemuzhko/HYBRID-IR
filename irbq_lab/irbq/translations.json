@@ -458,5 +458,8 @@
   "Сохранить как default": "Save as default",
   "Загрузить default": "Load default",
   "Настройки подготовки сохранены как default.": "Preparation settings saved as defaults.",
-  "Загружены сохранённые настройки подготовки.": "Saved preparation settings loaded."
+  "Загружены сохранённые настройки подготовки.": "Saved preparation settings loaded.",
+  "Pink + диапазон, 80–8000 Hz (legacy)": "Pink + band, 80–8000 Hz (legacy)",
+  "K + диапазон, 80–8000 Hz": "K + band, 80–8000 Hz",
+  "K + Pink + диапазон, 80–8000 Hz": "K + Pink + band, 80–8000 Hz"
 }
