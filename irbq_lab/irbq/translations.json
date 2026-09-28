@@ -145,7 +145,6 @@
   "Нет секций BQ": "No BQ sections",
   "Выбранная секция": "Selected section",
   "Название": "Name",
-  "Тип": "Type",
   "Частота": "Frequency",
   "Усиление": "Gain",
   "Частота, Hz": "Frequency, Hz",
@@ -454,5 +453,13 @@
   "{used} / {limit} Б; осталось {remaining} Б; параметры RBJ {params} Б; таблица усиления {lut} Б; код + const {total}/{cap} Б": "{used} / {limit} B; remaining {remaining} B; RBJ parameters {params} B; gain LUT {lut} B; code + const {total}/{cap} B",
   "Использовать фильтр Resonance старой модели как RESO? Да: сохранить его нейтральную АЧХ и использовать как регулятор. Нет: оставить все фильтры коррекции и добавить стандартные RESO/PRES. Presence остаётся фильтром коррекции. Отмена: не менять банк.": "Use the Resonance filter in this older model as RESO? Yes: reuse it, preserving its neutral response. No: keep all filters as corrections and add default RESO/PRES. Presence stays a correction filter. Cancel: leave the bank unchanged.",
   "Банк/картинка превышает консервативный профиль загрузки HVB4RBJ": "Bank/image exceeds conservative HVB4RBJ loading profile",
-  "Для моделей с ролями RESO используйте патчер HVB4": "Use the HVB4 role-aware patcher for models with RESO roles"
+  "Для моделей с ролями RESO используйте патчер HVB4": "Use the HVB4 role-aware patcher for models with RESO roles",
+  "Pink = равный вес на октаву. K = частотная часть ITU-R BS.1770 без LUFS gating.": "Pink = equal weight per octave. K = the ITU-R BS.1770 frequency weighting without LUFS gating.",
+  "Сохранить как default": "Save as default",
+  "Загрузить default": "Load default",
+  "Настройки подготовки сохранены как default.": "Preparation settings saved as defaults.",
+  "Загружены сохранённые настройки подготовки.": "Saved preparation settings loaded.",
+  "Pink + диапазон, 80–8000 Hz (legacy)": "Pink + band, 80–8000 Hz (legacy)",
+  "K + диапазон, 80–8000 Hz": "K + band, 80–8000 Hz",
+  "K + Pink + диапазон, 80–8000 Hz": "K + Pink + band, 80–8000 Hz"
 }

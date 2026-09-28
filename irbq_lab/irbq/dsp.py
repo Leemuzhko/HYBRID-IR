@@ -122,6 +122,81 @@ def sos_stability(sos) -> float:
         return 0.0
     return float(max((max(abs(np.roots(s[3:]))) for s in sos)))
 
+
+def k_weighting_response(f, fs):
+    """ITU-R BS.1770 K-weighting magnitude/phase response for arbitrary sample rate.
+
+    Uses the De Man coefficient construction that matches the 48 kHz coefficients
+    from BS.1770 while preserving the same analogue-shaped response at other rates.
+    This is frequency weighting only; no LUFS block gating is involved here.
+    """
+    f = np.asarray(f, dtype=float)
+    z = np.exp(-2j * np.pi * f / fs)
+
+    # Stage 1: head/acoustic pre-filter (high shelf).
+    gain_db = 3.999843853973347
+    q = 0.7071752369554196
+    fc = 1681.974450955533
+    k = np.tan(np.pi * fc / fs)
+    vh = 10.0 ** (gain_db / 20.0)
+    vb = vh ** 0.499666774155
+    den = 1.0 + k / q + k * k
+    b0 = (vh + vb * k / q + k * k) / den
+    b1 = 2.0 * (k * k - vh) / den
+    b2 = (vh - vb * k / q + k * k) / den
+    a1 = 2.0 * (k * k - 1.0) / den
+    a2 = (1.0 - k / q + k * k) / den
+    shelf = (b0 + b1 * z + b2 * z * z) / (1.0 + a1 * z + a2 * z * z)
+
+    # Stage 2: revised low-frequency B-curve (RLB) high-pass.
+    q = 0.5003270373238773
+    fc = 38.13547087602444
+    k = np.tan(np.pi * fc / fs)
+    den = 1.0 + k / q + k * k
+    a1 = 2.0 * (k * k - 1.0) / den
+    a2 = (1.0 - k / q + k * k) / den
+    highpass = (1.0 - 2.0 * z + z * z) / (1.0 + a1 * z + a2 * z * z)
+    return shelf * highpass
+
+
+def response_normalization_power(H, f, fs, mode):
+    """Mean response power for the selectable cabinet-normalisation weightings.
+
+    'band' intentionally preserves the historical logarithmic 80-8000 Hz
+    implementation. Equal spacing on the log-frequency grid is approximately
+    pink-noise (1/f) spectral weighting when viewed per linear Hz.
+    """
+    H = np.asarray(H)
+    f = np.asarray(f, dtype=float)
+    p = np.abs(H) ** 2
+    audible_hi = min(20000.0, fs * 0.45)
+
+    if mode == 'band':
+        fg = np.geomspace(80.0, min(8000.0, audible_hi), 4096)
+        return float(np.mean(np.interp(fg, f, p)))
+
+    if mode in ('pink', 'k_pink', 'k_pink_band'):
+        lo = 80.0 if mode == 'k_pink_band' else 20.0
+        hi = min(8000.0, audible_hi) if mode == 'k_pink_band' else audible_hi
+        fg = np.geomspace(lo, hi, 4096)
+        pg = np.interp(fg, f, p)
+        if mode == 'pink':
+            return float(np.mean(pg))
+        wk = np.abs(k_weighting_response(fg, fs)) ** 2
+        return float(np.sum(pg * wk) / max(np.sum(wk), 1e-30))
+
+    if mode in ('k_weighted', 'k_band'):
+        lo = 80.0 if mode == 'k_band' else 20.0
+        hi = min(8000.0, audible_hi) if mode == 'k_band' else audible_hi
+        mask = (f >= lo) & (f <= hi)
+        if not np.any(mask):
+            raise ValueError('Нет частотных отсчётов для выбранной нормализации.')
+        wk = np.abs(k_weighting_response(f[mask], fs)) ** 2
+        return float(np.sum(p[mask] * wk) / max(np.sum(wk), 1e-30))
+
+    raise ValueError('Неизвестная энергетическая нормализация.')
+
+
 def quantize_fir(h):
     h = array1(h)
     scale = max(1.0, float(np.max(abs(h))) / 0.95)
@@ -296,16 +371,15 @@ def prepare(audio, src_fs: int, cfg: PrepConfig):
     gain = 1.0
     if cfg.normalization == 'peak':
         gain = 10 ** (cfg.level_db / 20) / np.max(abs(y))
-    elif cfg.normalization in ('band', 'frequency_peak'):
+    elif cfg.normalization in ('band', 'pink', 'k_weighted', 'k_band', 'k_pink', 'k_pink_band', 'frequency_peak'):
         n = fft.next_fast_len(max(65536, 2 * len(y)))
         H = np.fft.rfft(y, n)
         f = np.fft.rfftfreq(n, 1 / cfg.fs)
-        if cfg.normalization == 'band':
-            fg = np.geomspace(80, min(8000, cfg.fs * 0.45), 4096)
-            power = np.interp(fg, f, abs(H) ** 2).mean()
-            gain = 10 ** (cfg.level_db / 20) / max(math.sqrt(power), 1e-20)
-        else:
+        if cfg.normalization == 'frequency_peak':
             gain = 10 ** (cfg.level_db / 20) / max(np.max(abs(H)), 1e-20)
+        else:
+            power = response_normalization_power(H, f, cfg.fs, cfg.normalization)
+            gain = 10 ** (cfg.level_db / 20) / max(math.sqrt(power), 1e-20)
     elif cfg.normalization != 'none':
         raise ValueError('Неизвестная нормализация.')
     if cfg.invert_polarity:
