@@ -11,7 +11,12 @@ Prepare cabinet responses, fit hybrid FIR/IIR models and build your own ZDL effe
   <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Status: experimental">
 </p>
 <p align="center"><strong>English</strong> · <a href="README.ru.md">Русский</a> · <a href="README.uk.md">Українська</a></p>
-<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip">Download for Windows</a></h3>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">Download for Windows</a></h3>
+
+**[Standalone — recommended](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — Python required](https://github.com/Leemuzhko/HYBRID-IR/releases)**
+
+Choose the matching ZIP under release Assets. Both include the same app for their revision; development builds are prereleases. GitHub Download ZIP contains source code, not the installed app.
+
 <p align="center"><a href="docs/en/installation.md">Installation</a> · <a href="docs/en/workflow.md">Build your first effect</a> · <a href="https://ko-fi.com/leemuzhko">Support on Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
 <sub>Project device family. Hardware validation varies by model and bank; see the technical guide.</sub></p>

@@ -56,9 +56,13 @@ Upstream LICENSE.md збережено дослівно в `licenses/Zoom-Firmwa
 
 ## Компоненти, що встановлюються окремо
 
-Python і залежності pip зберігають власні ліцензії у своїх встановленнях.
-Цей інсталятор завантажує пакети Python в окреме середовище, а не розповсюджує
-їхні встановлені двійкові файли. TI C6000 CGT отримують окремо від Texas Instruments:
+Python і залежності зберігають власні ліцензії. Lite завантажує пакети в окреме
+середовище. Standalone містить CPython, Tcl/Tk і закріплені залежності: див.
+`runtime/LICENSE.txt`, ліцензії в `runtime/tcl` та
+`runtime/Lib/site-packages/*dist-info`. `RUNTIME_PROVENANCE.json` фіксує
+версію інтерпретатора; `PUBLICATION_MANIFEST.json` — хеші всіх файлів.
+Хеші перевіряють цілісність, а не автентичність видавця.
+TI C6000 CGT отримують окремо від Texas Instruments:
 https://www.ti.com/tool/C6000-CGT
 
 Три окремі фрагменти середовища виконання (`linesel_handlers.bin`, `divf_rts.bin`,

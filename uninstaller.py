@@ -61,7 +61,7 @@ def plan(root):
         if (not isinstance(shortcut,dict) or set(shortcut)!={'path','sha256'}
                 or not isinstance(shortcut['path'],str) or '\0' in shortcut['path']
                 or not Path(shortcut['path']).is_absolute()
-                or Path(shortcut['path']).name!='HYBRID IR.lnk'
+                or Path(shortcut['path']).name not in ('HYBRID IR.lnk','HYBRID IR Development.lnk')
                 or not isinstance(shortcut['sha256'],str)
                 or not re.fullmatch(r'[0-9a-f]{64}',shortcut['sha256'])):
             raise ValueError('Invalid shortcut receipt')
@@ -113,7 +113,7 @@ def _uninstall(root, remove_preferences=False):
     shortcut=record.get('shortcut')
     if shortcut and os.name=='nt':
         try:
-            desktop=desktop_path();link=desktop/'HYBRID IR.lnk'
+            desktop=desktop_path();link=desktop/Path(shortcut['path']).name
             if str(link)==shortcut['path'] and plain_path(link,desktop) and link.is_file():
                 if digest(link)==shortcut['sha256']:link.unlink()
                 else:preserved.append('Modified desktop shortcut')
@@ -170,6 +170,9 @@ def main():
     import tkinter as tk
     from tkinter import ttk,messagebox
     root_path=Path(__file__).resolve().parent
+    if len(sys.argv) == 3 and sys.argv[1] == '--root':
+        root_path=Path(sys.argv[2]).absolute()
+    # Standalone invokes a copy outside the installation, so no runtime DLL is locked.
     window=tk.Tk();window.title('Uninstall HYBRID IR');window.geometry('620x310')
     icon=root_path/'assets/zoom-ms70cdr.ico'
     if icon.is_file() and os.name=='nt':window.iconbitmap(str(icon))

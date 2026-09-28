@@ -1,4 +1,4 @@
-"""Windows source installer. Uses an official Python 3.14 already installed.
+"""Windows Lite/Standalone installer with receipt-based ownership.
 
 No elevation, firmware downloads, or device access. Pip installs into the
 selected destination. Runtime fragments are provisioned from user files.
@@ -37,7 +37,10 @@ def create_desktop_shortcut(destination, desktop=None):
     """Resolve the real Windows Desktop (including redirection), preserve existing links."""
     if os.name!='nt':raise OSError('Desktop shortcuts require Windows')
     destination=Path(destination).resolve()
-    for file in (destination/'.venv/Scripts/pythonw.exe',destination/'launch.py',destination/'assets/zoom-ms70cdr.ico'):
+    runtime_helper = helper('distribution_runtime')
+    pythonw = runtime_helper.interpreter(destination, windowed=True)
+    development = runtime_helper.metadata(destination)['channel'] == 'development'
+    for file in (pythonw,destination/'launch.py',destination/'assets/zoom-ms70cdr.ico'):
         if not file.is_file():raise ValueError(f'Shortcut target missing: {file.name}')
     script=r'''
 $ErrorActionPreference = 'Stop'
@@ -45,11 +48,11 @@ $shell = New-Object -ComObject WScript.Shell
 $desktopPath = $env:HYBRIDIR_SHORTCUT_DESKTOP
 if (-not $desktopPath) { $desktopPath = $shell.SpecialFolders.Item('Desktop') }
 if (-not (Test-Path -LiteralPath $desktopPath -PathType Container)) { throw 'Desktop folder missing' }
-$linkPath = Join-Path $desktopPath 'HYBRID IR.lnk'
+$linkPath = Join-Path $desktopPath $env:HYBRIDIR_SHORTCUT_NAME
 if (Test-Path -LiteralPath $linkPath) { throw 'HYBRID IR desktop shortcut already exists; preserved' }
 $appPath = $env:HYBRIDIR_SHORTCUT_APP
 $link = $shell.CreateShortcut($linkPath)
-$link.TargetPath = Join-Path $appPath '.venv\Scripts\pythonw.exe'
+$link.TargetPath = $env:HYBRIDIR_SHORTCUT_PYTHON
 $link.Arguments = '-B -X utf8 "' + (Join-Path $appPath 'launch.py') + '"'
 $link.WorkingDirectory = $appPath
 $link.IconLocation = (Join-Path $appPath 'assets\zoom-ms70cdr.ico') + ',0'
@@ -61,6 +64,8 @@ Write-Output $linkPath
     result=subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',
                     base64.b64encode(script.encode('utf-16le')).decode('ascii')],
                    env={**os.environ,'HYBRIDIR_SHORTCUT_APP':str(destination),
+                        'HYBRIDIR_SHORTCUT_PYTHON':str(pythonw),
+                        'HYBRIDIR_SHORTCUT_NAME':'HYBRID IR Development.lnk' if development else 'HYBRID IR.lnk',
                         'HYBRIDIR_SHORTCUT_DESKTOP':str(desktop) if desktop else ''},
                    check=True,capture_output=True,timeout=30,
                    creationflags=subprocess.CREATE_NO_WINDOW)
@@ -101,6 +106,8 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
     if destination.is_relative_to(source) or source.is_relative_to(destination):
         raise ValueError('Choose an installation path outside the extracted source folder.')
     payload = checked_payload(source)
+    delivery = helper('distribution_runtime').metadata(source)
+    standalone = delivery['flavor'] == 'standalone'
     runtime = None
     if full:
         sys.path.insert(0, str(source / 'hybridir_sdk'))
@@ -119,16 +126,22 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
     if runtime is not None:
         from sdk.runtime_setup import write_runtime
         write_runtime(destination / 'hybridir_sdk', runtime)
-    progress('Creating a private Python environment...')
-    venv.EnvBuilder(with_pip=True).create(destination / '.venv')
-    python = destination / '.venv' / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
-    progress('Installing dependencies from PyPI. This may take several minutes...')
     log = destination / 'installation.log'
-    with log.open('w', encoding='utf-8') as stream:
-        subprocess.run([str(python), '-m', 'pip', '--isolated', 'install',
-                        '--index-url', 'https://pypi.org/simple', '--only-binary=:all:',
-                        '-r', str(destination / 'requirements-zoom-lock.txt')],
-                       stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=1200)
+    if standalone:
+        python = destination / 'runtime/python.exe'
+        if not python.is_file():
+            raise ValueError('Standalone runtime is missing')
+        log.write_text('Standalone: bundled runtime, no dependency downloads.\n', encoding='utf-8')
+    else:
+        progress('Creating a private Python environment...')
+        venv.EnvBuilder(with_pip=True).create(destination / '.venv')
+        python = destination / '.venv' / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+        progress('Installing dependencies from PyPI. This may take several minutes...')
+        with log.open('w', encoding='utf-8') as stream:
+            subprocess.run([str(python), '-m', 'pip', '--isolated', 'install',
+                            '--index-url', 'https://pypi.org/simple', '--only-binary=:all:',
+                            '-r', str(destination / 'requirements-zoom-lock.txt')],
+                           stdout=stream, stderr=subprocess.STDOUT, check=True, timeout=1200)
     progress('Checking the installed application...')
     subprocess.run([str(python), '-B', '-c',
                     'import tkinter,numpy,scipy,matplotlib,soundfile,PIL; '
@@ -157,12 +170,14 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
         {'schema':'hybridir-install/1', 'bundle_id':hashlib.sha256((source/'PUBLICATION_MANIFEST.json').read_bytes()).hexdigest()[:12],
          'ti_root':str(Path(ti_root).resolve()) if full else '',
          'zdl_enabled':full}, indent=2), encoding='utf-8')
+    relative_python = 'runtime\\python.exe' if standalone else '.venv\\Scripts\\python.exe'
     (destination / 'Start_HYBRIDIR.cmd').write_text(
-        '@echo off\r\ncd /d "%~dp0"\r\n".venv\\Scripts\\python.exe" -B -X utf8 launch.py %*\r\n'
+        '@echo off\r\ncd /d "%~dp0"\r\n"'+relative_python+'" -B -X utf8 launch.py %*\r\n'
         'if errorlevel 1 pause\r\n', encoding='utf-8')
     (destination / 'Uninstall_HYBRIDIR.cmd').write_text(
         '@echo off\r\nsetlocal\r\ncd /d "%TEMP%"\r\n'
-        'py -3.14 -B -X utf8 "%~dp0uninstaller.py"\r\n',encoding='utf-8')
+        + ('powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0standalone_uninstall.ps1"\r\n'
+           if standalone else 'py -3.14 -B -X utf8 "%~dp0uninstaller.py"\r\n'),encoding='utf-8')
     shortcut_record=None
     if desktop_shortcut:
         try:shortcut_record=create_desktop_shortcut(destination)
@@ -193,7 +208,10 @@ def main():
     ttk.Label(body, text='Install HYBRID IR', font=('Segoe UI',18)).grid(row=0,column=0,columnspan=3,sticky='w')
     ttk.Label(body, text='Trainer and ZDL bank builder · Windows · no administrator rights required').grid(
         row=1,column=0,columnspan=3,sticky='w',pady=(4,18))
-    destination = tk.StringVar(value=str(Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / 'HYBRIDIR'))
+    delivery = helper('distribution_runtime').metadata(SOURCE)
+    folder = 'HYBRIDIR-Development' if delivery['channel'] == 'development' else 'HYBRIDIR'
+    root.title('HYBRID IR Setup — '+delivery['channel']+' / '+delivery['flavor'])
+    destination = tk.StringVar(value=str(Path(os.environ.get('LOCALAPPDATA', str(Path.home()))) / folder))
     ti = tk.StringVar()
     donors = tk.StringVar()
     fields = [('Install to',destination),('TI C6000 compiler folder',ti),('Stock ZDL / runtime folder',donors)]
@@ -228,7 +246,8 @@ def main():
     shortcut=tk.BooleanVar(value=True)
     shortcut_control=ttk.Checkbutton(body,text='Create a desktop shortcut',variable=shortcut)
     shortcut_control.grid(row=7,column=0,columnspan=3,sticky='w',pady=(12,4));controls.append(shortcut_control)
-    status=tk.StringVar(value='Dependencies are downloaded from PyPI during installation.')
+    status=tk.StringVar(value=('Offline installation with bundled Python and dependencies.'
+        if delivery['flavor']=='standalone' else 'Python 3.14 required. Dependencies are downloaded from PyPI.'))
     ttk.Label(body,textvariable=status,wraplength=660).grid(row=8,column=0,columnspan=3,sticky='w',pady=15)
     events=queue.Queue()
     busy=False
