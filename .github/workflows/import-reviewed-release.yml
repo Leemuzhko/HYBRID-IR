@@ -1,0 +1,153 @@
+name: Import and validate reviewed HYBRID IR release
+"on":
+  push:
+    branches: [release/hir3a-0.4.1]
+    paths: [.github/workflows/import-reviewed-release.yml]
+permissions:
+  contents: read
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      commit: ${{ steps.import.outputs.commit }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+      - name: Import reviewed files without private history
+        id: import
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config core.autocrlf false
+          python - <<'PY'
+          import base64,hashlib,io,json,os,subprocess,urllib.request,urllib.parse,zipfile
+          from pathlib import Path,PurePosixPath
+          def digest(data):return hashlib.sha256(data).hexdigest()
+          repo=os.environ['GITHUB_REPOSITORY']
+          raw=json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/git/blobs/6f31f0787f4f7748fb816d37088e4ce7b7af3b1d']))
+          handoff=json.loads(base64.b64decode(raw['content']))
+          url=handoff['download_url']
+          print('::add-mask::'+url,flush=True)
+          assert urllib.parse.urlsplit(url).scheme=='https'
+          assert urllib.parse.urlsplit(url).hostname.endswith('.oaiusercontent.com')
+          try:
+              with urllib.request.urlopen(url,timeout=60) as response:outer=response.read(10_000_001)
+          except Exception:
+              raise RuntimeError('Reviewed transfer unavailable or expired; no repository files changed') from None
+          assert len(outer)<=10_000_000 and digest(outer)=='170d0e999ec62ab927c787c502197b13f7c64ff35a9fc98af6023321fa678ed0'
+          with zipfile.ZipFile(io.BytesIO(outer)) as bundle:inner=bundle.read('public-source/HYBRID-IR-source.zip')
+          assert digest(inner)=='6f80e6b19af6d451423ee4f6c366eb0c5548d3617f886abb408cf970d916b564'
+          payload={}
+          with zipfile.ZipFile(io.BytesIO(inner)) as bundle:
+              for item in bundle.infolist():
+                  if item.is_dir():continue
+                  assert item.filename.startswith('HYBRID-IR/')
+                  name=item.filename[len('HYBRID-IR/'):]
+                  p=PurePosixPath(name)
+                  assert not p.is_absolute() and '\\' not in name and not any(x in ('','..','.git') for x in p.parts)
+                  assert (item.external_attr>>16)&0o170000 != 0o120000
+                  assert name.casefold() not in {x.casefold() for x in payload}
+                  payload[name]=bundle.read(item)
+          manifest=payload['PUBLICATION_MANIFEST.json']
+          assert digest(manifest)=='ab93cfe34c20b03725818d6defbeb9652a537166d789002ce8332feb4c91336e'
+          m=json.loads(manifest)
+          assert m['source_revision']=='93fb582dbb23a4544d5b6dac186999be4c335732' and m['app_version']=='0.4.1'
+          expected={f['path']:f['sha256'] for f in m['files']}
+          assert set(payload)==set(expected)|{'PUBLICATION_MANIFEST.json'}
+          for name,value in expected.items():assert digest(payload[name])==value,name
+          assert digest(payload['hybridir_sdk/templates/HIR3A.ZDL'])=='14f605e66ea0ca24a1bd0b0873cb15b8dbaf900290ffe78f9f6cb60c99b0f9d4'
+          changes=subprocess.check_output(['git','diff','--name-only','382fd26917bd64a7d52d6ac21da008d035bcbf02','HEAD'],text=True).splitlines()
+          assert set(changes)<={'.github/workflows/release-review-snapshot.yml','.github/workflows/import-reviewed-release.yml'}
+          current=set(subprocess.check_output(['git','ls-tree','-r','--name-only','HEAD'],text=True).splitlines())
+          obsolete=sorted(current-set(payload))
+          if obsolete:subprocess.run(['git','rm','--',*obsolete],check=True)
+          for name,data in payload.items():
+              p=Path(name)
+              assert not any(x.is_symlink() for x in (p,*p.parents))
+              p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+          subprocess.run(['git','add','-f','--',*sorted(payload)],check=True)
+          print('Verified public snapshot:',len(payload),'files; private repository history was not copied')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'release: synchronize reviewed HIR3A and preparation defaults for 0.4.1'
+          git push origin HEAD:refs/heads/release/hir3a-0.4.1
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  windows:
+    needs: import
+    runs-on: windows-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.import.outputs.commit }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.14.6'
+          architecture: x64
+      - name: Install pinned validation dependencies
+        shell: pwsh
+        run: |
+          python -m pip install --only-binary=:all: -r requirements-zoom-lock.txt
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python -m pip install --only-binary=:all: ziglang==0.16.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Source and GUI release gate
+        shell: pwsh
+        run: |
+          python -B scripts/run_development_tests.py 2>&1 | Tee-Object PUBLIC_WINDOWS.log
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build exact committed Lite and Standalone
+        shell: pwsh
+        run: |
+          python -B scripts/build_hybrid_distribution.py --repo . --revision HEAD --out artifacts --version 0.4.1 --channel stable
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Payload and installed-application lifecycle gates
+        shell: pwsh
+        run: |
+          Get-ChildItem artifacts -Directory | ForEach-Object {
+            $python = if ($_.Name -like '*Standalone') { Join-Path $_.FullName 'runtime/python.exe' } else { 'python' }
+            & $python -B scripts/verify_release_payload.py --root $_.FullName
+            if ($LASTEXITCODE -ne 0) { throw 'Payload verification failed' }
+            python -B scripts/smoke_hybrid_distribution.py --source $_.FullName --work ('smoke-' + $_.Name)
+            if ($LASTEXITCODE -ne 0) { throw 'Installed application lifecycle failed' }
+            if ($_.Name -like '*Standalone') {
+              python -B scripts/smoke_standalone_uninstall.py --source $_.FullName --work ('uninstall-' + $_.Name)
+              if ($LASTEXITCODE -ne 0) { throw 'Standalone uninstall entrypoint failed' }
+            }
+          }
+      - name: Record build revision
+        shell: bash
+        run: |
+          git rev-parse HEAD > BUILD_REVISION.txt
+          python -m pip freeze > TEST_DEPENDENCIES.txt
+      - name: Upload verified installation packages
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-packages
+          path: |
+            artifacts/*.zip
+            artifacts/*.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload validation receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-validation
+          path: |
+            PUBLIC_WINDOWS.log
+            BUILD_REVISION.txt
+            TEST_DEPENDENCIES.txt
+            smoke-*/*.json
+            uninstall-*/*.json
+          if-no-files-found: ignore
+          retention-days: 30
