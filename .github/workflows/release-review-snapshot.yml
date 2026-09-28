@@ -1,0 +1,33 @@
+name: Release baseline review
+on:
+  push:
+    branches: [release/hir3a-0.4.1]
+    paths: [.github/workflows/release-review-snapshot.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 382fd26917bd64a7d52d6ac21da008d035bcbf02
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Capture baseline and public-history inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir review
+          git archive --format=zip --output=review/HYBRID-IR-baseline.zip HEAD
+          git log --all --format='%H %s' > review/HISTORY.txt
+          git rev-list --all --objects > review/HISTORY_OBJECTS.txt
+          git ls-tree -r HEAD > review/TREE.txt
+          sha256sum review/HYBRID-IR-baseline.zip > review/SHA256SUMS.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hybrid-release-baseline
+          path: review/
+          retention-days: 7
+          if-no-files-found: error
