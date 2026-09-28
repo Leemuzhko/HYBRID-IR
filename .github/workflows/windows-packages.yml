@@ -24,11 +24,9 @@ jobs:
       - name: Build both flavors
         env:
           PACKAGE_VERSION: ${{ inputs.version }}
-          REPOSITORY_NAME: ${{ github.event.repository.name }}
         shell: pwsh
         run: |
-          $channel = if ($env:REPOSITORY_NAME -eq 'HYBRID-IR_development') { 'development' } else { 'stable' }
-          python -B scripts/build_hybrid_distribution.py --out artifacts --version "$env:PACKAGE_VERSION" --channel $channel
+          python -B scripts/build_hybrid_distribution.py --out artifacts --version "$env:PACKAGE_VERSION"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Real disposable lifecycle smoke
         shell: pwsh

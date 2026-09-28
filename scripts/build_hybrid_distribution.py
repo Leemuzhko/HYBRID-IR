@@ -53,6 +53,29 @@ def destination_for(name):
     return None
 
 
+def channel_for_markers(markers):
+    expected={'PUBLICATION_MANIFEST.json':('stable','hybridir-publication/1'),
+              'DEVELOPMENT_MANIFEST.json':('development','hybridir-development-snapshot/1')}
+    if len(markers)!=1 or next(iter(markers)) not in expected:
+        raise ValueError('Exactly one bounded repository marker is required')
+    name=next(iter(markers));channel,schema=expected[name]
+    if markers[name].get('schema')!=schema:
+        raise ValueError('Invalid source marker schema')
+    return channel
+
+
+def source_identity(repo, revision):
+    commit=subprocess.check_output(['git','-C',str(repo),'rev-parse',revision+'^{commit}'],text=True).strip()
+    names=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only',commit],text=True).splitlines()
+    markers={name:json.loads(subprocess.check_output(['git','-C',str(repo),'show',commit+':'+name]))
+             for name in ('PUBLICATION_MANIFEST.json','DEVELOPMENT_MANIFEST.json') if name in names}
+    return commit,channel_for_markers(markers)
+
+
+def runtime_requirements(raw):
+    return b'\n'.join(line for line in raw.splitlines() if not line.startswith(b'ziglang=='))+b'\n'
+
+
 def export_revision(repo, revision, output):
     revision = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', revision+'^{commit}'], text=True).strip()
     names = subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '--name-only', revision], text=True).splitlines()
@@ -73,7 +96,7 @@ def export_revision(repo, revision, output):
         if name == 'requirements-zoom-lock.txt':
             # Zig only compiles host-test fixtures; it is not used by Trainer,
             # the template patcher, or the separate TI build path.
-            raw=b'\n'.join(line for line in raw.splitlines() if not line.startswith(b'ziglang=='))+b'\n'
+            raw=runtime_requirements(raw)
         path = output / target_name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
@@ -130,7 +153,11 @@ def bundle_python(output):
 def build(repo, revision, out, flavor, channel, version):
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9.\-]{0,60}', version):
         raise ValueError('Unsafe version')
-    if flavor not in ('lite', 'standalone') or channel not in ('stable', 'development'):
+    revision, expected_channel=source_identity(repo, revision)
+    if channel is not None and channel!=expected_channel:
+        raise ValueError('Channel does not match the committed source marker')
+    channel=expected_channel
+    if flavor not in ('lite', 'standalone'):
         raise ValueError('Unsupported distribution')
     name = f'HYBRID-IR-{version}-Windows-x64-{flavor.title()}'
     folder = out / name
@@ -176,7 +203,7 @@ if __name__ == '__main__':
     parser.add_argument('--revision', default='HEAD')
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--version', required=True)
-    parser.add_argument('--channel', choices=('stable', 'development'), required=True)
+    parser.add_argument('--channel', choices=('stable', 'development'), help='Optional assertion; derived from the committed source marker')
     parser.add_argument('--flavor', choices=('lite', 'standalone', 'both'), default='both')
     args = parser.parse_args()
     for flavor in (('lite', 'standalone') if args.flavor=='both' else (args.flavor,)):

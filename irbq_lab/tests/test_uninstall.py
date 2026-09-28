@@ -48,10 +48,26 @@ class TestUninstall(unittest.TestCase):
                 settings=Path(td)/folder/'settings.json'
                 settings.parent.mkdir();settings.write_text('{}')
             root=Path(td)/'app';self.setup_app(root)
-            (root/'distribution.json').write_text(json.dumps({'channel':'development'}))
+            (root/'distribution.json').write_text(json.dumps({'schema':'hybridir-distribution/1','channel':'development'}))
+            (root/module.RECEIPT).unlink();module.write_receipt(root)
             module.uninstall(root,remove_preferences=True)
             self.assertTrue((Path(td)/'IRBQ_Lab/settings.json').is_file())
             self.assertFalse((Path(td)/'HYBRIDIR-Development/settings.json').exists())
+
+    def test_damaged_channel_metadata_preserves_preferences(self):
+        for damage in ('missing','invalid'):
+            with tempfile.TemporaryDirectory() as td,patch.dict(os.environ,{'APPDATA':td,'IRBQ_SETTINGS_PATH':''}):
+                for folder in ('IRBQ_Lab','HYBRIDIR-Development'):
+                    settings=Path(td)/folder/'settings.json';settings.parent.mkdir();settings.write_text('{}')
+                root=Path(td)/'app';self.setup_app(root)
+                metadata=root/'distribution.json'
+                metadata.write_text(json.dumps({'schema':'hybridir-distribution/1','channel':'development'}))
+                (root/module.RECEIPT).unlink();module.write_receipt(root)
+                if damage=='missing':metadata.unlink()
+                else:metadata.write_text('{}')
+                module.uninstall(root,remove_preferences=True)
+                self.assertTrue((Path(td)/'IRBQ_Lab/settings.json').exists())
+                self.assertEqual((Path(td)/'HYBRIDIR-Development/settings.json').exists(),damage=='invalid')
 
     def test_receipt_traversal_rejected_before_deletion(self):
         with tempfile.TemporaryDirectory() as td:

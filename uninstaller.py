@@ -37,6 +37,18 @@ def desktop_path():
         timeout=30,creationflags=subprocess.CREATE_NO_WINDOW)
     return Path(result.stdout.decode('utf-8-sig').strip())
 
+def metadata_channel(root):
+    path=Path(root)/'distribution.json'
+    if not path.exists():return None
+    try:
+        data=json.loads(path.read_text(encoding='utf-8'))
+        if data.get('schema')=='hybridir-distribution/1' and data.get('channel') in ('stable','development'):
+            return data['channel']
+    except (OSError,ValueError,TypeError,AttributeError):
+        pass
+    return None
+
+
 def write_receipt(root, shortcut=None):
     root=Path(root).resolve()
     files=[]
@@ -44,7 +56,8 @@ def write_receipt(root, shortcut=None):
         if path.name==RECEIPT:continue
         if not plain_path(path,root):raise ValueError('Installation contains a link or junction')
         if path.is_file():files.append(dict(path=path.relative_to(root).as_posix(),sha256=digest(path)))
-    record=dict(schema='hybridir-uninstall/1',root=str(root),files=files,shortcut=shortcut)
+    channel=metadata_channel(root) if (root/'distribution.json').exists() else 'stable'
+    record=dict(schema='hybridir-uninstall/1',root=str(root),files=files,shortcut=shortcut,channel=channel)
     with (root/RECEIPT).open('x',encoding='utf-8') as stream:json.dump(record,stream,indent=2)
 
 def plan(root):
@@ -101,8 +114,13 @@ def uninstall(root, remove_preferences=False):
 def _uninstall(root, remove_preferences=False):
     root,record,selected,preserved=plan(root)
     delivery_path=root/'distribution.json'
-    channel=(json.loads(delivery_path.read_text(encoding='utf-8')).get('channel')
-             if delivery_path.exists() else 'stable')
+    recorded_delivery=any(item['path']=='distribution.json' for item in record['files'])
+    channel=record.get('channel', None if recorded_delivery else 'stable')
+    if delivery_path.exists():
+        current_channel=metadata_channel(root)
+        if current_channel is None or (channel is not None and current_channel!=channel):
+            channel=None
+        elif channel is None:channel=current_channel
     errors=[];removed=0
     controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd','installation_guard.py',
               'standalone_uninstall.ps1','PUBLICATION_MANIFEST.json','distribution.json'}
@@ -130,7 +148,9 @@ def _uninstall(root, remove_preferences=False):
             elif str(link)!=shortcut['path'] or not plain_path(link,desktop):
                 preserved.append('Desktop shortcut path changed or linked; check it manually')
         except (OSError,subprocess.SubprocessError) as exc:errors.append('Desktop shortcut: '+str(exc))
-    if remove_preferences:
+    if remove_preferences and channel not in ('stable','development'):
+        preserved.append('Preferences: channel identity unavailable; remove manually if needed')
+    if remove_preferences and channel in ('stable','development'):
         settings_folder='HYBRIDIR-Development' if channel=='development' else 'IRBQ_Lab'
         settings=Path(os.environ.get('APPDATA',Path.home()/'AppData/Roaming'))/settings_folder/'settings.json'
         if os.environ.get('IRBQ_SETTINGS_PATH'):

@@ -58,6 +58,17 @@ class TestDistribution(unittest.TestCase):
             self.assertIsNone(builder.destination_for(name))
         self.assertEqual(builder.destination_for('packaging/hybridir/installer.py'),'installer.py')
         self.assertEqual(builder.destination_for('docs/hybridir_user/ru/workflow.md'),'docs/ru/workflow.md')
+        stable={'PUBLICATION_MANIFEST.json':{'schema':'hybridir-publication/1'}}
+        dev={'DEVELOPMENT_MANIFEST.json':{'schema':'hybridir-development-snapshot/1'}}
+        self.assertEqual(builder.channel_for_markers(stable),'stable')
+        self.assertEqual(builder.channel_for_markers(dev),'development')
+        for markers in ({},{**stable,**dev},{'PUBLICATION_MANIFEST.json':{'schema':'bad'}}):
+            with self.assertRaises(ValueError):builder.channel_for_markers(markers)
+        with tempfile.TemporaryDirectory() as td,patch.object(builder,'source_identity',return_value=('abc','development')):
+            with self.assertRaisesRegex(ValueError,'Channel'):
+                builder.build(Path(td),'HEAD',Path(td)/'out','lite','stable','1.0')
+            self.assertFalse((Path(td)/'out').exists())
+        self.assertEqual(builder.runtime_requirements(b'numpy==2.5.3\r\nziglang==0.16.0\r\n'),b'numpy==2.5.3\n')
 
 
 if __name__=='__main__':unittest.main()
