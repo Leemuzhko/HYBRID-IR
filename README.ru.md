@@ -11,7 +11,12 @@
   <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Экспериментальная версия">
 </p>
 <p align="center"><a href="README.md">English</a> · <strong>Русский</strong> · <a href="README.uk.md">Українська</a></p>
-<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/archive/refs/heads/main.zip">Скачать для Windows</a></h3>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">Скачать для Windows</a></h3>
+
+**[Standalone — рекомендую](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — нужен Python](https://github.com/Leemuzhko/HYBRID-IR/releases)**
+
+Выберите соответствующий ZIP в Assets релиза. Код приложения в обоих вариантах одной версии одинаков; разработческие сборки — предварительные. Download ZIP скачивает исходники, а не готовое приложение.
+
 <p align="center"><a href="docs/ru/installation.md">Установка</a> · <a href="docs/ru/workflow.md">Создать первый эффект</a> · <a href="https://ko-fi.com/leemuzhko">Поддержать на Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
 <sub>Линейка устройств проекта. Аппаратная проверка зависит от модели и банка; см. техническое руководство.</sub></p>

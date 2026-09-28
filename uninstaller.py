@@ -37,6 +37,18 @@ def desktop_path():
         timeout=30,creationflags=subprocess.CREATE_NO_WINDOW)
     return Path(result.stdout.decode('utf-8-sig').strip())
 
+def metadata_channel(root):
+    path=Path(root)/'distribution.json'
+    if not path.exists():return None
+    try:
+        data=json.loads(path.read_text(encoding='utf-8'))
+        if data.get('schema')=='hybridir-distribution/1' and data.get('channel') in ('stable','development'):
+            return data['channel']
+    except (OSError,ValueError,TypeError,AttributeError):
+        pass
+    return None
+
+
 def write_receipt(root, shortcut=None):
     root=Path(root).resolve()
     files=[]
@@ -44,7 +56,8 @@ def write_receipt(root, shortcut=None):
         if path.name==RECEIPT:continue
         if not plain_path(path,root):raise ValueError('Installation contains a link or junction')
         if path.is_file():files.append(dict(path=path.relative_to(root).as_posix(),sha256=digest(path)))
-    record=dict(schema='hybridir-uninstall/1',root=str(root),files=files,shortcut=shortcut)
+    channel=metadata_channel(root) if (root/'distribution.json').exists() else 'stable'
+    record=dict(schema='hybridir-uninstall/1',root=str(root),files=files,shortcut=shortcut,channel=channel)
     with (root/RECEIPT).open('x',encoding='utf-8') as stream:json.dump(record,stream,indent=2)
 
 def plan(root):
@@ -61,7 +74,7 @@ def plan(root):
         if (not isinstance(shortcut,dict) or set(shortcut)!={'path','sha256'}
                 or not isinstance(shortcut['path'],str) or '\0' in shortcut['path']
                 or not Path(shortcut['path']).is_absolute()
-                or Path(shortcut['path']).name!='HYBRID IR.lnk'
+                or Path(shortcut['path']).name not in ('HYBRID IR.lnk','HYBRID IR Development.lnk')
                 or not isinstance(shortcut['sha256'],str)
                 or not re.fullmatch(r'[0-9a-f]{64}',shortcut['sha256'])):
             raise ValueError('Invalid shortcut receipt')
@@ -100,11 +113,26 @@ def uninstall(root, remove_preferences=False):
 
 def _uninstall(root, remove_preferences=False):
     root,record,selected,preserved=plan(root)
+    delivery_path=root/'distribution.json'
+    recorded_delivery=any(item['path']=='distribution.json' for item in record['files'])
+    channel=record.get('channel', None if recorded_delivery else 'stable')
+    if delivery_path.exists():
+        current_channel=metadata_channel(root)
+        if current_channel is None or (channel is not None and current_channel!=channel):
+            channel=None
+        elif channel is None:channel=current_channel
     errors=[];removed=0
-    controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd','installation_guard.py'}
-    deferred=[item for item in selected if item[0].relative_to(root).as_posix() in controls]
+    controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd','installation_guard.py',
+              'standalone_uninstall.ps1','PUBLICATION_MANIFEST.json','distribution.json'}
+    def is_control(path):
+        name=path.relative_to(root).as_posix()
+        return name in controls or (name.startswith('runtime/') and
+                                    not name.startswith('runtime/Lib/site-packages/'))
+    # Preserve a runnable standalone uninstall path if any application file is
+    # locked. Scientific dependencies are not needed by the uninstall UI.
+    deferred=[item for item in selected if is_control(item[0])]
     for path,sha in selected:
-        if path.relative_to(root).as_posix() in controls:continue
+        if is_control(path):continue
         try:
             if not plain_path(path,root) or digest(path)!=sha:
                 preserved.append(path.relative_to(root).as_posix());continue
@@ -113,15 +141,18 @@ def _uninstall(root, remove_preferences=False):
     shortcut=record.get('shortcut')
     if shortcut and os.name=='nt':
         try:
-            desktop=desktop_path();link=desktop/'HYBRID IR.lnk'
+            desktop=desktop_path();link=desktop/Path(shortcut['path']).name
             if str(link)==shortcut['path'] and plain_path(link,desktop) and link.is_file():
                 if digest(link)==shortcut['sha256']:link.unlink()
                 else:preserved.append('Modified desktop shortcut')
             elif str(link)!=shortcut['path'] or not plain_path(link,desktop):
                 preserved.append('Desktop shortcut path changed or linked; check it manually')
         except (OSError,subprocess.SubprocessError) as exc:errors.append('Desktop shortcut: '+str(exc))
-    if remove_preferences:
-        settings=Path(os.environ.get('APPDATA',Path.home()/'AppData/Roaming'))/'IRBQ_Lab/settings.json'
+    if remove_preferences and channel not in ('stable','development'):
+        preserved.append('Preferences: channel identity unavailable; remove manually if needed')
+    if remove_preferences and channel in ('stable','development'):
+        settings_folder='HYBRIDIR-Development' if channel=='development' else 'IRBQ_Lab'
+        settings=Path(os.environ.get('APPDATA',Path.home()/'AppData/Roaming'))/settings_folder/'settings.json'
         if os.environ.get('IRBQ_SETTINGS_PATH'):
             preserved.append('Custom IRBQ_SETTINGS_PATH (remove manually if needed)')
         elif settings.exists():
@@ -170,6 +201,9 @@ def main():
     import tkinter as tk
     from tkinter import ttk,messagebox
     root_path=Path(__file__).resolve().parent
+    if len(sys.argv) == 3 and sys.argv[1] == '--root':
+        root_path=Path(sys.argv[2]).absolute()
+    # Standalone invokes a copy outside the installation, so no runtime DLL is locked.
     window=tk.Tk();window.title('Uninstall HYBRID IR');window.geometry('620x310')
     icon=root_path/'assets/zoom-ms70cdr.ico'
     if icon.is_file() and os.name=='nt':window.iconbitmap(str(icon))
@@ -180,7 +214,7 @@ def main():
     ttk.Label(body,text='Uninstall HYBRID IR',font=('Segoe UI',18)).pack(anchor='w')
     ttk.Label(body,text=f'{len(selected)} recorded files will be removed.\n{len(preserved)} new or modified files will be kept.\nClose HYBRID IR before continuing.\nPersonal IRs, banks and Zoom Effect Manager folders are not removed.',wraplength=570).pack(anchor='w',pady=16)
     prefs=tk.BooleanVar(value=False)
-    ttk.Checkbutton(body,text='Also remove shared IRBQ Lab language/theme settings',variable=prefs).pack(anchor='w')
+    ttk.Checkbutton(body,text='Also remove this channel\'s language/theme settings',variable=prefs).pack(anchor='w')
     def execute():
         if not messagebox.askyesno('Confirm uninstall',f'Remove HYBRID IR from:\n{root_path}?',parent=window):return
         try:

@@ -49,6 +49,17 @@ class TestUpdate(unittest.TestCase):
     def update(self, install=None):
         return updater.update(self.source, self.destination, install or installer.install, installer.checked_payload)
 
+    def test_different_flavor_or_channel_is_rejected_before_staging(self):
+        for flavor, channel in (('standalone','stable'),('lite','development')):
+            with self.subTest(flavor=flavor,channel=channel):
+                (self.source/'distribution.json').write_text(json.dumps(dict(
+                    schema='hybridir-distribution/1',flavor=flavor,channel=channel)))
+                self.manifest()
+                before=updater.snapshot(self.destination)
+                with self.assertRaisesRegex(ValueError,'separate folder'):
+                    self.update()
+                self.assertEqual(updater.snapshot(self.destination),before)
+
     def test_success_preserves_personal_modified_and_receipt_ownership(self):
         personal = self.destination / 'my IRs/кабінет.wav'
         personal.parent.mkdir();personal.write_bytes(b'personal IR')

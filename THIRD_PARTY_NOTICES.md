@@ -52,9 +52,13 @@ to the W3C Audio EQ Cookbook: https://www.w3.org/TR/audio-eq-cookbook/
 
 ## Separately installed components
 
-Python and pip dependencies keep their own licenses in their installations.
-This source installer downloads Python packages into a private environment;
-it does not redistribute their installed binaries. TI C6000 CGT is obtained
+Python and dependencies retain their own licenses. Lite downloads packages into
+a private environment. Standalone redistributes CPython, Tcl/Tk and the locked
+dependencies: see `runtime/LICENSE.txt`, the license files under `runtime/tcl`,
+and `runtime/Lib/site-packages/*dist-info`. `RUNTIME_PROVENANCE.json` records
+the interpreter version and hashes; `PUBLICATION_MANIFEST.json` records every
+payload hash. These hashes check integrity, not publisher authenticity.
+TI C6000 CGT is obtained
 separately from Texas Instruments: https://www.ti.com/tool/C6000-CGT
 
 The three separate runtime blobs (`linesel_handlers.bin`, `divf_rts.bin`,
@@ -88,6 +92,11 @@ are documented in the accompanying HYBRID4.json. New hardware validation is pend
 The HVB4RBJ.zdl template follows the same third-party limitation.
 Its bank was replaced with a synthetic unit impulse, but its inherited runtime
 was not relicensed or removed. Its SHA256 is pinned in zoom_variable_patch.py.
-Three derived test exports received a user-reported functional PASS on MS-70CDR
-on 2026-09-27. This does not establish performance for every new bank or chain;
-the exact artifacts and evidence scope are recorded in RELEASE_CANDIDATE.md.
+Three exports from the previous template received a user-reported functional PASS
+on MS-70CDR on 2026-09-27. The compact candidate dated 2026-09-28 passed host
+and TI rebuild comparisons, but HOBASE/HOFOUR2K subsequently failed at slot
+insertion on the pedal. The `a6525065…` template is diagnostic, not accepted.
+The development-only HVB4REF.zdl retains the old synthetic HBUNIT bytes and the
+same third-party limitations; its companion passport is not hardware certification.
+No prior result establishes performance for every new bank or chain. See the
+current hardware limits, known failures and template-package documentation.

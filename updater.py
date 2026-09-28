@@ -66,6 +66,10 @@ def describe(source, destination, checked_payload):
     if source.is_relative_to(root) or root.is_relative_to(source):
         raise ValueError('Run the new installer from a separate extracted archive, outside the installation.')
     payload = checked_payload(source)
+    delivery = helper('distribution_runtime')
+    old_delivery, new_delivery = delivery.metadata(root), delivery.metadata(source)
+    if any(old_delivery[key] != new_delivery[key] for key in ('channel', 'flavor')):
+        raise ValueError('Use a separate folder when changing Lite/Standalone or stable/development. Your existing installation is preserved.')
     if (root / '.installation-incomplete').exists():
         raise ValueError('Incomplete installation: use a new folder or restore your backup.')
     if not (root / 'uninstall-receipt.json').is_file():

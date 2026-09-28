@@ -8,6 +8,8 @@ import sys
 ROOT = Path(__file__).resolve().parent
 
 def run_application():
+    from distribution_runtime import configure_preferences
+    configure_preferences(ROOT)
     configuration = ROOT / 'installation.json'
     if configuration.exists():
         settings = json.loads(configuration.read_text(encoding='utf-8'))
