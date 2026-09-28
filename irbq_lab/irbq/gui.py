@@ -31,11 +31,11 @@ NORM_NAMES = {
     'Без нормализации': 'none',
     'Пик импульса': 'peak',
     'Pink, 20–20000 Hz': 'pink',
-    'Pink + band, 80–8000 Hz (legacy)': 'band',
+    'Pink + диапазон, 80–8000 Hz (legacy)': 'band',
     'K-weighted, 20–20000 Hz': 'k_weighted',
-    'K + band, 80–8000 Hz': 'k_band',
+    'K + диапазон, 80–8000 Hz': 'k_band',
     'K + Pink, 20–20000 Hz': 'k_pink',
-    'K + Pink + band, 80–8000 Hz': 'k_pink_band',
+    'K + Pink + диапазон, 80–8000 Hz': 'k_pink_band',
     'Максимум |H|': 'frequency_peak',
 }
 PROFILE_NAMES = {'Гитара 80–8000 Hz': 'guitar', 'Акцент 300–3000 Hz': 'mid', 'Равный вес на октаву': 'flat'}
