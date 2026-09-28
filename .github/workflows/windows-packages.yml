@@ -36,6 +36,10 @@ jobs:
           Get-ChildItem artifacts -Directory | ForEach-Object {
             python -B scripts/smoke_hybrid_distribution.py --source $_.FullName --work ("smoke-" + $_.Name)
             if ($LASTEXITCODE -ne 0) { throw "Lifecycle smoke failed" }
+            if ($_.Name -like '*Standalone') {
+              python -B scripts/smoke_standalone_uninstall.py --source $_.FullName --work ("uninstall-" + $_.Name)
+              if ($LASTEXITCODE -ne 0) { throw "Uninstall entrypoint smoke failed" }
+            }
           }
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

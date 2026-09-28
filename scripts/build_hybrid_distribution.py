@@ -70,6 +70,10 @@ def export_revision(repo, revision, output):
         raw = subprocess.check_output(['git', '-C', str(repo), 'show', revision+':'+name])
         if raw.startswith(b'version https://git-lfs.github.com/spec/'):
             raise ValueError('Materialize and explicitly review LFS before release: '+name)
+        if name == 'requirements-zoom-lock.txt':
+            # Zig only compiles host-test fixtures; it is not used by Trainer,
+            # the template patcher, or the separate TI build path.
+            raw=b'\n'.join(line for line in raw.splitlines() if not line.startswith(b'ziglang=='))+b'\n'
         path = output / target_name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
@@ -91,7 +95,7 @@ def bundle_python(output):
         shutil.copyfile(base/name, runtime/name)
     for name in ('Lib', 'DLLs', 'tcl'):
         shutil.copytree(base/name, runtime/name,
-                        ignore=shutil.ignore_patterns('site-packages', '__pycache__', '*.pyc', 'test', 'tests', 'idlelib', 'ensurepip'))
+                        ignore=shutil.ignore_patterns('site-packages', '__pycache__', '*.pyc', 'test', 'tests', 'idlelib', 'ensurepip', 'sitecustomize.py', 'usercustomize.py', '*.pth'))
     (output/'RUNTIME_PROVENANCE.json').write_text(json.dumps(dict(
         schema='hybridir-runtime/1', python_version=sys.version,
         source='Windows CPython base runtime with Tcl/Tk; dependencies resolved from requirements-zoom-lock.txt',
@@ -103,6 +107,15 @@ def bundle_python(output):
                     'https://pypi.org/simple', '--only-binary=:all:', '--no-compile',
                     '--target', str(runtime/'Lib/site-packages'),
                     '-r', str(output/'requirements-zoom-lock.txt')], check=True)
+    # pip-generated console launchers embed the build machine's interpreter path.
+    # They are not used by the GUI and must not ship as broken entry points.
+    launchers = runtime/'Lib/site-packages/bin'
+    if launchers.exists():
+        for entry in launchers.iterdir():
+            if not entry.is_file() or entry.is_symlink():
+                raise ValueError('Unexpected dependency console launcher')
+            entry.unlink()
+        launchers.rmdir()
     # Explicit paths prevent registry, PYTHONPATH and user site-packages leakage.
     (runtime/'python314._pth').write_text(
         'Lib\nDLLs\nLib/site-packages\n..\n../irbq_lab\n../hybridir_sdk\nimport site\n', encoding='utf-8')
@@ -125,7 +138,8 @@ def build(repo, revision, out, flavor, channel, version):
     commit = export_revision(repo, revision, folder)
     (folder/'distribution.json').write_text(json.dumps(dict(
         schema='hybridir-distribution/1', flavor=flavor, channel=channel,
-        version=version, source_revision=commit), indent=2), encoding='utf-8')
+        version=version, source_revision=commit,
+        excluded_test_dependencies=['ziglang']), indent=2), encoding='utf-8')
     if flavor == 'standalone':
         bundle_python(folder)
         (folder/'Install_HYBRIDIR.cmd').write_text(
@@ -142,7 +156,7 @@ def build(repo, revision, out, flavor, channel, version):
         'Your IRs, banks and projects are not deleted automatically.\n'
         'No TI compiler is required to patch existing templates. No new pedal validation is implied.\n', encoding='utf-8')
     for readme in ('README.md', 'README.ru.md', 'README.uk.md'):
-        (folder/readme).write_text('# HYBRID IR\\n\\nSee [English](docs/en/installation.md), [Русский](docs/ru/installation.md), [Українська](docs/uk/installation.md).\\n', encoding='utf-8')
+        (folder/readme).write_text('# HYBRID IR\n\n[Installation](docs/en/installation.md) · [Русский](docs/ru/installation.md) · [Українська](docs/uk/installation.md)\n\n[Ready-made effects](https://github.com/Leemuzhko/Zoom-ZDL-FX/tree/main/zdl/)\n', encoding='utf-8')
     files = [dict(path=p.relative_to(folder).as_posix(), sha256=digest(p))
              for p in sorted(folder.rglob('*')) if p.is_file()]
     (folder/'PUBLICATION_MANIFEST.json').write_text(json.dumps(dict(

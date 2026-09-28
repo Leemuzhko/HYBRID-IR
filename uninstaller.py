@@ -100,11 +100,21 @@ def uninstall(root, remove_preferences=False):
 
 def _uninstall(root, remove_preferences=False):
     root,record,selected,preserved=plan(root)
+    delivery_path=root/'distribution.json'
+    channel=(json.loads(delivery_path.read_text(encoding='utf-8')).get('channel')
+             if delivery_path.exists() else 'stable')
     errors=[];removed=0
-    controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd','installation_guard.py'}
-    deferred=[item for item in selected if item[0].relative_to(root).as_posix() in controls]
+    controls={'uninstaller.py','Uninstall_HYBRIDIR.cmd','installation_guard.py',
+              'standalone_uninstall.ps1','PUBLICATION_MANIFEST.json','distribution.json'}
+    def is_control(path):
+        name=path.relative_to(root).as_posix()
+        return name in controls or (name.startswith('runtime/') and
+                                    not name.startswith('runtime/Lib/site-packages/'))
+    # Preserve a runnable standalone uninstall path if any application file is
+    # locked. Scientific dependencies are not needed by the uninstall UI.
+    deferred=[item for item in selected if is_control(item[0])]
     for path,sha in selected:
-        if path.relative_to(root).as_posix() in controls:continue
+        if is_control(path):continue
         try:
             if not plain_path(path,root) or digest(path)!=sha:
                 preserved.append(path.relative_to(root).as_posix());continue
@@ -121,7 +131,8 @@ def _uninstall(root, remove_preferences=False):
                 preserved.append('Desktop shortcut path changed or linked; check it manually')
         except (OSError,subprocess.SubprocessError) as exc:errors.append('Desktop shortcut: '+str(exc))
     if remove_preferences:
-        settings=Path(os.environ.get('APPDATA',Path.home()/'AppData/Roaming'))/'IRBQ_Lab/settings.json'
+        settings_folder='HYBRIDIR-Development' if channel=='development' else 'IRBQ_Lab'
+        settings=Path(os.environ.get('APPDATA',Path.home()/'AppData/Roaming'))/settings_folder/'settings.json'
         if os.environ.get('IRBQ_SETTINGS_PATH'):
             preserved.append('Custom IRBQ_SETTINGS_PATH (remove manually if needed)')
         elif settings.exists():
@@ -183,7 +194,7 @@ def main():
     ttk.Label(body,text='Uninstall HYBRID IR',font=('Segoe UI',18)).pack(anchor='w')
     ttk.Label(body,text=f'{len(selected)} recorded files will be removed.\n{len(preserved)} new or modified files will be kept.\nClose HYBRID IR before continuing.\nPersonal IRs, banks and Zoom Effect Manager folders are not removed.',wraplength=570).pack(anchor='w',pady=16)
     prefs=tk.BooleanVar(value=False)
-    ttk.Checkbutton(body,text='Also remove shared IRBQ Lab language/theme settings',variable=prefs).pack(anchor='w')
+    ttk.Checkbutton(body,text='Also remove this channel\'s language/theme settings',variable=prefs).pack(anchor='w')
     def execute():
         if not messagebox.askyesno('Confirm uninstall',f'Remove HYBRID IR from:\n{root_path}?',parent=window):return
         try:

@@ -176,7 +176,7 @@ def install(source, destination, ti_root='', donor_folder='', full=True, progres
         'if errorlevel 1 pause\r\n', encoding='utf-8')
     (destination / 'Uninstall_HYBRIDIR.cmd').write_text(
         '@echo off\r\nsetlocal\r\ncd /d "%TEMP%"\r\n'
-        + ('powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0standalone_uninstall.ps1"\r\n'
+        + ('powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%~dp0standalone_uninstall.ps1"\r\nif errorlevel 1 pause\r\n'
            if standalone else 'py -3.14 -B -X utf8 "%~dp0uninstaller.py"\r\n'),encoding='utf-8')
     shortcut_record=None
     if desktop_shortcut:

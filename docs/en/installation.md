@@ -46,4 +46,6 @@ If files are locked or changed, read the result and retry after closing the app.
 
 Training and **Patch ZDL (no TI)** need no TI compiler. **Build ZDL** is optional: enable the Developer checkbox and supply TI C6000 CGT 8.5.0.LTS and the required user-owned donor files. Neither compiler nor donor blobs are included. This distribution does not change the ZDL template or claim new hardware validation.
 
+For an installation named `APP`, recovery uses `APP.update.json` and an `APP.backup-…` sibling. A custom `IRBQ_SETTINGS_PATH` is never removed automatically; preserve or remove that file yourself.
+
 [Prepare IRs and banks](workflow.md) · [Technical limits](technical.md)

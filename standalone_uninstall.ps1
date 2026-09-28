@@ -23,7 +23,11 @@ try {
             if ($part.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Linked runtime path' }
             $partPath = Split-Path -Parent $partPath
         }
-        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.sha256) { throw "Modified uninstall runtime: $name" }
+        $hasher = [Security.Cryptography.SHA256]::Create()
+        $stream = [IO.File]::OpenRead($source)
+        try { $hash = [BitConverter]::ToString($hasher.ComputeHash($stream)).Replace('-', '').ToLowerInvariant() }
+        finally { $stream.Dispose(); $hasher.Dispose() }
+        if ($hash -ne $entry.sha256) { throw "Modified uninstall runtime: $name" }
         $target = Join-Path $stage $name
         New-Item -ItemType Directory -Force -Path (Split-Path -Parent $target) | Out-Null
         Copy-Item -LiteralPath $source -Destination $target
@@ -35,7 +39,7 @@ try {
     } finally { Pop-Location }
 } catch {
     Write-Host $_ -ForegroundColor Red
-    Read-Host 'Press Enter to close'
+    throw
 } finally {
     # The path was allocated above and validated as a direct child of TEMP.
     Remove-Item -LiteralPath $stage -Recurse -Force

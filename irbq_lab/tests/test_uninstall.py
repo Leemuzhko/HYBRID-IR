@@ -42,6 +42,17 @@ class TestUninstall(unittest.TestCase):
             self.setup_app(root);module.uninstall(root,remove_preferences=True)
             self.assertFalse(settings.exists())
 
+    def test_development_settings_removal_preserves_stable(self):
+        with tempfile.TemporaryDirectory() as td,patch.dict(os.environ,{'APPDATA':td,'IRBQ_SETTINGS_PATH':''}):
+            for folder in ('IRBQ_Lab','HYBRIDIR-Development'):
+                settings=Path(td)/folder/'settings.json'
+                settings.parent.mkdir();settings.write_text('{}')
+            root=Path(td)/'app';self.setup_app(root)
+            (root/'distribution.json').write_text(json.dumps({'channel':'development'}))
+            module.uninstall(root,remove_preferences=True)
+            self.assertTrue((Path(td)/'IRBQ_Lab/settings.json').is_file())
+            self.assertFalse((Path(td)/'HYBRIDIR-Development/settings.json').exists())
+
     def test_receipt_traversal_rejected_before_deletion(self):
         with tempfile.TemporaryDirectory() as td:
             root=Path(td)/'app';self.setup_app(root)
@@ -67,6 +78,22 @@ class TestUninstall(unittest.TestCase):
             self.assertTrue(result['errors'])
             self.assertTrue((root/'uninstaller.py').exists())
             self.assertTrue((root/module.RECEIPT).exists())
+            self.assertFalse(module.uninstall(root)['folder_remains'])
+
+    def test_locked_file_preserves_standalone_retry_runtime(self):
+        with tempfile.TemporaryDirectory() as td:
+            root=Path(td)/'app';self.setup_app(root)
+            for name in ('runtime/python.exe','runtime/Lib/pathlib.py','standalone_uninstall.ps1','PUBLICATION_MANIFEST.json'):
+                file=root/name;file.parent.mkdir(parents=True,exist_ok=True);file.write_bytes(b'owned')
+            (root/module.RECEIPT).unlink();module.write_receipt(root)
+            real_unlink=Path.unlink
+            def locked(path,*a,**kw):
+                if path.name=='package.py':raise PermissionError('locked application dependency')
+                return real_unlink(path,*a,**kw)
+            with patch.object(Path,'unlink',locked):result=module.uninstall(root)
+            self.assertTrue(result['errors'])
+            for name in ('runtime/python.exe','runtime/Lib/pathlib.py','standalone_uninstall.ps1','PUBLICATION_MANIFEST.json','uninstaller.py'):
+                self.assertTrue((root/name).is_file(),name)
             self.assertFalse(module.uninstall(root)['folder_remains'])
 
     def test_malformed_shortcut_rejected_before_any_deletion(self):
