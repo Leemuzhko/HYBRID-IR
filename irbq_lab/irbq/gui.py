@@ -8,6 +8,7 @@ import queue
 import threading
 import traceback
 import time
+from dataclasses import asdict, fields
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, simpledialog
@@ -26,7 +27,17 @@ from .ui_theme import theme_widgets, theme_axes
 PLOTS = ['АЧХ', 'ΔАЧХ: модель − эталон', 'ФЧХ: без выравнивания', 'ΔФЧХ: относительно эталона', 'Групповая задержка', 'Импульс', 'BQ по секциям', 'Комплексная разность Hmodel − Href']
 PRESET = {'LowShelf + Resonance + Mid + Presence': False, 'LowCut + Resonance + Mid + Presence': True}
 MODE_NAMES = {'Попарно + совместный polish': 'pairs', 'Все BQ + FIR совместно': 'joint', 'Только BQ (с текущим состоянием FIR)': 'bq'}
-NORM_NAMES = {'Без нормализации': 'none', 'Пик импульса': 'peak', 'Средняя мощность H, 80–8000 Hz': 'band', 'Максимум |H|': 'frequency_peak'}
+NORM_NAMES = {
+    'Без нормализации': 'none',
+    'Пик импульса': 'peak',
+    'Pink, 20–20000 Hz': 'pink',
+    'Pink + band, 80–8000 Hz (legacy)': 'band',
+    'K-weighted, 20–20000 Hz': 'k_weighted',
+    'K + band, 80–8000 Hz': 'k_band',
+    'K + Pink, 20–20000 Hz': 'k_pink',
+    'K + Pink + band, 80–8000 Hz': 'k_pink_band',
+    'Максимум |H|': 'frequency_peak',
+}
 PROFILE_NAMES = {'Гитара 80–8000 Hz': 'guitar', 'Акцент 300–3000 Hz': 'mid', 'Равный вес на октаву': 'flat'}
 OBJECTIVE_NAMES = {'Авто (рекомендуется)': 'auto', 'Магнитуда dB (только BQ)': 'magnitude', 'Комплексная: амплитуда + фаза': 'complex'}
 
@@ -214,6 +225,11 @@ class BaseApp(tk.Tk):
         ttk.Checkbutton(p, text=_('Инвертировать полярность'), variable=v).pack(anchor='w', pady=3)
         field('Нормализация', 'normalization', 'Без нормализации', NORM_NAMES)
         field('Целевой уровень нормализации, dB', 'level_db', -1)
+        ttk.Label(p, text=_('Pink = равный вес на октаву. K = частотная часть ITU-R BS.1770 без LUFS gating.'), style='Small.TLabel', wraplength=270).pack(anchor='w', pady=(5, 2))
+        defaults_row = ttk.Frame(p)
+        defaults_row.pack(fill='x', pady=(7, 2))
+        ttk.Button(defaults_row, text=_('Сохранить как default'), command=self.save_prep_defaults).pack(side='left', expand=True, fill='x', padx=(0, 2))
+        ttk.Button(defaults_row, text=_('Загрузить default'), command=self.load_prep_defaults).pack(side='left', expand=True, fill='x', padx=(2, 0))
         ttk.Button(p, text=_('Применить подготовку'), command=self.preprocess).pack(fill='x', pady=12)
         ttk.Label(p, text=_('Подготовка создаёт новый эталон и сбрасывает\nмодель/снимки. Перед этим сохраните проект.\nDC и обрезка хвоста выключены по умолчанию.'), style='Small.TLabel').pack(anchor='w')
 
@@ -391,12 +407,39 @@ class BaseApp(tk.Tk):
         d['normalization'] = NORM_NAMES[d['normalization']]
         return PrepConfig(**d)
 
-    def sync_prep(self):
-        d = asdict(self.session.config)
+    def _sync_prep_config(self, cfg):
+        d = asdict(cfg)
         d['channel'] = {0: 'Канал 1', 1: 'Канал 2', -1: 'Среднее L+R'}.get(d['channel'], 'Канал 1')
-        d['normalization'] = next((k for k, v in NORM_NAMES.items() if v == d['normalization']))
+        d['normalization'] = next((k for k, v in NORM_NAMES.items() if v == d['normalization']), 'Без нормализации')
         for k, v in d.items():
-            self.pvars[k].set(v)
+            if k in self.pvars:
+                self.pvars[k].set(v)
+
+    def sync_prep(self):
+        self._sync_prep_config(self.session.config)
+
+    def _saved_prep_config(self):
+        raw = getattr(self.prefs, 'prep_defaults', {}) or {}
+        allowed = {f.name for f in fields(PrepConfig)}
+        try:
+            return PrepConfig(**{k: v for k, v in raw.items() if k in allowed})
+        except (TypeError, ValueError):
+            return PrepConfig()
+
+    def save_prep_defaults(self):
+        try:
+            cfg = self.read_prep()
+            self.prefs.prep_defaults = asdict(cfg)
+            self._save_settings_quietly()
+            self.status.set(_('Настройки подготовки сохранены как default.'))
+        except Exception as e:
+            self.error(e)
+
+    def load_prep_defaults(self, silent=False):
+        cfg = self._saved_prep_config()
+        self._sync_prep_config(cfg)
+        if not silent:
+            self.status.set(_('Загружены сохранённые настройки подготовки.'))
 
     def open_wav(self):
         if not self.guard(False):

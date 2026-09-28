@@ -63,6 +63,25 @@ class TestDSP(unittest.TestCase):
         t,b,_=prepare([.2,1,.2],48000,cfg)
         self.assertAlmostEqual(np.max(abs(t)),10**(-6/20))
 
+    def test_perceptual_normalization_flat_response_is_unity(self):
+        n=65536;f=np.fft.rfftfreq(n,1/48000);H=np.ones_like(f,dtype=complex)
+        for mode in ('band','pink','k_weighted','k_band','k_pink','k_pink_band'):
+            self.assertAlmostEqual(response_normalization_power(H,f,48000,mode),1.0,places=12)
+
+    def test_k_weighting_shape(self):
+        f=np.array([50.,1000.,10000.])
+        k=np.abs(k_weighting_response(f,48000))
+        self.assertLess(k[0],k[1])
+        self.assertGreater(k[2],k[1])
+
+    def test_new_normalization_modes_prepare_to_target(self):
+        impulse=np.r_[1.,np.zeros(63)]
+        for mode in ('pink','k_weighted','k_band','k_pink','k_pink_band'):
+            cfg=PrepConfig(fs=48000,trim_start=False,minimum_phase=False,normalization=mode,level_db=0)
+            t,_,_=prepare(impulse,48000,cfg)
+            n=fft.next_fast_len(max(65536,2*len(t)));H=np.fft.rfft(t,n);f=np.fft.rfftfreq(n,1/48000)
+            self.assertAlmostEqual(response_normalization_power(H,f,48000,mode),1.0,places=9)
+
     def test_render_frequency(self):
         m=Model(44100,np.array([.3,.5,-.1]),[Biquad('Peak',f=200,q=1,gain=7)])
         impulse=m.render(length=20000)

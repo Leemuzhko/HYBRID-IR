@@ -24,7 +24,9 @@ class TestPreferences(unittest.TestCase):
     def test_atomic_roundtrip(self):
         with tempfile.TemporaryDirectory() as t:
             p=Path(t)/'new'/'settings.json';a=Preferences('en','dark',True,False,True)
+            a.prep_defaults={'normalization':'k_pink_band','level_db':0.0,'fs':44100}
             save_preferences(a,p);self.assertEqual(load_preferences(p),a)
+            self.assertEqual(load_preferences(p).prep_defaults['normalization'],'k_pink_band')
             self.assertEqual(len(list(p.parent.iterdir())),1)
     def test_static_and_dynamic_localisation(self):
         set_language('en')

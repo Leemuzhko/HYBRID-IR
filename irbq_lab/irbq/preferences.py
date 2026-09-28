@@ -16,6 +16,7 @@ class Preferences:
     library_folder: str = ''
     recent_projects: list[str] = field(default_factory=list)
     recent_banks: list[str] = field(default_factory=list)
+    prep_defaults: dict = field(default_factory=dict)
     def validate(self):
         if self.language not in ('ru','en'): self.language='en'
         if self.theme not in ('light','dark'): self.theme='dark'
@@ -25,6 +26,10 @@ class Preferences:
         for key in ('recent_projects', 'recent_banks'):
             value = getattr(self, key)
             setattr(self, key, [p for p in value if isinstance(p, str)][:10] if isinstance(value, list) else [])
+        if not isinstance(self.prep_defaults, dict):
+            self.prep_defaults = {}
+        else:
+            self.prep_defaults = {str(k): v for k, v in self.prep_defaults.items() if isinstance(k, str)}
         return self
 
 def settings_path():

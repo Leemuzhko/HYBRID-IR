@@ -42,6 +42,8 @@ class WorkspaceMixin:
         self._gain_slider_active=False
         self._gain_slider_saved=False
         super().__init__()
+        if getattr(self.prefs, 'prep_defaults', None):
+            self.load_prep_defaults(silent=True)
         self.geometry('1440x930');self.minsize(1100,740)
         apply_theme(self,self.prefs.theme)
         self.redraw()
