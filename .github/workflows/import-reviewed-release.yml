@@ -1,226 +1,99 @@
-name: Import and publish verified HYBRID IR 0.4.1
+name: Register reviewed HYBRID IR source
 "on":
   push:
     branches: [release/hir3a-0.4.1]
     paths: [.github/workflows/import-reviewed-release.yml]
 permissions:
-  contents: read
+  contents: write
 jobs:
-  import:
+  register:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
-    permissions:
-      contents: write
-    outputs:
-      commit: ${{ steps.import.outputs.commit }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: ${{ github.sha }}
-          fetch-depth: 0
-      - name: Reconstruct exact reviewed public snapshot
-        id: import
+          ref: 382fd26917bd64a7d52d6ac21da008d035bcbf02
+          persist-credentials: false
+      - name: Verify and register only application Git objects
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          set -euo pipefail
-          git config core.autocrlf false
           python - <<'PY'
-          import base64,hashlib,json,lzma,os,subprocess,zlib
+          import base64,concurrent.futures,hashlib,json,lzma,os,subprocess,urllib.request,zlib
           from pathlib import Path,PurePosixPath
           BASE='382fd26917bd64a7d52d6ac21da008d035bcbf02'
           PARTS=['cd932c7921186504a26bc10692e945d3bd42c9d3','5afb37e52338b25be8bd45dc8e5e7db4aed41b38','bda4e72351dd2c48d70cfa842114a91c2eeaf100','065dec0415bf0470c0619c687313d83ebeba92ba','436ccd9ece5386e8a4de9d0f266a007a26c7632f','5f8b73358bf4848e415e355705ccf6133e824934','0477a5859592a9c005acf018e06a695900feb175','151cff5d6c60293888bffb45d6bef662cd5f2091']
-          def digest(b): return hashlib.sha256(b).hexdigest()
-          def checked_path(name):
-              p=PurePosixPath(name)
-              assert name and not p.is_absolute() and str(p)==name and '\\' not in name
-              assert all(part not in ('..','.git') for part in p.parts)
-              assert all(ord(c)>=32 for c in name)
-              return name
+          repo=os.environ['GITHUB_REPOSITORY'];assert repo=='Leemuzhko/HYBRID-IR'
+          def api(path,data=None):
+              request=urllib.request.Request('https://api.github.com/repos/'+repo+'/'+path,data=None if data is None else json.dumps(data).encode(),headers={'Authorization':'Bearer '+os.environ['GH_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','User-Agent':'HYBRID-IR-reviewed-source'})
+              with urllib.request.urlopen(request,timeout=60) as response:return json.load(response)
+          def digest(b):return hashlib.sha256(b).hexdigest()
+          def object_id(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
           def unique(pairs):
-              d={}
-              for k,v in pairs:
-                  assert k not in d,'Duplicate JSON key'
-                  d[k]=v
-              return d
-          repo=os.environ['GITHUB_REPOSITORY']
-          assert repo=='Leemuzhko/HYBRID-IR'
-          main=json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/git/ref/heads/main']))
-          assert main['object']['sha']==BASE,'Public main moved; manual reconciliation required'
-          chunks=[]
-          for oid in PARTS:
-              obj=json.loads(subprocess.check_output(['gh','api','repos/'+repo+'/git/blobs/'+oid]))
-              b=base64.b64decode(obj['content'])
-              assert hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()==oid
-              chunks.append(b)
-          packed=b''.join(chunks)
+              result={}
+              for k,v in pairs:assert k not in result;result[k]=v
+              return result
+          packed=b''.join(base64.b64decode(api('git/blobs/'+oid)['content']) for oid in PARTS)
           assert len(packed)==68288 and digest(packed)=='a83a60682e7baf03afed02b64d9b3f8609a55430e758d3303c707038c755edae'
           decoder=lzma.LZMADecompressor(memlimit=256*1024*1024)
-          raw=decoder.decompress(packed,max_length=5000000)
-          assert decoder.eof and not decoder.unused_data
+          raw=decoder.decompress(packed,max_length=5000000);assert decoder.eof and not decoder.unused_data
           transfer=json.loads(raw,object_pairs_hook=unique)
           assert transfer['base_commit']==BASE and len(transfer['files'])==138
           payload={};cache={};folded=set()
+          def validate(name):
+              p=PurePosixPath(name)
+              assert name and str(p)==name and not p.is_absolute() and '\\' not in name
+              assert all(x not in ('..','.git') for x in p.parts) and all(ord(c)>=32 for c in name)
           for name,row in transfer['files'].items():
-              checked_path(name)
-              assert name.casefold() not in folded;folded.add(name.casefold())
-              old=b''
+              validate(name);assert name.casefold() not in folded;folded.add(name.casefold());old=b''
               if row.get('base'):
-                  key=checked_path(row['base'])
+                  key=row['base'];validate(key)
                   if key not in cache:cache[key]=subprocess.check_output(['git','show',BASE+':'+key])
                   old=cache[key]
                   if row.get('base_sha256'):assert digest(old)==row['base_sha256']
               if 'ops' in row:
-                  lines=old.decode('utf-8').replace('\r\n','\n').splitlines(keepends=True)
-                  pieces=[]
+                  lines=old.decode('utf-8').replace('\r\n','\n').splitlines(keepends=True);pieces=[]
                   for op in row['ops']:
                       if isinstance(op,list):
                           a,b=op;assert 0<=a<=b<=len(lines);pieces.append(''.join(lines[a:b]))
                       else:assert isinstance(op,str);pieces.append(op)
-                  text=''.join(pieces)
-                  out=(text.replace('\n','\r\n') if row['crlf'] else text).encode('utf-8')
+                  text=''.join(pieces);out=(text.replace('\n','\r\n') if row['crlf'] else text).encode('utf-8')
               elif 'compressed' in row:
                   d=zlib.decompressobj(zdict=old[-32768:]) if row.get('base') else zlib.decompressobj()
                   out=d.decompress(base64.b64decode(row['compressed']),5000000)
-                  assert d.eof and not d.unused_data and not d.unconsumed_tail
-                  out+=d.flush()
+                  assert d.eof and not d.unused_data and not d.unconsumed_tail;out+=d.flush()
               else:out=old
-              assert digest(out)==row['sha256'],name
-              payload[name]=out
+              assert digest(out)==row['sha256'],name;payload[name]=out
           manifest=payload['PUBLICATION_MANIFEST.json']
           assert digest(manifest)=='7f7c872016bb0025537ad8996191e63adc221d15502815cf130c92d79240a4ae'
           m=json.loads(manifest,object_pairs_hook=unique)
           assert m['source_revision']=='2411a5f03864ccaab458df25ddeab98744145532' and m['app_version']=='0.4.1'
           expected={f['path']:f['sha256'] for f in m['files']}
           assert len(expected)==len(m['files']) and set(payload)==set(expected)|{'PUBLICATION_MANIFEST.json'}
-          for name,value in expected.items():assert digest(payload[name])==value,name
+          for name,value in expected.items():assert digest(payload[name])==value
           assert digest(payload['hybridir_sdk/templates/HIR3A.ZDL'])=='14f605e66ea0ca24a1bd0b0873cb15b8dbaf900290ffe78f9f6cb60c99b0f9d4'
-          changes=subprocess.check_output(['git','diff','--name-only',BASE,'HEAD'],text=True).splitlines()
-          assert set(changes)<={'.github/workflows/release-review-snapshot.yml','.github/workflows/import-reviewed-release.yml','.github/workflows/transfer-probe.yml'},changes
-          current=set(subprocess.check_output(['git','ls-tree','-r','--name-only','HEAD'],text=True).splitlines())
-          obsolete=sorted(current-set(payload))
-          if obsolete:subprocess.run(['git','rm','--',*obsolete],check=True)
+          old_objects=set(subprocess.check_output(['git','ls-tree','-r',BASE],text=True).split())
+          workflows={};entries=[]
+          def register(item):
+              name,data=item;oid=object_id(data)
+              if oid not in old_objects:
+                  assert api('git/blobs',{'encoding':'base64','content':base64.b64encode(data).decode()})['sha']==oid
+              return {'path':name,'mode':'100644','type':'blob','sha':oid}
+          application=[]
           for name,data in payload.items():
-              p=Path(name);assert not any(x.is_symlink() for x in (p,*p.parents))
-              p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
-          subprocess.run(['git','add','-f','--',*sorted(payload)],check=True)
-          print('PASS: 138 reviewed public files reconstructed byte-for-byte; no private history imported')
+              if name.startswith('.github/workflows/'):workflows[name]={'sha':object_id(data),'sha256':digest(data)}
+              else:application.append((name,data))
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:entries=list(pool.map(register,application))
+          tree=api('git/trees',{'tree':sorted(entries,key=lambda e:e['path'])})
+          result={'application_tree':tree['sha'],'application_files':len(entries),'workflow_files_for_authorized_connector':workflows,'manifest_sha256':digest(manifest),'source_revision':m['source_revision']}
+          Path('REGISTERED_SOURCE.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result,indent=2))
+          print('No branches, tags, releases or workflow files modified by this job.')
           PY
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'release: synchronize verified HIR3A, K-weighted defaults and Windows installers for 0.4.1'
-          git push origin HEAD:refs/heads/release/hir3a-0.4.1
-          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-  windows:
-    needs: import
-    runs-on: windows-latest
-    timeout-minutes: 35
-    env:
-      PYTHONUTF8: '1'
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          ref: ${{ needs.import.outputs.commit }}
-          fetch-depth: 0
-          persist-credentials: false
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
-        with:
-          python-version: '3.14.6'
-          architecture: x64
-      - name: Install pinned validation dependencies
-        shell: pwsh
-        run: |
-          python -m pip install --only-binary=:all: -r requirements-zoom-lock.txt
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m pip install --only-binary=:all: ziglang==0.16.0
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Source and GUI release gate
-        shell: pwsh
-        run: |
-          python -B -X utf8 scripts/run_development_tests.py 2>&1 | Tee-Object PUBLIC_WINDOWS.log
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Build exact committed Lite and Standalone
-        shell: pwsh
-        run: |
-          python -B scripts/build_hybrid_distribution.py --repo . --revision HEAD --out artifacts --version 0.4.1 --channel stable
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Payload and installed-application lifecycle gates
-        shell: pwsh
-        run: |
-          Get-ChildItem artifacts -Directory | ForEach-Object {
-            $python = if ($_.Name -like '*Standalone') { Join-Path $_.FullName 'runtime/python.exe' } else { 'python' }
-            & $python -B scripts/verify_release_payload.py --root $_.FullName
-            if ($LASTEXITCODE -ne 0) { throw 'Payload verification failed' }
-            python -B scripts/smoke_hybrid_distribution.py --source $_.FullName --work ('smoke-' + $_.Name)
-            if ($LASTEXITCODE -ne 0) { throw 'Installed application lifecycle failed' }
-            if ($_.Name -like '*Standalone') {
-              python -B scripts/smoke_standalone_uninstall.py --source $_.FullName --work ('uninstall-' + $_.Name)
-              if ($LASTEXITCODE -ne 0) { throw 'Standalone uninstall entrypoint failed' }
-            }
-          }
-      - name: Record build revision
-        shell: bash
-        run: |
-          git rev-parse HEAD > BUILD_REVISION.txt
-          python -m pip freeze > TEST_DEPENDENCIES.txt
-      - name: Upload verified installation packages
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: windows-packages
-          path: |
-            artifacts/*.zip
-            artifacts/*.sha256
+          name: reviewed-source-object-receipt
+          path: REGISTERED_SOURCE.json
           if-no-files-found: error
-          retention-days: 30
-      - name: Upload validation receipts
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          name: windows-validation
-          path: |
-            PUBLIC_WINDOWS.log
-            BUILD_REVISION.txt
-            TEST_DEPENDENCIES.txt
-            smoke-*/*.json
-            uninstall-*/*.json
-          if-no-files-found: ignore
-          retention-days: 30
-  publish:
-    needs: [import, windows]
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    permissions:
-      contents: write
-      actions: read
-    env:
-      GH_TOKEN: ${{ github.token }}
-      RELEASE_COMMIT: ${{ needs.import.outputs.commit }}
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          ref: ${{ needs.import.outputs.commit }}
-          fetch-depth: 0
-      - name: Retrieve the packages that passed Windows gates
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" --name windows-packages --dir verified-installers
-          cd verified-installers
-          sha256sum -c *.sha256
-          test "$(find . -maxdepth 1 -type f -name '*.zip' | wc -l)" -eq 2
-      - name: Publish checked source and a new non-prerelease version
-        shell: bash
-        run: |
-          set -euo pipefail
-          CURRENT="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
-          test "$CURRENT" = '382fd26917bd64a7d52d6ac21da008d035bcbf02'
-          if gh release view v0.4.1 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
-            echo 'Release already exists; refusing overwrite'; exit 1
-          fi
-          test -z "$(git ls-remote --tags origin refs/tags/v0.4.1)"
-          git push origin "$RELEASE_COMMIT:refs/heads/main"
-          git tag v0.4.1 "$RELEASE_COMMIT"
-          git push origin refs/tags/v0.4.1
-          gh release create v0.4.1 verified-installers/*.zip verified-installers/*.sha256 --repo "$GITHUB_REPOSITORY" --verify-tag --latest --title 'HYBRID IR 0.4.1 — HIR3A patcher and perceptual normalization' --notes-file RELEASE_NOTES.md
-          gh release view v0.4.1 --repo "$GITHUB_REPOSITORY" --json url,tagName,isDraft,isPrerelease,assets
+          retention-days: 7
