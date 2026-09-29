@@ -40,7 +40,9 @@ int GetString_GjEQ(unsigned int v, char *s) {
     if(half_db==0){s[0]='0';s[1]='.';s[2]='0';s[3]=0;return 3;}
     if(half_db<0){s[n++]='-';a=-half_db;}else{s[n++]='+';a=half_db;}
     whole=a/2;
-    if(whole>=10){s[n++]=(char)('0'+whole/10);s[n++]=(char)('0'+whole%10);}
+    /* whole is bounded to 0..15; avoid pulling integer division helpers in
+       size-oriented builds just to format the six two-digit positions. */
+    if(whole>=10){s[n++]='1';s[n++]=(char)('0'+whole-10);}
     else{s[n++]=(char)('0'+whole);}
     s[n++]='.';s[n++]=(a&1)?'5':'0';
     s[n]=0;return n;
@@ -53,9 +55,10 @@ static inline void gj_process_params(GjState *s, float *fx, const float *p) {
 }
 
 void Fx_FLT_HYBRIDIR(unsigned int *ctx) {
-    GjState *s; float *p;
+    GjState *s; float *p; uint32_t need;
     zoom_preserve_host_shuttle(ctx);
-    s=gj_bind_state(zoom_state_arena(ctx,gj_state_required()),gj_state_required());
+    need=gj_state_required();
+    s=gj_bind_state(zoom_state_arena(ctx,need),need);
     if(!s)return;
     p=zoom_params(ctx);
     gj_process_params(s,zoom_effect_buffer(ctx),p);

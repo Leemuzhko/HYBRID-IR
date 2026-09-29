@@ -52,6 +52,9 @@ def main():
     manifest.update(fxid=740, output_basename='HRBASE')
     (stage/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n', encoding='utf-8')
     result = build_effect(stage, ROOT/'hybridir_sdk', output_dir=args.output/'build')
+    from emit_template_profile import emit
+    emit(result.zdl_path,backend='hvb4-tail/1',code_const_cap=28904,
+         provenance='Developer SDK build; synthetic UNIT; unverified artifact. See THIRD_PARTY_NOTICES.md.')
     print(result.zdl_path)
 
 

@@ -1,0 +1,66 @@
+{
+  "schema": "hybrid-zdl-template/1",
+  "target": "zoom-zdl-c674x-elf32-le-sdk13/1",
+  "backend": "hvb4-tail/1",
+  "codec": "HVB4",
+  "binary": "HIR3A.ZDL",
+  "sha256": "14f605e66ea0ca24a1bd0b0873cb15b8dbaf900290ffe78f9f6cb60c99b0f9d4",
+  "bindings": {
+    "bank": [
+      18612,
+      536
+    ],
+    "name": [
+      17836,
+      12
+    ],
+    "id": [
+      64,
+      2
+    ],
+    "ir_a_max": [
+      18088,
+      4
+    ],
+    "ir_b_max": [
+      18232,
+      4
+    ],
+    "image": [
+      16940,
+      848
+    ]
+  },
+  "capacity": {
+    "entry_count": 9,
+    "max_fir": 4096,
+    "max_bq": 32,
+    "fir_pool_samples": 65534,
+    "bq_pool_sections": 65535
+  },
+  "const_prefix": 1672,
+  "sections": {
+    "": 0,
+    ".rela.dyn": 648,
+    ".rela.plt": 0,
+    ".audio": 0,
+    ".text": 16800,
+    ".const": 2208,
+    ".fardata": 144,
+    ".dynamic": 168,
+    ".dynsym": 592,
+    ".dynstr": 503,
+    ".hash": 304,
+    ".c6xabi.attributes": 62,
+    ".shstrtab": 110
+  },
+  "limits": {
+    "code_const_bytes": 28904,
+    "fardata_bytes": 144
+  },
+  "acceptance": {
+    "status": "historical-pass",
+    "evidence": ["docs/HIR_V3_COMBINED_RU.md: user-reported MS-70CDR operation and manual/auto patch persistence, 2026-09-28; new patched banks require their own pedal checks"]
+  },
+  "provenance": "HIR V3A exact artifact from 1f7c07e; user-reported hardware operation and patch persistence 2026-09-28; see docs/HIR_V3_COMBINED_RU.md"
+}

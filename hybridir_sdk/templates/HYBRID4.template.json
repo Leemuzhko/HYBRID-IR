@@ -1,0 +1,66 @@
+{
+  "schema": "hybrid-zdl-template/1",
+  "target": "zoom-zdl-c674x-elf32-le-sdk13/1",
+  "backend": "irb2-fixed/1",
+  "codec": "IRB2",
+  "binary": "HYBRID4.zdl",
+  "sha256": "5e7872717662a1f334a67e7de21ebd4cfcbd975cf32b7f43e4effdff6c607eff",
+  "bindings": {
+    "bank": [
+      17220,
+      13788
+    ],
+    "name": [
+      16460,
+      12
+    ],
+    "id": [
+      64,
+      2
+    ],
+    "ir_a_max": [
+      16664,
+      4
+    ],
+    "ir_b_max": [
+      16808,
+      4
+    ],
+    "image": [
+      15564,
+      848
+    ]
+  },
+  "capacity": {
+    "entry_count": 5,
+    "max_fir": 2048,
+    "max_bq": 32,
+    "fir_pool_samples": 4096,
+    "bq_pool_sections": 130
+  },
+  "const_prefix": 1656,
+  "sections": {
+    "": 0,
+    ".rela.dyn": 432,
+    ".rela.plt": 0,
+    ".audio": 0,
+    ".text": 15424,
+    ".const": 15448,
+    ".fardata": 144,
+    ".dynamic": 168,
+    ".dynsym": 560,
+    ".dynstr": 503,
+    ".hash": 288,
+    ".c6xabi.attributes": 62,
+    ".shstrtab": 110
+  },
+  "limits": {
+    "code_const_bytes": 30872,
+    "fardata_bytes": 144
+  },
+  "acceptance": {
+    "status": "unverified",
+    "evidence": []
+  },
+  "provenance": "Existing fixed IRB2 template; synthetic UNIT. Cap is original artifact extent, not a measured loader limit. See THIRD_PARTY_NOTICES.md."
+}

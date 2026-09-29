@@ -27,6 +27,9 @@ def safe_root(path):
         raise ValueError('Unsafe installation folder')
     if any(p.is_symlink() or p.is_junction() for p in (root, *root.parents)):
         raise ValueError('Linked installation paths are not supported')
+    root=root.resolve()
+    if root==Path(root.anchor) or root==Path.home().resolve():
+        raise ValueError('Unsafe installation folder')
     return root
 
 

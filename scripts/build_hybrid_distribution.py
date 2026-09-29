@@ -24,6 +24,8 @@ def digest(path):
 def destination_for(name):
     """Allow application/runtime inputs; exclude tests, research and user data."""
     p = Path(name)
+    if name.startswith('hybridir_sdk/templates/') and p.name not in {'HIR3A.ZDL','HIR3A.template.json'}:
+        return None
     if any(part in {'.git', '.venv', '__pycache__', 'tests', 'inputs', 'examples', 'results'} for part in p.parts):
         return None
     helpers = {'installer.py', 'launch.py', 'updater.py', 'uninstaller.py',
@@ -64,10 +66,18 @@ def channel_for_markers(markers):
     return channel
 
 
-def source_identity(repo, revision):
+def source_listing(repo, revision):
+    """Resolve a bounded project at the root OR a monorepo subdirectory."""
     commit=subprocess.check_output(['git','-C',str(repo),'rev-parse',revision+'^{commit}'],text=True).strip()
-    names=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only',commit],text=True).splitlines()
-    markers={name:json.loads(subprocess.check_output(['git','-C',str(repo),'show',commit+':'+name]))
+    prefix=subprocess.check_output(['git','-C',str(repo),'rev-parse','--show-prefix'],text=True).strip()
+    tree=commit+':'+prefix.rstrip('/') if prefix else commit
+    names=subprocess.check_output(['git','-C',str(repo),'ls-tree','--full-tree','-r','--name-only',tree],text=True).splitlines()
+    return commit,prefix,names
+
+
+def source_identity(repo, revision):
+    commit,prefix,names=source_listing(repo,revision)
+    markers={name:json.loads(subprocess.check_output(['git','-C',str(repo),'show',commit+':'+prefix+name]))
              for name in ('PUBLICATION_MANIFEST.json','DEVELOPMENT_MANIFEST.json') if name in names}
     return commit,channel_for_markers(markers)
 
@@ -77,11 +87,8 @@ def runtime_requirements(raw):
 
 
 def export_revision(repo, revision, output):
-    revision = subprocess.check_output(['git', '-C', str(repo), 'rev-parse', revision+'^{commit}'], text=True).strip()
-    names = subprocess.check_output(['git', '-C', str(repo), 'ls-tree', '-r', '--name-only', revision], text=True).splitlines()
-    # These markers distinguish the intentionally bounded standalone repositories.
-    if not ({'DEVELOPMENT_MANIFEST.json', 'PUBLICATION_MANIFEST.json'} & set(names)):
-        raise ValueError('Build from the public/development repository, not the research checkout')
+    revision,prefix,names=source_listing(repo,revision)
+    source_identity(repo,revision)  # Fail closed on missing/ambiguous channel markers.
     seen = set()
     for name in names:
         target_name = destination_for(name)
@@ -90,7 +97,7 @@ def export_revision(repo, revision, output):
         if target_name.casefold() in seen:
             raise ValueError('Duplicate payload destination: '+target_name)
         seen.add(target_name.casefold())
-        raw = subprocess.check_output(['git', '-C', str(repo), 'show', revision+':'+name])
+        raw = subprocess.check_output(['git', '-C', str(repo), 'show', revision+':'+prefix+name])
         if raw.startswith(b'version https://git-lfs.github.com/spec/'):
             raise ValueError('Materialize and explicitly review LFS before release: '+name)
         if name == 'requirements-zoom-lock.txt':
@@ -101,7 +108,10 @@ def export_revision(repo, revision, output):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
     required = ('installer.py', 'distribution_runtime.py', 'uninstaller.py', 'launch.py',
-                'irbq_lab/run.py', 'requirements-zoom-lock.txt', 'assets/zoom-ms70cdr.ico')
+                'irbq_lab/run.py', 'requirements-zoom-lock.txt', 'assets/zoom-ms70cdr.ico',
+                'irbq_lab/irbq/bank_prepare.py', 'irbq_lab/irbq/source_audio.py',
+                'irbq_lab/irbq/template_profile.py', 'irbq_lab/irbq/template_patch.py',
+                'hybridir_sdk/templates/HIR3A.ZDL', 'hybridir_sdk/templates/HIR3A.template.json')
     if any(not (output/name).is_file() for name in required):
         raise ValueError('Incomplete application payload')
     return revision

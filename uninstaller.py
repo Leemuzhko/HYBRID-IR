@@ -64,6 +64,11 @@ def plan(root):
     root=Path(root).absolute()
     if not plain_path(root,root) or root==Path(root.anchor) or root==Path.home():
         raise ValueError('Unsafe installation folder')
+    # Windows 8.3 aliases name the same directory as the canonical receipt.
+    # Reject links before resolving; never weaken the receipt ownership check.
+    root=root.resolve()
+    if root==Path(root.anchor) or root==Path.home().resolve():
+        raise ValueError('Unsafe installation folder')
     receipt=root/RECEIPT
     if not plain_path(receipt,root):raise ValueError('Invalid receipt path')
     record=json.loads(receipt.read_text(encoding='utf-8'))

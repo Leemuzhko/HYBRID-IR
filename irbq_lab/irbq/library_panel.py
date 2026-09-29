@@ -37,7 +37,7 @@ class LibraryPanel(ttk.Frame):
         scroll=ttk.Scrollbar(body,orient='vertical',command=self.tree.yview);scroll.grid(row=0,column=1,sticky='ns')
         self.tree.configure(yscrollcommand=scroll.set)
         self.tree.bind('<Double-1>',lambda e:self.app.zoom_panel.guarded(self.edit))
-        actions=ttk.Frame(self);actions.grid(row=3,column=0,sticky='ew',pady=(8,0))
+        actions=ttk.Frame(self);actions.grid(row=3,column=0,sticky='ew',pady=(4,0))
         for col,(label,fn) in enumerate([('Add selected to bank',self.add_selected),('Edit in Trainer',self.edit),('Save current to library',self.save_current)]):
             ttk.Button(actions,text=tr(label),style='Compact.TButton',command=lambda f=fn:self.app.zoom_panel.guarded(f)).grid(row=0,column=col,padx=(0,4),pady=2,sticky='ew')
         more=ttk.Menubutton(actions,text=tr('Import'),style='Compact.TMenubutton');more.grid(row=0,column=3)

@@ -1,0 +1,66 @@
+{
+  "schema": "hybrid-zdl-template/1",
+  "target": "zoom-zdl-c674x-elf32-le-sdk13/1",
+  "backend": "hvb4-tail/1",
+  "codec": "HVB4",
+  "binary": "HVB4REF.zdl",
+  "sha256": "a60e2b45ed00159ca034a1302b4d359319c06f1b80480dcb0f8e55e3db2bec54",
+  "bindings": {
+    "bank": [
+      24532,
+      536
+    ],
+    "name": [
+      23756,
+      12
+    ],
+    "id": [
+      64,
+      2
+    ],
+    "ir_a_max": [
+      24008,
+      4
+    ],
+    "ir_b_max": [
+      24152,
+      4
+    ],
+    "image": [
+      22860,
+      848
+    ]
+  },
+  "capacity": {
+    "entry_count": 9,
+    "max_fir": 4096,
+    "max_bq": 32,
+    "fir_pool_samples": 65534,
+    "bq_pool_sections": 65535
+  },
+  "const_prefix": 1672,
+  "sections": {
+    "": 0,
+    ".rela.dyn": 1824,
+    ".rela.plt": 0,
+    ".audio": 0,
+    ".text": 22720,
+    ".const": 2208,
+    ".fardata": 144,
+    ".dynamic": 168,
+    ".dynsym": 720,
+    ".dynstr": 503,
+    ".hash": 368,
+    ".c6xabi.attributes": 62,
+    ".shstrtab": 110
+  },
+  "limits": {
+    "code_const_bytes": 28904,
+    "fardata_bytes": 144
+  },
+  "acceptance": {
+    "status": "unverified",
+    "evidence": []
+  },
+  "provenance": "Byte-exact HBUNIT 741 (a60e2b45), synthetic UNIT. User-reported functional PASS 2026-09-27: docs/HVB4_RBJ_RELEASE_CANDIDATE.md. New banks remain unverified; inherited runtime: THIRD_PARTY_NOTICES.md."
+}

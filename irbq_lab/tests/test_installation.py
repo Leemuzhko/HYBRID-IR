@@ -50,13 +50,64 @@ class TestInstallation(unittest.TestCase):
     @unittest.skipUnless(os.name=='nt','Windows shortcut')
     def test_shortcut_real_com_and_existing_preserved(self):
         with tempfile.TemporaryDirectory(prefix="hybrid space ' тест ") as td:
-            root=Path(td);app=root/'app';desktop=root/'desktop';desktop.mkdir()
+            root=Path(td).resolve();app=root/'app';desktop=root/'desktop';desktop.mkdir()
             for relative in ('.venv/Scripts/pythonw.exe','launch.py','assets/zoom-ms70cdr.ico'):
                 path=app/relative;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(b'fixture')
-            installer.create_desktop_shortcut(app,desktop)
+            # Exercise COM with a genuine Windows executable/icon, not invalid PE bytes.
+            import shutil
+            shutil.copyfile(Path(sys.executable).with_name('pythonw.exe'),app/'.venv/Scripts/pythonw.exe')
+            icon=ROOT/'assets/zoom-ms70cdr.ico'
+            if not icon.exists():icon=ROOT/'packaging/hybridir/zoom-ms70cdr.ico'
+            shutil.copyfile(icon,app/'assets/zoom-ms70cdr.ico')
+            try:
+                installer.create_desktop_shortcut(app,desktop)
+            except installer.subprocess.CalledProcessError as exc:
+                print('Shortcut COM diagnostic:',(exc.stderr or b'').decode('utf-8',errors='replace'),flush=True)
+                raise
             link=desktop/'HYBRID IR.lnk'
             before=link.read_bytes();self.assertGreater(len(before),100)
-            script=r'''[Console]::OutputEncoding = [Text.UTF8Encoding]::new(); $s = New-Object -ComObject WScript.Shell; $l = $s.CreateShortcut($env:HYBRID_TEST_LINK); @{target=$l.TargetPath; arguments=$l.Arguments; icon=$l.IconLocation; cwd=$l.WorkingDirectory} | ConvertTo-Json -Compress'''
+            # Read saved Unicode fields through IShellLinkW, not ANSI WScript automation.
+            script=r'''Add-Type -TypeDefinition @'
+using System;
+using System.Text;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+[ComImport, Guid("00021401-0000-0000-C000-000000000046")]
+public class ReadbackShellLink {}
+[ComImport, Guid("000214F9-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface ReadbackIShellLinkW {
+ void GetPath([Out,MarshalAs(UnmanagedType.LPWStr)] StringBuilder s,int c,IntPtr d,uint f);
+ void GetIDList(out IntPtr p); void SetIDList(IntPtr p);
+ void GetDescription([Out,MarshalAs(UnmanagedType.LPWStr)] StringBuilder s,int c);
+ void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string s);
+ void GetWorkingDirectory([Out,MarshalAs(UnmanagedType.LPWStr)] StringBuilder s,int c);
+ void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string s);
+ void GetArguments([Out,MarshalAs(UnmanagedType.LPWStr)] StringBuilder s,int c);
+ void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string s);
+ void GetHotkey(out short n); void SetHotkey(short n);
+ void GetShowCmd(out int n); void SetShowCmd(int n);
+ void GetIconLocation([Out,MarshalAs(UnmanagedType.LPWStr)] StringBuilder s,int c,out int n);
+}
+public static class ReadbackShortcut {
+ public static string[] Load(string path) {
+  object raw=new ReadbackShellLink();
+  try {
+   ((IPersistFile)raw).Load(path,0);
+   ReadbackIShellLinkW l=(ReadbackIShellLinkW)raw;
+   StringBuilder target=new StringBuilder(32768), args=new StringBuilder(32768), cwd=new StringBuilder(32768), icon=new StringBuilder(32768);
+   int index;
+   l.GetPath(target,target.Capacity,IntPtr.Zero,4);
+   l.GetArguments(args,args.Capacity);
+   l.GetWorkingDirectory(cwd,cwd.Capacity);
+   l.GetIconLocation(icon,icon.Capacity,out index);
+   return new string[]{target.ToString(),args.ToString(),cwd.ToString(),icon.ToString()+","+index};
+  } finally {Marshal.FinalReleaseComObject(raw);}
+ }
+}
+'@
+[Console]::OutputEncoding = [Text.UTF8Encoding]::new()
+$v = [ReadbackShortcut]::Load($env:HYBRID_TEST_LINK)
+@{target=$v[0]; arguments=$v[1]; cwd=$v[2]; icon=$v[3]} | ConvertTo-Json -Compress'''
             result=installer.subprocess.run(['powershell.exe','-NoProfile','-NonInteractive','-EncodedCommand',
                 installer.base64.b64encode(script.encode('utf-16le')).decode('ascii')],
                 env={**os.environ,'HYBRID_TEST_LINK':str(link)},capture_output=True,check=True,timeout=30,

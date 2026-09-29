@@ -577,11 +577,10 @@ class ObjFile:
                         'offset': offset,
                         'type':   rtype,
                         'sym_idx': info >> 8,
-                        # TI emits CALLP PCR relocations as SHT_REL with the
-                        # instruction offset as the implicit addend. Without
-                        # this, calls land early by their original section
-                        # offset after we move .text/.audio in the final ZDL.
+                        # Legacy same-section compensation; NOT an ELF addend.
+                        # Cross-section function references are handled below.
                         'addend': offset if rtype == RT_PCR_S21 else 0,
+                        'implicit_rel': True,
                     })
             if entries:
                 self.relocs.setdefault(target_idx, []).extend(entries)
@@ -620,6 +619,26 @@ def _patch_pcr_s21(code: bytearray, offset: int, target_addr: int, instr_addr: i
     instr = struct.unpack_from('<I', code, offset)[0]
     instr = (instr & ~(0x1FFFFF << 7)) | ((delta & 0x1FFFFF) << 7)
     struct.pack_into('<I', code, offset, instr)
+
+
+def _code_reloc_addend(rel: dict, sym: dict, sec: dict, section_count: int) -> int:
+    """Bounded NAM V22/HIR V2 correction; other legacy paths stay unchanged.
+
+    TI's observed cross-section function REL placeholders have zero S21 bits.
+    The relocation site's offset is not part of the destination address.
+    Reject an unverified nonzero placeholder instead of dropping its addend.
+    This is not a general implementation of every C6000 REL expression.
+    """
+    if (rel['type'] == RT_PCR_S21 and rel.get('implicit_rel', False)
+            and sym['type'] == 2 and 0 < sym['shndx'] < section_count
+            and sym['shndx'] != sec['idx']):
+        word = struct.unpack_from('<I', sec['data'], rel['offset'])[0]
+        if (word >> 7) & 0x1FFFFF:
+            raise ValueError(
+                f"Unsupported nonzero cross-section REL/PCR_S21 placeholder: "
+                f"{sec['name']}+{rel['offset']:#x} -> {sym['name']}")
+        return 0
+    return rel['addend'] if sym['shndx'] != 0 else 0
 
 
 # ---------------------------------------------------------------------------
@@ -1600,7 +1619,7 @@ def link(cfg: LinkerConfig) -> None:
             # compensation is needed — applying it lands the call past the
             # real target by exactly the instruction's section offset, which
             # froze the pedal on InitProbe stage 2.
-            addend = rel['addend'] if sym['shndx'] != 0 else 0
+            addend = _code_reloc_addend(rel, sym, sec, len(obj.sections))
             target = sym_addr[rel['sym_idx']] + addend
             file_off = base_off + offset
             if rtype == RT_ABS_L16:

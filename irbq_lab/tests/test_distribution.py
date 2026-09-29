@@ -9,6 +9,35 @@ from tests.test_installation import installer
 
 
 class TestDistribution(unittest.TestCase):
+    def test_only_current_template_is_shipped(self):
+        import runpy
+        root=Path(__file__).resolve().parents[2]
+        choose=runpy.run_path(str(root/'scripts/build_hybrid_distribution.py'))['destination_for']
+        for name in ('HIR3A.ZDL','HIR3A.template.json'):
+            self.assertEqual(choose('hybridir_sdk/templates/'+name),'hybridir_sdk/templates/'+name)
+        for name in ('HVB4RBJ.zdl','IRDUAL4P.ZDL','HVB4REF.template.json'):
+            self.assertIsNone(choose('hybridir_sdk/templates/'+name))
+
+    def test_source_listing_respects_monorepo_boundary(self):
+        import runpy
+        import subprocess
+        root=Path(__file__).resolve().parents[2]
+        builder=runpy.run_path(str(root/'scripts/build_hybrid_distribution.py'))
+        with tempfile.TemporaryDirectory() as td:
+            repo=Path(td);project=repo/'HYBRID-IR';project.mkdir()
+            (repo/'outside.txt').write_text('must not be exported')
+            (project/'DEVELOPMENT_MANIFEST.json').write_text(json.dumps({'schema':'hybridir-development-snapshot/1'}))
+            (project/'inside.py').write_text('pass')
+            def git(*args):
+                return subprocess.check_output(['git','-C',str(repo),*args],stderr=subprocess.STDOUT,text=True)
+            git('init');git('add','.')
+            git('-c','user.name=Test','-c','user.email=test@example.invalid','commit','-m','fixture')
+            commit,prefix,names=builder['source_listing'](project,'HEAD')
+            self.assertEqual(prefix,'HYBRID-IR/')
+            self.assertEqual(set(names),{'inside.py','DEVELOPMENT_MANIFEST.json'})
+            self.assertEqual(builder['source_identity'](project,'HEAD'),(commit,'development'))
+            with self.assertRaises(ValueError):builder['source_identity'](repo,'HEAD')
+
     def test_legacy_is_lite_stable(self):
         helper = installer.helper('distribution_runtime')
         with tempfile.TemporaryDirectory() as td:
@@ -45,7 +74,7 @@ class TestDistribution(unittest.TestCase):
                 with patch.object(installer.subprocess,'run') as run:
                     installer.install(source,target,full=False)
                     self.assertEqual(run.call_count,1)  # Only the installed GUI smoke.
-                    self.assertEqual(run.call_args.args[0][0],str(target/'runtime/python.exe'))
+                    self.assertEqual(Path(run.call_args.args[0][0]).resolve(),(target/'runtime/python.exe').resolve())
             self.assertIn('standalone_uninstall.ps1',(target/'Uninstall_HYBRIDIR.cmd').read_text())
             self.assertIn('runtime\\python.exe',(target/'Start_HYBRIDIR.cmd').read_text())
 

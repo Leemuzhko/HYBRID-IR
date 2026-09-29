@@ -1,5 +1,10 @@
 # Third-party code and provenance
 
+The default HIR3A.ZDL is a synthetic UNIT-bank template derived from the same
+SDK and inherited stock runtime described below; it is not a clean-room binary.
+Its companion passport pins SHA256 and limits. User-reported pedal acceptance
+does not grant additional rights to inherited components or user-loaded IRs.
+
 English | [Українська](THIRD_PARTY_NOTICES.uk.md)
 
 Original HYBRID IR project code is MIT; third-party exceptions are listed below.

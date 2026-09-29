@@ -161,6 +161,12 @@ def build_effect(
         "--c99",
         "--opt_level=2",
     ]
+    # Opt-in only: preserve compiler behavior for every existing SDK client.
+    if "opt_for_space" in manifest:
+        space = manifest["opt_for_space"]
+        if type(space) is not int or not 0 <= space <= 3:
+            raise ValueError("opt_for_space must be an integer in 0..3")
+        cflags.append(f"--opt_for_space={space}")
     materialize_saved_params = bool(
         manifest.get("materialize_saved_params", False)
     )

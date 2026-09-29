@@ -429,8 +429,11 @@ class BaseApp(tk.Tk):
     def save_prep_defaults(self):
         try:
             cfg = self.read_prep()
-            self.prefs.prep_defaults = asdict(cfg)
-            self._save_settings_quietly()
+            from .preferences import save_preferences
+            updated=copy.deepcopy(self.prefs)
+            updated.prep_defaults=asdict(cfg)
+            save_preferences(updated)
+            self.prefs.prep_defaults=updated.prep_defaults
             self.status.set(_('Настройки подготовки сохранены как default.'))
         except Exception as e:
             self.error(e)

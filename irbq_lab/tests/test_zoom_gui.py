@@ -12,13 +12,51 @@ from irbq.zoom_bank import BankProject,Slot
 
 @unittest.skipUnless(os.name=='nt' or os.environ.get('DISPLAY'),'Desktop required')
 class TestZoomGUI(unittest.TestCase):
+    def test_default_passport_is_hardware_checked_v3(self):
+        from irbq.gui import App
+        from irbq.template_profile import load_package
+        app=App();app.withdraw()
+        try:
+            panel=app.zoom_panel
+            self.assertEqual(Path(panel.template_path).name,'HIR3A.template.json')
+            self.assertIn('HIR3A.template.json',panel.template_menu.entrycget(0,'label'))
+            package=load_package(panel.template_path)
+            self.assertEqual(package.profile['sha256'],'14f605e66ea0ca24a1bd0b0873cb15b8dbaf900290ffe78f9f6cb60c99b0f9d4')
+            self.assertEqual(package.profile['acceptance']['status'],'historical-pass')
+            panel.append(Model(44100,np.r_[.1,np.zeros(31)],[]),'TEST')
+            self.assertEqual(panel.usage(panel.project)['const_budget'],12104)
+            panel.variables['patched_folder'].set(self.profile.name)
+            with patch.object(app,'run_job') as job, patch('irbq.template_patch.publish_plan') as publish:
+                panel.build(patch=True)
+                plan=job.call_args.args[0]()
+                callback=job.call_args.args[1]
+                callback(plan)
+                job.call_args.args[0]()
+                publish.assert_called_once()
+                self.assertEqual(publish.call_args.args[1].profile['sha256'],package.profile['sha256'])
+        finally:app.player.close();app.destroy()
+
     def setUp(self):
         self.profile=tempfile.TemporaryDirectory()
         self.profile_patch=patch.dict(os.environ,{'IRBQ_SETTINGS_PATH':str(Path(self.profile.name)/'settings.json')})
         self.profile_patch.start()
+        self.diagnostic_confirm=patch('irbq.zoom_panel.messagebox.askyesno',return_value=True)
+        self.diagnostic_confirm.start()
 
     def tearDown(self):
-        self.profile_patch.stop();self.profile.cleanup()
+        self.diagnostic_confirm.stop();self.profile_patch.stop();self.profile.cleanup()
+
+    def test_legacy_diagnostic_warning_can_cancel_before_export(self):
+        from irbq.gui import App
+        app=App();app.withdraw()
+        try:
+            panel=app.zoom_panel;panel.use_legacy_template();panel.append(Model(44100,np.r_[.1,np.zeros(31)],[]),'TEST')
+            panel.variables['patched_folder'].set(self.profile.name)
+            with patch('irbq.zoom_panel.messagebox.askyesno',return_value=False) as confirm,patch.object(app,'run_job') as job:
+                panel.build(patch=True)
+                self.assertIn('known pedal insertion failure',confirm.call_args.args[1])
+                job.assert_not_called()
+        finally:app.player.close();app.destroy()
 
     def test_trainer_only_and_build_close_guard(self):
         from irbq.gui import App
@@ -28,6 +66,7 @@ class TestZoomGUI(unittest.TestCase):
                 self.assertIn('disabled',app.zoom_panel.build_button.state())
                 self.assertNotIn('disabled',app.zoom_panel.patch_button.state())
                 with self.assertRaisesRegex(ValueError,'disabled'):app.zoom_panel.build()
+                app.zoom_panel.use_legacy_template()
                 app.zoom_panel.append(Model(44100,np.r_[.1,np.zeros(31)],[]),'TEST')
                 with tempfile.TemporaryDirectory() as td, patch('irbq.zoom_panel.filedialog.askdirectory',return_value=td), patch.object(app,'run_job') as job, patch('irbq.zoom_variable_patch.patch_project') as patcher:
                     app.zoom_panel.build(patch=True)
@@ -123,6 +162,7 @@ class TestZoomGUI(unittest.TestCase):
                 panel.variables['patched_folder'].set(td)
                 for patch_mode,builder_name in ((False,'irbq.zoom_panel.build_project'),
                                                  (True,'irbq.zoom_variable_patch.patch_project')):
+                    panel.use_legacy_template()
                     with self.subTest(patch=patch_mode), \
                          patch('irbq.zoom_panel.filedialog.askdirectory') as chooser, \
                          patch('irbq.zoom_panel.messagebox.showinfo') as notice, \
@@ -138,6 +178,46 @@ class TestZoomGUI(unittest.TestCase):
                         notice.assert_called_once()
                         self.assertIn(str(path.resolve()),notice.call_args.args[1])
                         self.assertIn('successfully',notice.call_args.args[1])
+        finally:app.player.close();app.destroy()
+
+    def test_template_selection_cancel_and_non_destructive_conversion(self):
+        from irbq.gui import App
+        from tests.test_template_packages import passport
+        from irbq.dsp import Biquad
+        app=App();app.withdraw()
+        try:
+            panel=app.zoom_panel
+            panel.append(Model(44100,np.r_[.25,np.zeros(63)],[]),'TEST')
+            panel.project.slots[0].model.sections=[Biquad(kind='Peak',f=600,gain=3,control_role='reso')]
+            before=panel.project.slots[0].model.to_dict()
+            with tempfile.TemporaryDirectory() as td:
+                path=passport(td)
+                with patch('irbq.zoom_panel.filedialog.askopenfilename',return_value=str(path)):panel.choose_template()
+                self.assertEqual(panel.template_path,str(path.resolve()))
+                with patch('irbq.zoom_panel.simpledialog.askinteger',return_value=None):panel.choose_preparation('bake')
+                self.assertEqual(panel.export_mode,'preserve')
+                with patch('irbq.zoom_panel.simpledialog.askinteger',return_value=512):panel.choose_preparation('bake')
+                self.assertTrue(panel.update_budget()['template_fits'])
+                (Path(td)/'out').mkdir()
+                panel.variables['patched_folder'].set(str(Path(td)/'out'))
+                with patch('irbq.zoom_panel.messagebox.askyesno',return_value=False),patch.object(app,'run_job') as job:
+                    panel.build(patch=True)
+                    prepare_job=job.call_args.args
+                    prepare_job[1](prepare_job[0]())
+                    self.assertEqual(job.call_count,1)  # preparation only, no publication
+                self.assertEqual(panel.project.slots[0].model.to_dict(),before)
+                state=panel.capture();panel.use_legacy_template();panel.restore(state)
+                self.assertEqual(panel.export_mode,'bake');self.assertEqual(panel.export_taps,512)
+                self.assertEqual(panel.template_path,str(path.resolve()))
+                with patch('irbq.zoom_panel.messagebox.askyesno',return_value=True),patch.object(app,'run_job') as job:
+                    panel.build(patch=True)
+                    prepare_job=job.call_args.args
+                    prepare_job[1](prepare_job[0]())
+                    self.assertEqual(job.call_count,2)
+                    result=job.call_args.args[0]()
+                    self.assertTrue(result[0].exists())
+                    self.assertEqual(result[1]['preparation']['mode'],'bake')
+                self.assertEqual(panel.project.slots[0].model.to_dict(),before)
         finally:app.player.close();app.destroy()
 
     def test_role_migration_confirmation_and_cancel_are_inert(self):

@@ -51,13 +51,53 @@ if (-not (Test-Path -LiteralPath $desktopPath -PathType Container)) { throw 'Des
 $linkPath = Join-Path $desktopPath $env:HYBRIDIR_SHORTCUT_NAME
 if (Test-Path -LiteralPath $linkPath) { throw 'HYBRID IR desktop shortcut already exists; preserved' }
 $appPath = $env:HYBRIDIR_SHORTCUT_APP
-$link = $shell.CreateShortcut($linkPath)
-$link.TargetPath = $env:HYBRIDIR_SHORTCUT_PYTHON
-$link.Arguments = '-B -X utf8 "' + (Join-Path $appPath 'launch.py') + '"'
-$link.WorkingDirectory = $appPath
-$link.IconLocation = (Join-Path $appPath 'assets\zoom-ms70cdr.ico') + ',0'
-$link.Description = 'HYBRID IR Trainer and ZDL Patcher'
-$link.Save()
+# WScript.Shell rejects non-ANSI target paths on some Windows installations.
+# Use the explicit Unicode IShellLinkW interface for all stored link fields.
+Add-Type -TypeDefinition @'
+using System;
+using System.Text;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+[ComImport, Guid("00021401-0000-0000-C000-000000000046")]
+public class HybridShellLink {}
+[ComImport, Guid("000214F9-0000-0000-C000-000000000046"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+public interface HybridIShellLinkW {
+ void GetPath([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder path, int count, IntPtr data, uint flags);
+ void GetIDList(out IntPtr id);
+ void SetIDList(IntPtr id);
+ void GetDescription([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder text, int count);
+ void SetDescription([MarshalAs(UnmanagedType.LPWStr)] string text);
+ void GetWorkingDirectory([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder path, int count);
+ void SetWorkingDirectory([MarshalAs(UnmanagedType.LPWStr)] string path);
+ void GetArguments([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder text, int count);
+ void SetArguments([MarshalAs(UnmanagedType.LPWStr)] string text);
+ void GetHotkey(out short value);
+ void SetHotkey(short value);
+ void GetShowCmd(out int value);
+ void SetShowCmd(int value);
+ void GetIconLocation([Out, MarshalAs(UnmanagedType.LPWStr)] StringBuilder path, int count, out int index);
+ void SetIconLocation([MarshalAs(UnmanagedType.LPWStr)] string path, int index);
+ void SetRelativePath([MarshalAs(UnmanagedType.LPWStr)] string path, uint reserved);
+ void Resolve(IntPtr hwnd, uint flags);
+ void SetPath([MarshalAs(UnmanagedType.LPWStr)] string path);
+}
+public static class HybridShortcut {
+ public static void Save(string file, string target, string arguments, string directory, string icon) {
+  object raw = new HybridShellLink();
+  try {
+   HybridIShellLinkW link = (HybridIShellLinkW)raw;
+   link.SetPath(target);
+   link.SetArguments(arguments);
+   link.SetWorkingDirectory(directory);
+   link.SetIconLocation(icon, 0);
+   link.SetDescription("HYBRID IR Trainer and ZDL Patcher");
+   ((IPersistFile)raw).Save(file, true);
+  } finally { Marshal.FinalReleaseComObject(raw); }
+ }
+}
+'@
+$arguments = '-B -X utf8 "' + (Join-Path $appPath 'launch.py') + '"'
+[HybridShortcut]::Save($linkPath, $env:HYBRIDIR_SHORTCUT_PYTHON, $arguments, $appPath, (Join-Path $appPath 'assets\zoom-ms70cdr.ico'))
 [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
 Write-Output $linkPath
 '''

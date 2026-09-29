@@ -52,7 +52,7 @@ Two-stage crossfade rejected for this candidate because it needs duplicate FIR.
 
 ## Validation and unresolved risk
 
-Owner: [HVB4 candidate](../HVB4_RBJ_RELEASE_CANDIDATE.md). Targeted Python/native
+Owner: [HVB4 candidate](../HIR3A_RELEASE_NOTES.md). Targeted Python/native
 C/GUI tests and TI smoke are required; their commands/results live there.
 HBUNIT, HB9BQ and HB8RBJ received a user-reported functional PASS on MS-70CDR
 on 2026-09-27; the owner records exact hashes and scope. Sustained control-ramp

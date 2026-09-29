@@ -25,8 +25,8 @@ typedef struct GjState {
 } GjState;
 /* Host supplies the arena; this code only validates and partitions it. */
 #ifdef __TI_COMPILER_VERSION__
-#pragma FUNC_ALWAYS_INLINE(gj_state_required)
-#pragma FUNC_ALWAYS_INLINE(gj_bind_state)
+#pragma FUNC_CANNOT_INLINE(gj_state_required)
+#pragma FUNC_CANNOT_INLINE(gj_bind_state)
 #endif
 static inline uint32_t gj_state_required(void) {
     uint32_t taps, bq;
@@ -61,20 +61,21 @@ static inline GjState *gj_bind_state(void *arena, uint32_t bytes) {
 }
 
 #ifdef __TI_COMPILER_VERSION__
-#pragma FUNC_ALWAYS_INLINE(gj_clamp01)
-#pragma FUNC_ALWAYS_INLINE(gj_eq_position)
-#pragma FUNC_ALWAYS_INLINE(gj_select)
+/* Share block/control work; the inner FIR MAC loop remains inlined. */
+#pragma FUNC_CANNOT_INLINE(gj_clamp01)
+#pragma FUNC_CANNOT_INLINE(gj_eq_position)
+#pragma FUNC_CANNOT_INLINE(gj_select)
 #pragma FUNC_ALWAYS_INLINE(gj_mode)
-#pragma FUNC_ALWAYS_INLINE(gj_smooth)
-#pragma FUNC_ALWAYS_INLINE(gj_gain_amplitude)
-#pragma FUNC_ALWAYS_INLINE(gj_reso_coeff)
-#pragma FUNC_ALWAYS_INLINE(gj_pres_coeff)
-#pragma FUNC_ALWAYS_INLINE(gj_level_root)
-#pragma FUNC_ALWAYS_INLINE(gj_reset_branch)
+#pragma FUNC_CANNOT_INLINE(gj_smooth)
+#pragma FUNC_CANNOT_INLINE(gj_gain_amplitude)
+#pragma FUNC_CANNOT_INLINE(gj_reso_coeff)
+#pragma FUNC_CANNOT_INLINE(gj_pres_coeff)
+#pragma FUNC_CANNOT_INLINE(gj_level_root)
+#pragma FUNC_CANNOT_INLINE(gj_reset_branch)
 #pragma FUNC_ALWAYS_INLINE(gj_update_control)
 #pragma FUNC_ALWAYS_INLINE(gj_coeff_identity)
-#pragma FUNC_ALWAYS_INLINE(gj_biquads)
-#pragma FUNC_ALWAYS_INLINE(gj_branch)
+#pragma FUNC_CANNOT_INLINE(gj_biquads)
+#pragma FUNC_CANNOT_INLINE(gj_branch)
 #pragma FUNC_ALWAYS_INLINE(gj_process)
 #endif
 
@@ -209,7 +210,9 @@ static inline void gj_branch(GjBranch *s,float *fx,unsigned int sel,float level_
     gj_update_control(s,d,depth,pres,changed);
     if(d->fir_taps){
         const int16_t *fir=GJ_V2_FIR+d->fir_index;
-        ir_block_process(&s->fir,fx,1,d->fir_scale,channel,fir,d->fir_taps);
+        /* Each branch owns a fixed lane and independent history. Present that
+           lane as mono-left so the FIR need not contain unused mix/right paths. */
+        ir_block_process(&s->fir,fx+base_index,1,d->fir_scale,0u,fir,d->fir_taps);
     }else s->fir.magic=0u;
     gj_biquads(s,fx+base_index,d->bq_count,bq);
     for(i=0u;i<8u;i++){

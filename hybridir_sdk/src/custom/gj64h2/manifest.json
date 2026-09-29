@@ -1,0 +1,151 @@
+{
+  "sdk_profile": "minimal-v1",
+  "effect_name": "GJ64H2",
+  "audio_func_name": "Fx_FLT_GJ64H2",
+  "source_file": "effect.c",
+  "gid": 2,
+  "fxid": 564,
+  "fxid_version": "1.00",
+  "flags_byte": 1,
+  "materialize_saved_params": true,
+  "interrupt_threshold": 1,
+  "expected_local_relocation_symbols": [
+    "gj_bank"
+  ],
+  "params": [
+    {
+      "name": "OUT-L",
+      "min": 0,
+      "max": 150,
+      "default": 100,
+      "audio_default": 1.0
+    },
+    {
+      "name": "MODE",
+      "type": "enum",
+      "min": 0,
+      "max": 1,
+      "default": 0,
+      "audio_default": 0.0,
+      "labels": [
+        "Mono",
+        "Stereo"
+      ],
+      "getstr": "GetString_GjMode"
+    },
+    {
+      "name": "OUT-R",
+      "min": 0,
+      "max": 150,
+      "default": 100,
+      "audio_default": 1.0
+    },
+    {
+      "name": "IR-L",
+      "type": "enum",
+      "min": 0,
+      "max": 4,
+      "default": 1,
+      "audio_default": 0.01,
+      "labels": [
+        "OFF",
+        "64+4",
+        "128+8",
+        "512+2",
+        "1024"
+      ],
+      "getstr": "GetString_GjIR"
+    },
+    {
+      "name": "DEPTH",
+      "min": 0,
+      "max": 60,
+      "default": 30,
+      "audio_default": 0.5,
+      "getstr": "GetString_GjEQ"
+    },
+    {
+      "name": "PRES",
+      "min": 0,
+      "max": 60,
+      "default": 30,
+      "audio_default": 0.5,
+      "getstr": "GetString_GjEQ"
+    },
+    {
+      "name": "IR-R",
+      "type": "enum",
+      "min": 0,
+      "max": 4,
+      "default": 2,
+      "audio_default": 0.02,
+      "labels": [
+        "OFF",
+        "64+4",
+        "128+8",
+        "512+2",
+        "1024"
+      ],
+      "getstr": "GetString_GjIR"
+    },
+    {
+      "name": "DEPTH",
+      "min": 0,
+      "max": 60,
+      "default": 30,
+      "audio_default": 0.5,
+      "getstr": "GetString_GjEQ"
+    },
+    {
+      "name": "PRES",
+      "min": 0,
+      "max": 60,
+      "default": 30,
+      "audio_default": 0.5,
+      "getstr": "GetString_GjEQ"
+    }
+  ],
+  "ui": {
+    "screen": "screen_h1.rle",
+    "control_info_words_by_slot": [
+      [
+        20,
+        15,
+        11,
+        1,
+        2,
+        0
+      ],
+      [
+        20,
+        15,
+        11,
+        1,
+        2,
+        0
+      ],
+      [
+        20,
+        15,
+        11,
+        1,
+        2,
+        0
+      ]
+    ]
+  },
+  "audio_nop": false,
+  "synthesize_linesel_edit_handlers": true,
+  "synth_edit_start_index": 2,
+  "synth_handler_mode": "tail",
+  "synth_handler_mode_indices": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "smoke_max_fardata_bytes": 72
+}

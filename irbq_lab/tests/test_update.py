@@ -20,7 +20,7 @@ class TestUpdate(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory(prefix="hybrid update ' тест ")
         self.addCleanup(self.tmp.cleanup)
-        self.root = Path(self.tmp.name)
+        self.root = Path(self.tmp.name).resolve()
         self.source = self.root / 'source'
         self.source.mkdir()
         for name in ('installer.py', 'uninstaller.py', 'installation_guard.py', 'updater.py', 'launch.py'):

@@ -15,7 +15,7 @@ from .zoom_rbj_bank import pack, validate
 from .zoom_variable_repack import layout, repack_roles as repack
 
 TEMPLATE = SDK/'templates/HVB4RBJ.zdl'
-TEMPLATE_SHA = 'b21528b5a6444dbe6200cf73b450643da22082c0e865a6c86e4cb4b298357894'
+TEMPLATE_SHA = 'a65250657b900f3856f18a7e3b54ef45756adbe4408b2b1355d3977fcc06dcd0'
 CODE_CONST_CAP = 28904
 FARDATA_CAP = 144
 CONST_PREFIX = 1672

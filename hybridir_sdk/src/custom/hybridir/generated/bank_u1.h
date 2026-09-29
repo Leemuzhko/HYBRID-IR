@@ -44,6 +44,7 @@ typedef struct GjBankBlob {
 #pragma DATA_ALIGN(gj_bank, 8)
 #endif
 
+
 const GjBankBlob gj_bank = {
 {0x32425249u,1,32,2,32,2,8,1,32,2,48,61,2932,0},
 {

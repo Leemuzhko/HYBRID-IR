@@ -24,12 +24,16 @@ class Session:
     log: list[str] = field(default_factory=list)
     model: Model | None = None
     snapshots: list[Model] = field(default_factory=list)
+    # Optional byte-exact source container, independent of the prepared/model IR.
+    source_audio: bytes | None = None
 
     def load_audio(self,path):
-        info=sf.info(path)
-        if info.duration>30 or info.channels>8:
-            raise ValueError('Допустим IR до 30 секунд, до 8 каналов.')
-        self.source,self.source_fs=sf.read(path,dtype='float64')
+        from .source_audio import decode_source
+        path=Path(path)
+        if path.stat().st_size>32_000_000:raise ValueError('Source audio is too large')
+        raw=path.read_bytes()
+        source,rate,_=decode_source(raw)
+        self.source,self.source_fs,self.source_audio=source,rate,raw
         self.source_name=Path(path).name
         self.target=None; self.before_mpt=None; self.model=None; self.snapshots=[]
 

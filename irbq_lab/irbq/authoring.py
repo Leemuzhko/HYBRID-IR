@@ -38,7 +38,7 @@ def read_file(path):
     return path.read_bytes()
 
 
-def session_bytes(session):
+def session_bytes(session, *, source_blobs=None):
     if session.model is None:
         raise ValueError('No model to save')
     signals = {}
@@ -46,26 +46,48 @@ def session_bytes(session):
         value = getattr(session, key)
         if value is not None:
             signals[key] = np.asarray(value, dtype=np.float64)
-    metadata = dict(schema='irbq-project/2', source_name=session.source_name,
+    metadata = dict(schema='irbq-project/3', source_name=session.source_name,
                     source_fs=session.source_fs, prep=asdict(session.config), log=session.log,
                     model=session.model.to_dict(), snapshots=[m.to_dict() for m in session.snapshots])
     data = io.BytesIO()
     np.savez_compressed(data, **signals)
     output = io.BytesIO()
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as z:
+        if session.source_audio is not None:
+            from .source_audio import decode_source
+            samples, rate, original = decode_source(session.source_audio)
+            if rate != session.source_fs or session.source is None or not np.array_equal(samples,session.source):
+                raise ValueError('Original audio does not match project source')
+            original['storage']='embedded' if source_blobs is None else 'bank'
+            metadata['original_audio']=original
+            if source_blobs is None:z.writestr('original.audio',session.source_audio)
+            else:source_blobs[original['sha256']]=session.source_audio
         z.writestr('project.json', json_bytes(metadata))
         z.writestr('signals.npz', data.getvalue())
     raw = output.getvalue()
-    session_from_bytes(raw)  # Validate the exact representation before publication.
+    session_from_bytes(raw,source_blobs=source_blobs)  # Validate before publication.
     return raw
 
 
-def session_from_bytes(raw,max_signal_bytes=128_000_000):
+def session_from_bytes(raw,max_signal_bytes=128_000_000, *, source_blobs=None):
     with archive(raw, 160_000_000) as z:
         d = json.loads(z.read('project.json'))
-        if d.get('schema') not in ('irbq-project/1', 'irbq-project/2'):
+        if d.get('schema') not in ('irbq-project/1', 'irbq-project/2', 'irbq-project/3'):
             raise ValueError('Unsupported IRBQ project version')
         payload = z.read('signals.npz')
+        original=d.get('original_audio')
+        source_audio=None
+        if original is not None:
+            if d['schema']!='irbq-project/3':raise ValueError('Unexpected original audio metadata')
+            digest=original.get('sha256','')
+            if len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):
+                raise ValueError('Invalid source hash')
+            if original.get('storage')=='embedded':source_audio=z.read('original.audio')
+            elif original.get('storage')=='bank' and source_blobs is not None:
+                source_audio=source_blobs.get(digest)
+            else:raise ValueError('Unresolved original audio reference')
+            if source_audio is None or hashlib.sha256(source_audio).hexdigest()!=digest:
+                raise ValueError('Original audio hash mismatch')
     with archive(payload, 160_000_000) as nested:
         # Validate NPY declarations before allocation, including malicious short payloads.
         expanded=0
@@ -109,8 +131,14 @@ def session_from_bytes(raw,max_signal_bytes=128_000_000):
     source_fs = int(d['source_fs'])
     if not 8000 <= source_fs <= 192000:
         raise ValueError('Invalid source sample rate')
-    return Session(signals['source'], source_fs, d.get('source_name', ''), signals['target'],
-                   signals['before_mpt'], cfg, d.get('log', []), model, snapshots)
+    if source_audio is not None:
+        from .source_audio import decode_source
+        samples,rate,meta=decode_source(source_audio)
+        if any(original.get(k)!=v for k,v in meta.items()) or rate!=source_fs or not np.array_equal(samples,signals['source']):
+            raise ValueError('Original audio does not match project source')
+    return Session(source=signals['source'],source_fs=source_fs,source_name=d.get('source_name',''),
+                   target=signals['target'],before_mpt=signals['before_mpt'],config=cfg,
+                   log=d.get('log',[]),model=model,snapshots=snapshots,source_audio=source_audio)
 
 
 def model_session(model):
@@ -129,6 +157,7 @@ def portable_bank_bytes(project):
     project.validate(allow_empty=True)
     output = io.BytesIO()
     slots = []
+    source_blobs={}
     signal_bytes=0
     with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as z:
         for i, slot in enumerate(project.slots):
@@ -137,12 +166,14 @@ def portable_bank_bytes(project):
             signal_bytes+=sum(np.asarray(v).size*8 for v in (session.source,session.target,session.before_mpt) if v is not None)
             if signal_bytes>128_000_000:raise ValueError('Bank signals exceed memory budget')
             name = f'sessions/{i}.irbq'
-            z.writestr(name, session_bytes(session))
+            z.writestr(name, session_bytes(session,source_blobs=source_blobs))
             slots.append(dict(label=slot.label, uid=slot.uid, session=name))
         image = read_file(project.image)
         validate_card(image)
         z.writestr('card.png', image)
-        z.writestr('bank.json', json_bytes(dict(schema='hybrid-ir-bank/1', name=project.name,
+        if sum(map(len,source_blobs.values()))>64_000_000:raise ValueError('Bank original audio exceeds memory budget')
+        for digest,blob in source_blobs.items():z.writestr('sources/'+digest,blob)
+        z.writestr('bank.json', json_bytes(dict(schema='hybrid-ir-bank/2', name=project.name,
             fxid=project.fxid, gid=project.gid, filename=project.filename, slots=slots)))
     raw = output.getvalue()
     with archive(raw):
@@ -155,7 +186,8 @@ def load_portable_bank(path):
     from .preferences import settings_path
     with archive(read_file(path)) as z:
         data = json.loads(z.read('bank.json'))
-        if data.pop('schema', None) != 'hybrid-ir-bank/1':
+        schema=data.pop('schema',None)
+        if schema not in ('hybrid-ir-bank/1','hybrid-ir-bank/2'):
             raise ValueError('Unsupported portable bank version')
         descriptors = data.pop('slots')
         if set(data)!={'name','fxid','gid','filename'}:
@@ -164,10 +196,21 @@ def load_portable_bank(path):
             raise ValueError('Too many bank slots')
         slots = []
         remaining=128_000_000
+        source_blobs={}
+        source_items=[item for item in z.infolist() if item.filename.startswith('sources/')]
+        if len(source_items)>8 or sum(i.file_size for i in source_items)>64_000_000:
+            raise ValueError('Bank original audio exceeds memory budget')
+        for item in source_items:
+            digest=item.filename[8:]
+            if schema!='hybrid-ir-bank/2' or len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):
+                raise ValueError('Invalid source reference')
+            blob=z.read(item)
+            if hashlib.sha256(blob).hexdigest()!=digest:raise ValueError('Original audio hash mismatch')
+            source_blobs[digest]=blob
         for i, descriptor in enumerate(descriptors):
             if descriptor['session'] != f'sessions/{i}.irbq':
                 raise ValueError('Invalid bank session reference')
-            session = session_from_bytes(z.read(descriptor['session']),remaining)
+            session = session_from_bytes(z.read(descriptor['session']),remaining,source_blobs=source_blobs)
             remaining-=sum(v.nbytes for v in (session.source,session.target,session.before_mpt) if v is not None)
             slots.append(Slot(descriptor['label'], session.model.clone(), session, descriptor['uid']))
         image = z.read('card.png')
@@ -240,6 +283,7 @@ def scan_library(folder,check_cancel=None):
             from .zoom_rbj_bank import bq_count
             bq_count(session.model)  # Reject invalid roles before a Tk filter renders them.
             size=sum(v.nbytes for v in (session.source,session.target,session.before_mpt) if v is not None)
+            size+=len(session.source_audio or b'')
             if retained+size>256_000_000:raise ValueError('Library reference memory budget exceeded')
             retained+=size
             entries.append(LibraryEntry(path,session))

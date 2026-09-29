@@ -1,48 +1,69 @@
 name: Windows application packages
-on:
+"on":
+  push:
+    branches: [main, "release/**"]
+    paths: ["irbq_lab/**", "hybridir_sdk/**", "scripts/**", "requirements-zoom-lock.txt", "release.json", ".github/workflows/windows-packages.yml"]
+    tags: ["v*"]
+  pull_request:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Package version, e.g. 0.4.1-rc1"
-        required: true
-        type: string
 permissions:
   contents: read
 jobs:
   build:
     runs-on: windows-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.14.6'
           architecture: x64
-      - run: python -m pip install --only-binary=:all: -r requirements-zoom-lock.txt
-      - name: Lifecycle tests
-        working-directory: irbq_lab
-        run: python -B -m unittest tests.test_installation tests.test_update tests.test_uninstall tests.test_distribution
-      - name: Build both flavors
-        env:
-          PACKAGE_VERSION: ${{ inputs.version }}
+      - name: Install pinned test dependencies
         shell: pwsh
         run: |
-          python -B scripts/build_hybrid_distribution.py --out artifacts --version "$env:PACKAGE_VERSION"
+          python -m pip install --only-binary=:all: -r requirements-zoom-lock.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-      - name: Real disposable lifecycle smoke
+          python -m pip install --only-binary=:all: ziglang==0.16.0
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Source and GUI tests
+        shell: pwsh
+        run: |
+          python -B scripts/run_development_tests.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build Lite and Standalone from the exact commit
+        shell: pwsh
+        run: |
+          $v = (Get-Content release.json | ConvertFrom-Json).version
+          python -B scripts/build_hybrid_distribution.py --repo . --revision "$env:GITHUB_SHA" --out artifacts --version "$v" --channel stable
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify each payload and its Windows lifecycle
         shell: pwsh
         run: |
           Get-ChildItem artifacts -Directory | ForEach-Object {
+            $python = if ($_.Name -like '*Standalone') { Join-Path $_.FullName 'runtime/python.exe' } else { 'python' }
+            & $python -B scripts/verify_release_payload.py --root $_.FullName
+            if ($LASTEXITCODE -ne 0) { throw 'Payload verification failed' }
             python -B scripts/smoke_hybrid_distribution.py --source $_.FullName --work ("smoke-" + $_.Name)
-            if ($LASTEXITCODE -ne 0) { throw "Lifecycle smoke failed" }
+            if ($LASTEXITCODE -ne 0) { throw 'Windows install/update/uninstall smoke failed' }
             if ($_.Name -like '*Standalone') {
               python -B scripts/smoke_standalone_uninstall.py --source $_.FullName --work ("uninstall-" + $_.Name)
-              if ($LASTEXITCODE -ne 0) { throw "Uninstall entrypoint smoke failed" }
+              if ($LASTEXITCODE -ne 0) { throw 'Standalone uninstall entrypoint failed' }
             }
           }
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - name: Upload verified installers and checksums
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: windows-packages
           path: |
             artifacts/*.zip
             artifacts/*.sha256
           if-no-files-found: error
+      - name: Upload lifecycle receipts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: windows-validation
+          path: |
+            smoke-*/*.json
+            uninstall-*/smoke.json
+          if-no-files-found: ignore

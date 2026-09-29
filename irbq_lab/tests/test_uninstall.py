@@ -13,6 +13,28 @@ spec=importlib.util.spec_from_file_location('uninstall_test_module',path)
 module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
 
 class TestUninstall(unittest.TestCase):
+    @unittest.skipUnless(os.name=='nt','Windows 8.3 paths')
+    def test_short_path_alias_keeps_receipt_ownership(self):
+        import ctypes
+        from ctypes import wintypes
+        get_short=ctypes.windll.kernel32.GetShortPathNameW
+        get_short.argtypes=(wintypes.LPCWSTR,wintypes.LPWSTR,wintypes.DWORD)
+        get_short.restype=wintypes.DWORD
+        with tempfile.TemporaryDirectory(prefix='hybridir long installation ') as td:
+            root=Path(td)/'owned application folder';self.setup_app(root)
+            buf=ctypes.create_unicode_buffer(32768)
+            size=get_short(str(root.resolve()),buf,len(buf))
+            self.assertTrue(0<size<len(buf))
+            alias=Path(buf.value)
+            self.assertEqual(alias.resolve(),root.resolve())
+            self.assertEqual(module.plan(alias)[0],root.resolve())
+            receipt=root/module.RECEIPT;data=json.loads(receipt.read_text(encoding='utf-8'))
+            original=data['root'];data['root']=str(root.parent/'unrelated')
+            receipt.write_text(json.dumps(data),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'does not belong'):module.plan(alias)
+            data['root']=original;receipt.write_text(json.dumps(data),encoding='utf-8')
+            self.assertFalse(module.uninstall(alias)['folder_remains'])
+
     def setup_app(self,root):
         root.mkdir()
         for name in ('launch.py','installer.py','uninstaller.py','.venv/package.py','assets/icon.ico'):

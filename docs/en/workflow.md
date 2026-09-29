@@ -1,5 +1,10 @@
 # Prepare IRs and build a bank
 
+Release 0.4.1: HIR3A is the default template passport for
+**Patch ZDL (no TI)**. No manual template selection is needed. Its code uses
+16,800 bytes; the conservative code + constants budget is 28,904 bytes.
+New banks still need a pedal check. Other passports remain selectable.
+
 **English** · [Русский](../ru/workflow.md) · [Українська](../uk/workflow.md)
 
 [Home](../../README.md) · [Installation, updates and removal](installation.md) · [Limits and technical details](technical.md)

@@ -40,15 +40,37 @@ Looking for something ready to try? My [Zoom-ZDL-FX repository](https://github.c
 
 Install the desktop app, open **Zoom ZDL**, add an IR with **Import WAV**, and export with **Patch ZDL (no TI)**. Transfer the resulting ZDL with [Zoom Effect Manager](https://zoomeffectmanager.com/en/download/). The guides above cover the settings and checks.
 
-## Before you start
+## What's new in 0.4.1
 
-Trainer **0.4.0** adds a searchable IR library, portable projects/banks and editing of bank slots. Export goes straight to your configured Zoom Effect Manager folder and confirms the saved path. See the [workflow guide](docs/en/workflow.md).
+**HIR3A is selected automatically for Patch ZDL (no TI).** Its original synthetic
+template has user-reported MS-70CDR operation, parameter persistence and patched
+export acceptance. New banks still need their own pedal checks. The application
+packages contain only HIR3A and its hash-paired template passport.
 
-The current **HVB4RBJ** patcher supports **1–8 IR slots + OFF**, within its memory budget. Watch the bank indicator: eight short hybrid models can fit, while four distinct 2048-tap IRs cannot. The conservative profile does not admit a 4096-tap bank; longer-IR experiments are covered in the technical guide. Keep slot names to **5 characters** for the pedal display.
+**K-weighted normalization** is available alone, with the 80–8000 Hz band,
+with Pink weighting, or with both Pink and that band. This is frequency-weighted
+IR response normalization, not a gated LUFS meter. Existing normalization modes
+remain available; export does not secretly renormalize the saved model.
 
-DSP cost is deliberately low and fixed at **20**, not a CPU percentage. Listen to the complete chain: if it crackles, use a shorter IR or **L/R** mode to run one branch. IR **OFF** alone is not a complete branch shutdown. See the technical guide before testing.
+Use **Save as default** in Preparation to retain the current preparation settings,
+including normalization. **Load defaults** restores them; the next application
+start restores them automatically. These are preparation defaults, not named
+profiles or a saved set of training-optimizer parameters.
 
-My documented tests used an **MS-70CDR, firmware 2.10**. Three HVB4RBJ test exports, including an eight-slot bank, worked in functional pedal tests. Every new bank and effect chain still needs checking. This is cabinet filtering, not an amplifier or distortion model.
+The library and portable projects/banks retain original audio for explicit
+re-preparation. Older model-only projects remain usable. Keep backups: older
+program versions may not read the new original-audio schemas.
+
+The template allows **1–8 IR slots + OFF**, FIR **32–4096 taps** and at most
+**32 BQ per entry**, including RESO/PRES. The total byte budget takes priority:
+code is 16,800 B; constants may use 12,104 B, including a 1,672 B prefix.
+Two independent 4096-tap IRs do **not** fit this profile. Use at most 5 visible
+characters for slot labels. See the [technical guide](docs/en/technical.md).
+
+DSP cost **20** is not CPU usage. Two long IRs plus an amplifier may overload
+the pedal. Use a shorter IR or L/R mode and check the whole chain by ear.
+IR OFF does not shut down all branch processing. This is cabinet filtering,
+not an amplifier or distortion model.
 
 ## Support the project
 

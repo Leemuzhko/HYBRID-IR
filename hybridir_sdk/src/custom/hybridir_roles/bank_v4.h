@@ -18,9 +18,10 @@ typedef struct GjModelDesc {
 #ifdef __TI_COMPILER_VERSION__
 #pragma FUNC_ALWAYS_INLINE(gj_v2_header)
 #pragma FUNC_ALWAYS_INLINE(gj_v2_region)
-#pragma FUNC_ALWAYS_INLINE(gj_v2_finite)
-#pragma FUNC_ALWAYS_INLINE(gj_v2_stable)
-#pragma FUNC_ALWAYS_INLINE(gj_v2_valid)
+/* Cold validation is shared with the label callback, not copied into audio. */
+#pragma FUNC_CANNOT_INLINE(gj_v2_finite)
+#pragma FUNC_CANNOT_INLINE(gj_v2_stable)
+#pragma FUNC_CANNOT_INLINE(gj_v2_valid)
 #pragma FUNC_ALWAYS_INLINE(gj_runtime_fir)
 #pragma FUNC_ALWAYS_INLINE(gj_runtime_bq)
 #pragma FUNC_ALWAYS_INLINE(gj_runtime_count)

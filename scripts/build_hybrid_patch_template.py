@@ -54,6 +54,9 @@ def main():
                               image=list(symbols['picEffectType_HYBRID IR'])))
     assert len(raw) == struct.unpack_from('<I',raw,16)[0]+76
     atomic_write(args.output/'HYBRID4.json',json.dumps(profile,indent=2).encode('utf-8'))
+    from emit_template_profile import emit
+    emit(path,backend='irb2-fixed/1',code_const_cap=sum(sections[n][5] for n in ('.text','.audio','.const')),
+         provenance=profile['provenance'])
     print(json.dumps(profile,indent=2))
     # Review this digest and update zoom_patch.PROFILE_SHA256 when adopting a new template.
     print('Canonical profile SHA256: '+hashlib.sha256(json.dumps(profile,sort_keys=True,separators=(',',':')).encode('utf-8')).hexdigest())

@@ -46,6 +46,7 @@ __declspec(dllexport) void coeff(unsigned slot,float raw,float*r,float*p){gj_res
 __declspec(dllexport) void run(void*p,unsigned n,float*x,const float*params){GjState*s=gj_bind_state(p,n);if(s)gj_process_params(s,x,params);}
 __declspec(dllexport) unsigned phase(void*p){return ((GjState*)p)->switch_phase;}
 __declspec(dllexport) unsigned selection(void*p){return ((GjState*)p)->selected_l;}
+__declspec(dllexport) int eq_label(unsigned v,char*s){return GetString_GjEQ(v,s);}
 ''',encoding='utf-8')
         dll=folder/'rbj.dll'
         env={**os.environ,'ZIG_GLOBAL_CACHE_DIR':str(ROOT/'.test-cache/zig-global'),
@@ -59,6 +60,7 @@ __declspec(dllexport) unsigned selection(void*p){return ((GjState*)p)->selected_
         cls.lib.coeff.argtypes=[C.c_uint,C.c_float,FP,FP]
         cls.lib.run.argtypes=[C.c_void_p,C.c_uint,FP,FP]
         cls.lib.phase.argtypes=[C.c_void_p];cls.lib.selection.argtypes=[C.c_void_p]
+        cls.lib.eq_label.argtypes=[C.c_uint,C.c_char_p]
 
     @classmethod
     def tearDownClass(cls):
@@ -105,6 +107,15 @@ __declspec(dllexport) unsigned selection(void*p){return ((GjState*)p)->selected_
                 else:np.testing.assert_allclose(r,ref[ui],rtol=3e-6,atol=5e-7)
                 np.testing.assert_allclose(p,pref[ui],rtol=3e-6,atol=5e-7)
 
+    def test_eq_display_all_positions(self):
+        for ui in list(range(61)) + [61, 0xffffffff]:
+            out = C.create_string_buffer(16)
+            count = self.lib.eq_label(ui, out)
+            value = (min(ui,60)-30)/2
+            expected = '0.0' if value == 0 else f'{value:+.1f}'
+            self.assertEqual(out.value.decode('ascii'), expected)
+            self.assertEqual(count, len(expected))
+
     def test_nine_bq_neutral_audio_matches_quantized_model(self):
         m=Model(44100,np.r_[.5,np.zeros(127)],preset_sections(8))
         m.sections[1].gain=-6.;m.sections[-1].gain=2.
@@ -134,6 +145,27 @@ __declspec(dllexport) unsigned selection(void*p){return ((GjState*)p)->selected_
         self.assertTrue(np.all(resumed<0));self.assertLess(abs(resumed[0]),1e-5)
         self.assertAlmostEqual(resumed[-1],-.01,places=7)
         self.assertEqual(a.raw[:16],a.raw[-16:])
+
+    def test_two_long_firs_wrap_and_keep_channels_independent(self):
+        from irbq.dsp import quantize_fir
+        rng = np.random.default_rng(4096)
+        models = [Model(44100, rng.normal(0, .002, 4096), []) for _ in range(2)]
+        bank, report = pack(BankProject(slots=[Slot('A', models[0]), Slot('B', models[1])]))
+        self.assertEqual(report['fir_pool_samples'], 8192)
+        self.bind(bank)
+        self.assertEqual(self.lib.valid(), 1)
+        a, n, ptr = self.arena()
+        p = self.params(mode=0, left=1, right=2)
+        for _ in range(40):
+            self.process(ptr, n, p, np.zeros(16))
+        x = rng.normal(0, .01, (1100, 16)).astype('f4')
+        actual = np.vstack([self.process(ptr, n, p, b) for b in x])
+        for c, model in zip((0, 8), models):
+            q, scale = quantize_fir(model.fir)
+            expected = signal.lfilter(q.astype('f8') / 32768 * scale, [1.], x[:, c:c+8].flatten())
+            np.testing.assert_allclose(actual[:, c:c+8].flatten(), expected, rtol=3e-4, atol=3e-7)
+        self.assertEqual(a.raw[:16], b'\xa5'*16)
+        self.assertEqual(a.raw[-16:], b'\xa5'*16)
 
     def test_mode_rapid_changes_and_invalid_arena(self):
         bank,_=pack(BankProject(slots=[Slot('POS',Model(44100,np.r_[.5,np.zeros(63)],[]))]))

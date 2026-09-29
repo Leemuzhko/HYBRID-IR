@@ -44,7 +44,19 @@ class WorkspaceMixin:
         super().__init__()
         if getattr(self.prefs, 'prep_defaults', None):
             self.load_prep_defaults(silent=True)
-        self.geometry('1440x930');self.minsize(1100,740)
+        screen_w=max(800,int(self.winfo_screenwidth()))
+        screen_h=max(600,int(self.winfo_screenheight()))
+        # Leave room for the window-manager title bar/panel and force an explicit
+        # on-screen origin. This matters in Codespaces/noVNC where the virtual
+        # desktop can be smaller than the normal 1440x930 desktop layout.
+        margin_x=40
+        margin_y=100
+        width=min(1440,max(760,screen_w-margin_x))
+        height=min(930,max(560,screen_h-margin_y))
+        min_width=min(1100,max(640,screen_w-margin_x))
+        min_height=min(740,max(480,screen_h-margin_y))
+        self.minsize(min_width,min_height)
+        self.geometry(f'{width}x{height}+10+10')
         apply_theme(self,self.prefs.theme)
         self.redraw()
 

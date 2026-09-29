@@ -9,9 +9,27 @@
   "flags_byte": 1,
   "materialize_saved_params": true,
   "interrupt_threshold": 1,
+  "opt_for_space": 3,
   "expected_local_relocation_symbols": [
     "gj_bank",
-    "gj_bank_meta"
+    "gj_bank_meta",
+    ".text",
+    "gj_v2_valid",
+    "gj_v2_stable",
+    "gj_v2_finite",
+    "gj_branch",
+    "gj_state_required",
+    "gj_bind_state",
+    "gj_reset_branch",
+    "gj_reso_coeff",
+    "gj_pres_coeff",
+    "gj_select",
+    "gj_eq_position",
+    "gj_biquads",
+    "gj_gain_amplitude",
+    "gj_smooth",
+    "gj_clamp01",
+    "gj_level_root"
   ],
   "params": [
     {
@@ -191,7 +209,7 @@
   "audio_nop": false,
   "synthesize_linesel_edit_handlers": true,
   "synth_edit_start_index": 2,
-  "synth_handler_mode": "tail",
+  "synth_handler_mode": "compact_aligned",
   "synth_handler_mode_indices": [
     2,
     3,

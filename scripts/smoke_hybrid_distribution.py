@@ -22,11 +22,24 @@ def smoke(source, work):
     delivery=installer.helper('distribution_runtime').metadata(source)
     target=work/'installed'
     installer.install(source,target,full=False,progress=print)
+    def verify_installed(stage):
+        python=target/('runtime/python.exe' if delivery['flavor']=='standalone' else '.venv/Scripts/python.exe')
+        env=dict(os.environ)
+        if delivery['flavor']=='standalone':
+            env.update(PATH=str(Path(os.environ['SystemRoot'])/'System32'),
+                       PYTHONHOME='invalid-isolation-probe',PYTHONPATH='invalid-isolation-probe')
+        result=subprocess.run([str(python),'-B',str(Path(__file__).with_name('verify_release_payload.py')),
+                               '--root',str(target)],cwd=work,env=env,check=True,
+                              capture_output=True,text=True,timeout=180)
+        (work/(stage+'-features.json')).write_text(result.stdout,encoding='utf-8')
+        print(result.stdout)
+    verify_installed('installed')
     personal=target/'personal-bank.txt';personal.write_text('preserve me')
     update=installer.helper('updater')
     result=update.update(source,target,installer.install,installer.checked_payload,print)
     assert personal.read_text()=='preserve me'
     assert (result['backup']/'personal-bank.txt').read_text()=='preserve me'
+    verify_installed('updated')
     receipt=json.loads((target/'uninstall-receipt.json').read_text())
     assert 'personal-bank.txt' not in {x['path'] for x in receipt['files']}
     if delivery['flavor']=='standalone':
@@ -54,7 +67,7 @@ def smoke(source, work):
     assert not (target/'.venv').exists()
     report=dict(flavor=delivery['flavor'],channel=delivery['channel'],
                 source_revision=delivery['source_revision'],install=True,update=True,
-                uninstall=True,personal_preserved=True,pristine_vm=False,
+                uninstall=True,installed_features=True,updated_features=True,personal_preserved=True,pristine_vm=False,
                 hardware_validation=False)
     (work/'smoke.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print(json.dumps(report))

@@ -26,6 +26,9 @@ class ZoomPanel(ttk.Frame):
         self.edit_digest = None
         self.variables = {}
         self.budget_job = None
+        self.template_path = str(Path(__file__).resolve().parents[2] / 'hybridir_sdk/templates/HIR3A.template.json')
+        self.export_mode = 'preserve'
+        self.export_taps = 1024
         self.columnconfigure(0, weight=3)
         self.columnconfigure(1, weight=0, minsize=340)
         self.rowconfigure(1, weight=1)
@@ -77,6 +80,17 @@ class ZoomPanel(ttk.Frame):
         for text,command in [('New bank',self.new),('Open bank',self.open),('Save bank as…',lambda:self.save(True)),('Size estimate',self.estimate)]:
             menu.add_command(label=tr(text),command=lambda fn=command:self.guarded(fn))
         ttk.Button(bottom,text=tr('Save bank'),style='Compact.TButton',command=lambda:self.guarded(self.save)).pack(side='left')
+        template_menu=ttk.Menubutton(bottom,text=tr('Template'),style='Compact.TMenubutton')
+        template_menu.pack(side='left',padx=(4,0))
+        tm=tk.Menu(template_menu,tearoff=False);template_menu.configure(menu=tm)
+        self.template_menu=tm
+        tm.add_command(label=tr('Legacy export (unchanged)'),state='disabled')
+        tm.add_command(label=tr('Select template passport…'),command=lambda:self.guarded(self.choose_template))
+        tm.add_command(label=tr('Legacy export (unchanged)'),command=lambda:self.guarded(self.use_legacy_template))
+        self.refresh_template_menu()
+        tm.add_separator()
+        for label,mode in [('Preserve current model','preserve'),('Bake current model into FIR','bake'),('Prepare again from original IR','original')]:
+            tm.add_command(label=tr(label),command=lambda m=mode:self.guarded(lambda:self.choose_preparation(m)))
         self.build_button = ttk.Button(bottom,text='Build ZDL',style='Compact.TButton',command=lambda:self.guarded(self.build))
         self.build_button.pack(side='right')
         self.patch_button = ttk.Button(bottom,text='Patch ZDL (no TI)',style='Accent.TButton',command=lambda:self.guarded(lambda:self.build(patch=True)))
@@ -96,7 +110,7 @@ class ZoomPanel(ttk.Frame):
         self.capacity_brief=tk.StringVar(value=tr('Bank size'))
         self.template_brief=tk.StringVar(value=tr('Bank slots'))
         for row, title, bar, text in (
-            (0, 'HVB4RBJ .const budget', self.capacity_bar, self.capacity_text),
+            (0, 'Bank .const budget', self.capacity_bar, self.capacity_text),
             (1, 'Variable bank loading profile', self.template_bar, self.template_text)):
             ttk.Label(budget,textvariable=self.capacity_brief if row==0 else self.template_brief,style='Small.TLabel',wraplength=310).grid(row=row*2,column=0,columnspan=2,sticky='w')
             bar.grid(row=row*2+1,column=0,columnspan=2,sticky='ew',pady=(4,8))
@@ -147,12 +161,15 @@ class ZoomPanel(ttk.Frame):
         try:
             preview = copy.copy(self.project)
             preview.image = self.variables['image'].get()
-            usage = bank_usage(preview)
+            usage = self.usage(preview)
             self.capacity_bar['value'] = min(100, 100*usage['const_bytes']/usage['const_budget'])
-            self.template_bar['value'] = min(100, 100*usage['active_slots']/8)
+            slot_cap=usage['limits']['slots'][1]
+            self.template_bar['value'] = min(100, 100*usage['active_slots']/slot_cap)
             remaining = usage['remaining_bytes']
             self.capacity_brief.set(tr('Bank .const: {used}/{limit} B · free {remaining} B').format(used=usage['const_bytes'],limit=usage['const_budget'],remaining=remaining))
-            self.template_brief.set(tr('Slots {slots}/8 · FIR {fir} · BQ {bq}').format(slots=usage['active_slots'],fir=usage['limits']['fir_pool'][0],bq=usage['limits']['bq_pool'][0]))
+            if self.template_path and self.export_mode!='preserve':
+                self.capacity_brief.set(tr('Upper bound after conversion')+' · '+self.capacity_brief.get())
+            self.template_brief.set(tr('Slots {slots}/{limit} · FIR {fir} · BQ {bq}').format(slots=usage['active_slots'],limit=slot_cap,fir=usage['limits']['fir_pool'][0],bq=usage['limits']['bq_pool'][0]))
             self.capacity_text.set(tr('{used} / {limit} B; remaining {remaining} B; RBJ parameters {params} B; gain LUT {lut} B; code + const {total}/{cap} B').format(
                 used=usage['const_bytes'],limit=usage['const_budget'],remaining=remaining,
                 params=usage['rbj_parameter_bytes']+usage['common_pres_parameter_bytes'],lut=usage['gain_lut_bytes'],
@@ -183,10 +200,13 @@ class ZoomPanel(ttk.Frame):
     def capture(self):
         return dict(project=copy.deepcopy(self.project),variables={k:v.get() for k,v in self.variables.items()},
                     dirty=self.dirty,selected=self.tree.selection(),report=self.report.get(),
-                    path=self.project_path,edit_uid=self.edit_uid,edit_digest=self.edit_digest)
+                    path=self.project_path,edit_uid=self.edit_uid,edit_digest=self.edit_digest,
+                    template_path=self.template_path,export_mode=self.export_mode,export_taps=self.export_taps)
 
     def restore(self,state):
         self.project=state['project']
+        self.template_path=state.get('template_path');self.export_mode=state.get('export_mode','preserve');self.export_taps=state.get('export_taps',1024)
+        self.refresh_template_menu()
         self.project_path=state.get('path');self.edit_uid=state.get('edit_uid');self.edit_digest=state.get('edit_digest')
         for k,v in state['variables'].items():self.variables[k].set(v)
         self.refresh();self.dirty=state['dirty'];self.report.set(state['report'])
@@ -262,7 +282,7 @@ class ZoomPanel(ttk.Frame):
         taps=simpledialog.askinteger('FIR length','32–4096 samples after current preparation settings:',
                                     initialvalue=1024,minvalue=32,maxvalue=4096,parent=self)
         if taps is None:return
-        session=Session(config=copy.deepcopy(self.app.session.config))
+        session=Session(config=copy.deepcopy(self.app.read_prep()))
         session.config.fs=44100
         def prepare():
             session.load_audio(path)
@@ -395,17 +415,65 @@ class ZoomPanel(ttk.Frame):
         self.mark_dirty();self.refresh();self.app.dirty=False;self.refresh_titles()
 
     def estimate(self):
-        self.sync();r=bank_usage(self.project)
+        self.sync();r=self.usage(self.project)
         self.report.set(tr('{slots} slots · bank {bank} B · .const {const}/{budget} B · role/fade kernel: hardware unverified').format(
             slots=r['active_slots'],bank=r['bank_bytes'],const=r['const_bytes'],budget=r['const_budget']))
         return r
+
+    def choose_template(self):
+        from .template_profile import load_package
+        path=filedialog.askopenfilename(parent=self,title=tr('Select template passport…'),filetypes=[('ZDL template','*.template.json')])
+        if not path:return
+        package=load_package(path)
+        # A known failed kernel cannot become usable by changing its passport.
+        package.require_export_consent(True)
+        self.template_path=str(Path(path).resolve())
+        self.export_mode='preserve'
+        self.report.set(tr('Template: {name} · hardware unverified').format(name=Path(path).name))
+        self.refresh_template_menu()
+        self.schedule_budget()
+
+    def use_legacy_template(self):
+        self.template_path=None;self.export_mode='preserve'
+        self.refresh_template_menu()
+        self.report.set(tr('Legacy export (unchanged)'));self.schedule_budget()
+
+    def choose_preparation(self,mode):
+        if not self.template_path:raise ValueError(tr('Select a template passport first'))
+        from .template_profile import load_package
+        package=load_package(self.template_path)
+        taps=self.export_taps
+        if mode!='preserve':
+            taps=simpledialog.askinteger(tr('FIR length'),tr('FIR length'),parent=self,
+                initialvalue=min(taps,package.model_target.max_fir),minvalue=32,maxvalue=package.model_target.max_fir)
+            if taps is None:return
+        self.export_mode=mode;self.export_taps=taps
+        labels={'preserve':'Preserve current model','bake':'Bake current model into FIR','original':'Prepare again from original IR'}
+        self.report.set(tr(labels[mode]));self.schedule_budget()
+        self.refresh_template_menu()
+
+    def refresh_template_menu(self):
+        labels={'preserve':'Preserve current model','bake':'Bake current model into FIR','original':'Prepare again from original IR'}
+        text=tr('Legacy export (unchanged)') if not self.template_path else (
+            Path(self.template_path).name+' · '+tr(labels[self.export_mode])+
+            (f' · {self.export_taps}' if self.export_mode!='preserve' else ''))
+        self.template_menu.entryconfigure(0,label=text)
+
+    def usage(self,project):
+        if not self.template_path:return bank_usage(project)
+        from .template_profile import load_package
+        from .template_patch import bank_usage as template_usage
+        from .bank_prepare import preview_bank
+        package=load_package(self.template_path)
+        prepared=preview_bank(project,package.model_target,mode=self.export_mode,taps=self.export_taps)
+        return template_usage(prepared,package)
 
     def build(self, patch=False):
         if not patch and os.environ.get('HYBRIDIR_ZDL_ENABLED') == '0':
             raise ValueError('ZDL building is disabled in this Trainer-only installation. Run full setup in a new folder.')
         if not patch and any(b.control_role for s in self.project.slots for b in s.model.sections):
             raise ValueError('Use Patch ZDL for role-aware models; the legacy TI builder adds default controls')
-        self.sync();report=self.estimate()
+        self.sync();self.project.validate();report=self.estimate()
         if not self.project.patched_folder:
             folder=filedialog.askdirectory(parent=self,title='Select the custom ZDL folder used by Zoom Effect Manager')
             if not folder:return
@@ -420,7 +488,7 @@ class ZoomPanel(ttk.Frame):
                 free=suggest_free_id(self.project)
                 if not messagebox.askyesno('ID occupied',f'ID {self.project.fxid} belongs to another effect. Use free ID {free}?',parent=self):return
                 self.project.fxid=free;self.variables['fxid'].set(str(free))
-        if patch and not bank_usage(self.project)['template_fits']:
+        if patch and not self.template_path and not report['template_fits']:
             raise ValueError('Bank/image exceeds conservative HVB4RBJ loading profile')
         if not patch:
             _,legacy_report=pack_bank(self.project)
@@ -435,14 +503,43 @@ class ZoomPanel(ttk.Frame):
         existing=[str(path) for path in outputs if path.exists()]
         overwrite=bool(existing)
         if overwrite and not messagebox.askyesno('Overwrite','Replace existing files?\n'+'\n'.join(existing),parent=self):return
-        project=copy.deepcopy(self.project)
+        if patch and not self.template_path:
+            if not messagebox.askyesno(tr('Legacy diagnostic export'),
+                tr('The current legacy template has a known pedal insertion failure. Use Template → Select template passport for normal export. Continue for host diagnostics only?'),parent=self):return
+        from .bank_prepare import export_snapshot
+        project=export_snapshot(self.project,include_source=bool(self.template_path))
         builder=build_project
         if patch:
-            from .zoom_variable_patch import patch_project
-            builder=patch_project
+            if self.template_path:
+                from .template_profile import load_package
+                from .template_patch import plan_patch
+                package=load_package(self.template_path)
+                package.require_export_consent(True)
+                mode,taps=self.export_mode,self.export_taps
+                self.app.run_job(lambda:plan_patch(project,package,mode=mode,taps=taps),
+                    lambda plan:self.confirm_plan(plan,package,destination,overwrite,replace_identity,mode,taps),
+                    tr('Preparing template export…'),cancellable=False)
+                return
+            else:
+                from .zoom_variable_patch import patch_project
+                builder=patch_project
         self.app.run_job(lambda:builder(project,destination,overwrite,replace_identity),
                          self.export_complete,
                          'Patching HYBRIDIR bank…' if patch else 'Building HYBRIDIR bank…', cancellable=False)
+
+    def confirm_plan(self,plan,package,destination,overwrite,replace_identity,mode,taps):
+        from .template_patch import publish_plan
+        message=tr('Export with an experimental template? Host checks do not guarantee pedal operation. The authoring bank remains unchanged.')
+        labels={'preserve':'Preserve current model','bake':'Bake current model into FIR','original':'Prepare again from original IR'}
+        message+='\n'+package.profile_path.name+'\n'+tr(labels[mode])
+        if mode!='preserve':message+=f' · {taps}'
+        metrics=[m for row in plan.report['preparation']['slots'] for m in row.get('metrics',[]) if m['band']=='guitar']
+        if metrics:
+            message+='\n'+tr('80 Hz–8 kHz: worst magnitude RMS error {rms:.3f} dB; peak error {peak:.3f} dB.').format(
+                rms=max(m['mag_rms_db'] for m in metrics),peak=max(m['mag_max_db'] for m in metrics))
+        if not messagebox.askyesno(tr('ZDL export'),message,parent=self):return
+        self.app.run_job(lambda:publish_plan(plan,package,destination,overwrite,replace_identity,allow_experimental=True),
+                         self.export_complete,'Patching HYBRIDIR bank…',cancellable=False)
 
     def export_complete(self, result):
         path,report=result

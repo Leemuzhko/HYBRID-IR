@@ -151,6 +151,12 @@ class LibraryGUI(unittest.TestCase):
         self.assertEqual(self.app.library_panel.taps.get(),'128')
 
     def test_bank_table_has_real_working_height(self):
+        # Assert layout at an explicit desktop size, not the runner's screen default.
+        self.app.maxsize(1920,1200)
+        self.app.geometry('1440x930');self.app.update()
+        if self.app.winfo_height()<900:
+            self.skipTest('Window manager cannot supply the 1440x930 layout-test surface')
+        print('Layout dimensions:',self.app.winfo_geometry(),self.app.winfo_screenwidth(),self.app.winfo_screenheight(),flush=True)
         self.app.tabs.select(self.panel);self.app.update();self.app.catalog_selected();self.app.update()
         self.assertGreater(self.panel.tree.winfo_height(),200)
         self.assertLess(self.panel.budget_frame.winfo_width(),500)

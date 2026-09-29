@@ -12,6 +12,37 @@ from irbq.zoom_variable_repack import layout
 
 
 class TestVariablePatch(unittest.TestCase):
+    def test_two_distinct_4096_ir_fit_without_raising_profile(self):
+        self.assertEqual(CODE_CONST_CAP, 28904)
+        p = self.project(count=2, taps=4096)
+        usage = bank_usage(p)
+        self.assertEqual(usage['fir_pool_samples'], 8192)
+        self.assertTrue(usage['template_fits'], usage)
+        with tempfile.TemporaryDirectory() as td:
+            target, report = patch_project(p, td)
+            self.assertEqual(report['code_const_bytes'], usage['code_const_bytes'])
+            self.assertLessEqual(section_usage(target.read_bytes())['code_const_bytes'], 28904)
+
+    def test_compact_handlers_call_shared_stub(self):
+        import struct
+        raw = load_template()
+        desc, _ = symbol(raw, 'SonicStomp')
+        elf, _, _, _, names = layout(raw)
+        section = names['.text'][1]
+        first = struct.unpack_from('<I', raw, desc+2*48+28)[0]
+        shared_stub = first - 0x60 + 0x140
+        handlers = [struct.unpack_from('<I', raw, desc+i*48+28)[0] for i in range(4, 11)]
+        self.assertEqual([b-a for a,b in zip(handlers, handlers[1:])], [96]*6)
+        for start in handlers:
+            self.assertEqual(start % 32, 0)
+            for rel in (12,24):
+                address = start + rel
+                word = struct.unpack_from('<I', elf, section[4]+address-section[3])[0]
+                delta = (word >> 7) & 0x1fffff
+                if delta & 0x100000:
+                    delta -= 0x200000
+                self.assertEqual((address & ~31) + 4*delta, shared_stub)
+
     def project(self,count=4,taps=64):
         return BankProject(name='SAFE TEST',filename='SAFE',fxid=700,
             slots=[Slot('C'+str(i),Model(44100,np.r_[.5,.001*i,np.zeros(taps-2)],[])) for i in range(count)])
@@ -49,7 +80,7 @@ class TestVariablePatch(unittest.TestCase):
                 self.assertEqual(names['.text'][1][5],bn['.text'][1][5])
 
     def test_oversize_rejected_without_output(self):
-        p=self.project(4,2048)
+        p=self.project(3,4096)
         self.assertFalse(bank_usage(p)['template_fits'])
         with tempfile.TemporaryDirectory() as td:
             out=Path(td)/'out'
@@ -91,7 +122,7 @@ class TestVariablePatch(unittest.TestCase):
     def test_exact_boundary_and_custom_artwork(self):
         from irbq.dsp import Biquad
         from PIL import Image
-        p=self.project(4,424)
+        p=self.project(4,1996)
         for i,slot in enumerate(p.slots):
             slot.model.sections=[Biquad(kind='Peak',f=200.+100*j+10*i,gain=.25*(j+1)) for j in range(4)]
         self.assertEqual(bank_usage(p)['code_const_bytes'],CODE_CONST_CAP)
