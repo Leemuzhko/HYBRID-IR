@@ -1,0 +1,98 @@
+name: Publish verified HYBRID IR 0.4.1
+"on":
+  push:
+    branches: [ops/publish-0.4.1-verified]
+    paths: [.github/workflows/publish-verified-0.4.1.yml]
+permissions:
+  contents: write
+  actions: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_COMMIT: be94ae58a299af50aabd97921fbd110290b554f7
+      VERIFIED_RUN: '36505820396'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: be94ae58a299af50aabd97921fbd110290b554f7
+          persist-credentials: false
+      - name: Require the exact committed Windows build to pass
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,os,subprocess,time
+          repo=os.environ['GITHUB_REPOSITORY'];assert repo=='Leemuzhko/HYBRID-IR'
+          for attempt in range(100):
+              run=json.loads(subprocess.check_output(['gh','api',f"repos/{repo}/actions/runs/{os.environ['VERIFIED_RUN']}"]))
+              assert run['head_sha']==os.environ['RELEASE_COMMIT'] and run['path']=='.github/workflows/windows-packages.yml'
+              if run['status']=='completed':
+                  assert run['conclusion']=='success','Windows release gate did not pass'
+                  print('Exact-commit source tests and Lite/Standalone lifecycle checks passed');break
+              print('Waiting for Windows release gate...',flush=True);time.sleep(10)
+          else:raise RuntimeError('Windows release gate timed out')
+          main=json.loads(subprocess.check_output(['gh','api',f'repos/{repo}/git/ref/heads/main']))
+          assert main['object']['sha']==os.environ['RELEASE_COMMIT'],'Main changed; stop publication'
+          PY
+      - name: Retrieve checked packages and receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh run download "$VERIFIED_RUN" --repo "$GITHUB_REPOSITORY" --name windows-packages --dir installers
+          gh run download "$VERIFIED_RUN" --repo "$GITHUB_REPOSITORY" --name windows-validation --dir validation
+          (cd installers && sha256sum -c *.sha256)
+      - name: Verify source identity and actual feature receipts
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib,json,os,zipfile
+          from pathlib import Path,PurePosixPath
+          revision=os.environ['RELEASE_COMMIT'];result={'version':'0.4.1','source_revision':revision,'windows_run':int(os.environ['VERIFIED_RUN']),'host_only':True,'new_pedal_timing_test':False,'packages':[]}
+          expected=['HYBRID-IR-0.4.1-Windows-x64-Lite.zip','HYBRID-IR-0.4.1-Windows-x64-Standalone.zip']
+          assert sorted(p.name for p in Path('installers').glob('*.zip'))==expected
+          for filename in expected:
+              p=Path('installers')/filename;root=filename[:-4]+'/'
+              with zipfile.ZipFile(p) as z:
+                  names=z.namelist();assert len(names)==len(set(names))
+                  assert all(n.startswith(root) and '..' not in PurePosixPath(n).parts and '\\' not in n for n in names)
+                  d=json.loads(z.read(root+'distribution.json'))
+                  assert d['source_revision']==revision and d['version']=='0.4.1' and d['channel']=='stable'
+                  assert d['flavor'] in ('lite','standalone')
+                  templates={n.removeprefix(root+'hybridir_sdk/templates/') for n in names if n.startswith(root+'hybridir_sdk/templates/') and not n.endswith('/')}
+                  assert templates=={'HIR3A.ZDL','HIR3A.template.json'}
+                  assert hashlib.sha256(z.read(root+'hybridir_sdk/templates/HIR3A.ZDL')).hexdigest()=='14f605e66ea0ca24a1bd0b0873cb15b8dbaf900290ffe78f9f6cb60c99b0f9d4'
+                  for module in ('dsp','preferences','zoom_panel','template_profile','template_patch'):
+                      f='irbq_lab/irbq/'+module+'.py'
+                      # Windows checkout may normalize newlines, never semantics.
+                      assert z.read(root+f).replace(b'\r\n',b'\n')==Path(f).read_bytes().replace(b'\r\n',b'\n')
+                  manifest=json.loads(z.read(root+'PUBLICATION_MANIFEST.json'))
+                  for f in manifest['files']:assert hashlib.sha256(z.read(root+f['path'])).hexdigest()==f['sha256'],f['path']
+              receipts=[]
+              for f in Path('validation').rglob('*features.json'):
+                  r=json.loads(f.read_text())
+                  if r['flavor']==d['flavor']:
+                      assert r['source_revision']==revision and r['defaults_restart'] and r['hir3a_export'] and r['empty_bank_guard']
+                      assert set(r['k_modes'])=={'k_weighted','k_band','k_pink','k_pink_band'}
+                      receipts.append(f.name)
+              assert set(receipts)=={'installed-features.json','updated-features.json'},receipts
+              result['packages'].append({'file':filename,'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'bytes':p.stat().st_size,'flavor':d['flavor'],'k_weighted_modes':4,'saved_defaults_restart':True,'installed_and_updated_features_checked':True})
+          Path('installers/VALIDATION-0.4.1.json').write_text(json.dumps(result,indent=2)+'\n')
+          print(json.dumps(result,indent=2))
+          PY
+      - name: Create a new tag and publish the verified release
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$RELEASE_COMMIT"
+          if gh release view v0.4.1 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to overwrite'; exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v0.4.1" >/dev/null 2>&1; then
+            test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v0.4.1" --jq .object.sha)" = "$RELEASE_COMMIT"
+          else
+            gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref=refs/tags/v0.4.1 -f sha="$RELEASE_COMMIT"
+          fi
+          gh release create v0.4.1 installers/*.zip installers/*.sha256 installers/VALIDATION-0.4.1.json --repo "$GITHUB_REPOSITORY" --verify-tag --latest --title 'HYBRID IR 0.4.1 — HIR3A patcher and perceptual normalization' --notes-file RELEASE_NOTES.md
+          gh release view v0.4.1 --repo "$GITHUB_REPOSITORY" --json url,tagName,isDraft,isPrerelease,assets
