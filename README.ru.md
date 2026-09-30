@@ -5,17 +5,19 @@
 <p align="center"><strong>Ваш кабинет. Внутри вашего Zoom.</strong><br>
 Подготовка импульсов, гибридная FIR/IIR-аппроксимация и сборка собственных ZDL.</p>
 <p align="center">
-  <img src="https://img.shields.io/badge/Desktop-Windows-2563eb?style=flat-square" alt="Программа для Windows">
+  <img src="https://img.shields.io/badge/Desktop-Windows_%2B_macOS-2563eb?style=flat-square" alt="Программа для Windows и macOS">
   <img src="https://img.shields.io/badge/DSP-FIR_%2B_IIR-475569?style=flat-square" alt="DSP: FIR + IIR">
   <img src="https://img.shields.io/badge/Patcher-No_TI_compiler-475569?style=flat-square" alt="Патчер без компилятора TI">
   <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Экспериментальная версия">
 </p>
 <p align="center"><a href="README.md">English</a> · <strong>Русский</strong> · <a href="README.uk.md">Українська</a></p>
-<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">Скачать для Windows</a></h3>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">DOWNLOAD</a></h3>
 
-**[Standalone — рекомендую](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — нужен Python](https://github.com/Leemuzhko/HYBRID-IR/releases)**
+**Windows x64:** **[Standalone — рекомендую](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — нужен Python](https://github.com/Leemuzhko/HYBRID-IR/releases)**
 
-Выберите соответствующий ZIP в Assets релиза. Код приложения в обоих вариантах одной версии одинаков; разработческие сборки — предварительные. Download ZIP скачивает исходники, а не готовое приложение.
+**macOS 15+ (preview):** [Apple Silicon (ARM64)](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-preview.zip) · [Intel (x86_64)](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-preview.zip)
+
+Выберите соответствующий ZIP в Assets релиза. Код приложения в Windows Lite и Standalone одной версии одинаков; разработческие сборки — предварительные. Download ZIP скачивает исходники, а не готовое приложение.
 
 <p align="center"><a href="docs/ru/installation.md">Установка</a> · <a href="docs/ru/workflow.md">Создать первый эффект</a> · <a href="https://ko-fi.com/leemuzhko">Поддержать на Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>

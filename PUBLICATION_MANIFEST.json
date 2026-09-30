@@ -535,15 +535,15 @@
     },
     {
       "path": "README.md",
-      "sha256": "5b410719fc8f163dd4105520dd93f405f04fbe736b0e0505bfff7a454e281460"
+      "sha256": "113694ecc175c58efa3b68d1399327f6e7b807ad543f4fa432f9e99cf3ddb308"
     },
     {
       "path": "README.ru.md",
-      "sha256": "adc5344e5c8603794c15edd2abdb559fbddf7d4bf840b21e4f13c8f1de774b03"
+      "sha256": "531a57329c6651db56e605b277d7c8a8cc0028bac9ab3c40ec31824f2a0d1b96"
     },
     {
       "path": "README.uk.md",
-      "sha256": "cde438d0db2a713f4ee05c099c6bd02a17a2e2cd480cbb3a0337b2736d9d462d"
+      "sha256": "2bb4576a6cdd733c92cdba9d292201eca767858a96b8889ee6cdd0f57cafe9aa"
     },
     {
       "path": "release.json",

@@ -5,17 +5,19 @@
 <p align="center"><strong>Ваш кабінет. Усередині вашого Zoom.</strong><br>
 Підготовка імпульсів, гібридна FIR/IIR-апроксимація та збирання власних ZDL.</p>
 <p align="center">
-  <img src="https://img.shields.io/badge/Desktop-Windows-2563eb?style=flat-square" alt="Програма для Windows">
+  <img src="https://img.shields.io/badge/Desktop-Windows_%2B_macOS-2563eb?style=flat-square" alt="Програма для Windows і macOS">
   <img src="https://img.shields.io/badge/DSP-FIR_%2B_IIR-475569?style=flat-square" alt="DSP: FIR + IIR">
   <img src="https://img.shields.io/badge/Patcher-No_TI_compiler-475569?style=flat-square" alt="Патчер без компілятора TI">
   <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Експериментальна версія">
 </p>
 <p align="center"><a href="README.md">English</a> · <a href="README.ru.md">Русский</a> · <strong>Українська</strong></p>
-<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">Завантажити для Windows</a></h3>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">DOWNLOAD</a></h3>
 
-**[Standalone — рекомендовано](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — потрібен Python](https://github.com/Leemuzhko/HYBRID-IR/releases)**
+**Windows x64:** **[Standalone — рекомендовано](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — потрібен Python](https://github.com/Leemuzhko/HYBRID-IR/releases)**
 
-Виберіть відповідний ZIP в Assets релізу. Обидва варіанти однієї версії мають однаковий код; розробницькі збірки — попередні. Download ZIP завантажує вихідний код, а не готову програму.
+**macOS 15+ (preview):** [Apple Silicon (ARM64)](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-preview.zip) · [Intel (x86_64)](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-preview.zip)
+
+Виберіть відповідний ZIP в Assets релізу. Windows Lite і Standalone однієї версії мають однаковий код; розробницькі збірки — попередні. Download ZIP завантажує вихідний код, а не готову програму.
 
 <p align="center"><a href="docs/uk/installation.md">Встановлення</a> · <a href="docs/uk/workflow.md">Створити перший ефект</a> · <a href="https://ko-fi.com/leemuzhko">Підтримати на Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>

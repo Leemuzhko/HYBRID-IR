@@ -5,17 +5,19 @@
 <p align="center"><strong>Your cabinet sound. Inside your Zoom.</strong><br>
 Prepare cabinet responses, fit hybrid FIR/IIR models and build your own ZDL effects.</p>
 <p align="center">
-  <img src="https://img.shields.io/badge/Desktop-Windows-2563eb?style=flat-square" alt="Desktop: Windows">
+  <img src="https://img.shields.io/badge/Desktop-Windows_%2B_macOS-2563eb?style=flat-square" alt="Desktop: Windows and macOS">
   <img src="https://img.shields.io/badge/DSP-FIR_%2B_IIR-475569?style=flat-square" alt="DSP: FIR + IIR">
   <img src="https://img.shields.io/badge/Patcher-No_TI_compiler-475569?style=flat-square" alt="Patcher: no TI compiler">
   <img src="https://img.shields.io/badge/Status-Experimental-92400e?style=flat-square" alt="Status: experimental">
 </p>
 <p align="center"><strong>English</strong> · <a href="README.ru.md">Русский</a> · <a href="README.uk.md">Українська</a></p>
-<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">Download for Windows</a></h3>
+<h3 align="center"><a href="https://github.com/Leemuzhko/HYBRID-IR/releases">DOWNLOAD</a></h3>
 
-**[Standalone — recommended](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — Python required](https://github.com/Leemuzhko/HYBRID-IR/releases)**
+**Windows x64:** **[Standalone — recommended](https://github.com/Leemuzhko/HYBRID-IR/releases)** · **[Lite — Python required](https://github.com/Leemuzhko/HYBRID-IR/releases)**
 
-Choose the matching ZIP under release Assets. Both include the same app for their revision; development builds are prereleases. GitHub Download ZIP contains source code, not the installed app.
+**macOS 15+ (preview):** [Apple Silicon (ARM64)](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-preview.zip) · [Intel (x86_64)](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-preview.zip)
+
+Choose the matching ZIP under release Assets. Windows Lite and Standalone include the same app for their revision; development builds are prereleases. GitHub Download ZIP contains source code, not the installed app.
 
 <p align="center"><a href="docs/en/installation.md">Installation</a> · <a href="docs/en/workflow.md">Build your first effect</a> · <a href="https://ko-fi.com/leemuzhko">Support on Ko-fi</a></p>
 <p align="center">MS-50G · MS-60B · MS-70CDR · G1on · G1Xon · B1on<br>
