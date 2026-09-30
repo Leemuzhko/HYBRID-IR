@@ -71,7 +71,7 @@
   "files": [
     {
       "path": ".github/FUNDING.yml",
-      "sha256": "9007410eb0fe57ffbbc3306ba0650fb8a8fe3a3636886e8f697bb72f5faf6fd5"
+      "sha256": "35324b64d62c4d375e57dcd3267f20913bbe56544bfd514b5d7e1283c0c7bd86"
     },
     {
       "path": ".github/workflows/windows-packages.yml",
