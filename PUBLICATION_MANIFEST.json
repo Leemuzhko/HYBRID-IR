@@ -82,6 +82,46 @@
       "sha256": "bbd8d67f8a2ef1e063ab8d207a6d8fa79b33d797d345f5e4337ce3696ceb5eda"
     },
     {
+      "path": "Install_HYBRIDIR.cmd",
+      "sha256": "2d308fe0a2e6d0bc18176bed7f29036513c9d67a48cd9e65985da7b1d2cf3b30"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "e715d1d3e0503e6adbc5d44291d45d58f9f6be9b54d594849df39913817eb9aa"
+    },
+    {
+      "path": "README.md",
+      "sha256": "113694ecc175c58efa3b68d1399327f6e7b807ad543f4fa432f9e99cf3ddb308"
+    },
+    {
+      "path": "README.ru.md",
+      "sha256": "531a57329c6651db56e605b277d7c8a8cc0028bac9ab3c40ec31824f2a0d1b96"
+    },
+    {
+      "path": "README.uk.md",
+      "sha256": "2bb4576a6cdd733c92cdba9d292201eca767858a96b8889ee6cdd0f57cafe9aa"
+    },
+    {
+      "path": "RELEASE_CANDIDATE.md",
+      "sha256": "78eada4365143a26141b2d464b2645fe07dbfeb3d63b6cafa357e7e2dddaa49b"
+    },
+    {
+      "path": "RELEASE_NOTES.md",
+      "sha256": "66dc9bc5cc8870626ef6aafacf715463349e1a5886344255230de906a53d0375"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "f4a440953061c131c66865fc9b4f908c30825e87a587fe00851baa52490cae64"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.uk.md",
+      "sha256": "2c99be7bec081389bc6a8af7f7742bb1c3e58e6bd55bd798b5d2ef7e9ada4328"
+    },
+    {
+      "path": "UPSTREAM_PROVENANCE.json",
+      "sha256": "94b2535f0a06a46c03a2d99fb32c9471709d55f6a3bb6d9f434a0f14f96cc0e4"
+    },
+    {
       "path": "assets/IR_CAB-1200x800.png",
       "sha256": "f5b21c41c794d3de6c05fede13199e4366a28151cb2106acd43bf3d17039874a"
     },
@@ -92,6 +132,10 @@
     {
       "path": "distribution_runtime.py",
       "sha256": "5f5d4bed167220dfe30d61b74bfeaf1597e4235303a82762ee40f950b13621d8"
+    },
+    {
+      "path": "docs/HIR3A_RELEASE_NOTES.md",
+      "sha256": "66dc9bc5cc8870626ef6aafacf715463349e1a5886344255230de906a53d0375"
     },
     {
       "path": "docs/adr/0014-trained-reso-and-runtime-rbj-controls.md",
@@ -107,7 +151,7 @@
     },
     {
       "path": "docs/en/installation.md",
-      "sha256": "66ff19f7f7f5dc38914853f3d63a73af66ec5d6b7a7e8ded1d6c4f5e0404c0fb"
+      "sha256": "c15513f3b526a53a17ad57565350a7643d305634e966f83fe5a3d614ee4a9d6e"
     },
     {
       "path": "docs/en/technical.md",
@@ -118,12 +162,12 @@
       "sha256": "084eb9c03d899034b0ecc640260ed7ed1d84032d1c1117e29d4fb04b9b661e60"
     },
     {
-      "path": "docs/HIR3A_RELEASE_NOTES.md",
-      "sha256": "66dc9bc5cc8870626ef6aafacf715463349e1a5886344255230de906a53d0375"
+      "path": "docs/releases/v0.4.1.md",
+      "sha256": "ed1bc8490f168903df3e8f9d3a87f89c60be093c8016ac327b3bd405c0f5f345"
     },
     {
       "path": "docs/ru/installation.md",
-      "sha256": "a7095ec4982b45f215eb1a5125e8b1c772207189ca7df4cc4dd2d32dffaaa4e2"
+      "sha256": "11df0a2a80f69dde3f4100e06000da94f97bd9ac48d39adf35e4d077bc2ff675"
     },
     {
       "path": "docs/ru/technical.md",
@@ -135,7 +179,7 @@
     },
     {
       "path": "docs/uk/installation.md",
-      "sha256": "d9eadc92a5e6177ec21d8f41e8e4a0be387cd7a837ad8e9dbacb1d676902150c"
+      "sha256": "6112a66f522cc280fa25d84da0b4235a8eab6d6ab69f769cff02b3598ffbd5c7"
     },
     {
       "path": "docs/uk/technical.md",
@@ -190,6 +234,10 @@
       "sha256": "108ba46d400f2a37db34428782835daf2cc2036b2b0dd351c38a4053f125fdbe"
     },
     {
+      "path": "hybridir_sdk/src/custom/hybridir/IR_CAB.png",
+      "sha256": "4f24121ede811d255a0bee1a8d4b654781693fa17a80e07020835c93ee14b7e6"
+    },
+    {
       "path": "hybridir_sdk/src/custom/hybridir/core.h",
       "sha256": "aba5e3905b41c3229d35e52271438c8022c3ae0ea1a0d28d8422a3865dac7cf1"
     },
@@ -204,10 +252,6 @@
     {
       "path": "hybridir_sdk/src/custom/hybridir/generated/kernel.h",
       "sha256": "96a36fd066203fef295d8b3ca3f4892212e1f8348b97d2de33d6acea04b1b57a"
-    },
-    {
-      "path": "hybridir_sdk/src/custom/hybridir/IR_CAB.png",
-      "sha256": "4f24121ede811d255a0bee1a8d4b654781693fa17a80e07020835c93ee14b7e6"
     },
     {
       "path": "hybridir_sdk/src/custom/hybridir/manifest.json",
@@ -242,12 +286,12 @@
       "sha256": "39bdc862f749fc9963b9b20c5509648caa1c52e722991a1b3bd10cefc16ad09b"
     },
     {
-      "path": "hybridir_sdk/templates/HIR3A.template.json",
-      "sha256": "439b4e1229b9d3428edaaa3dc3acbc831574e698251b0e5e040b0ed3b62e572f"
-    },
-    {
       "path": "hybridir_sdk/templates/HIR3A.ZDL",
       "sha256": "14f605e66ea0ca24a1bd0b0873cb15b8dbaf900290ffe78f9f6cb60c99b0f9d4"
+    },
+    {
+      "path": "hybridir_sdk/templates/HIR3A.template.json",
+      "sha256": "439b4e1229b9d3428edaaa3dc3acbc831574e698251b0e5e040b0ed3b62e572f"
     },
     {
       "path": "hybridir_sdk/templates/HVB4RBJ.zdl",
@@ -278,16 +322,20 @@
       "sha256": "5e8a010553732cff29fc8ed92830d790fa231d015eddb6f13e89068c8653b9fe"
     },
     {
-      "path": "Install_HYBRIDIR.cmd",
-      "sha256": "2d308fe0a2e6d0bc18176bed7f29036513c9d67a48cd9e65985da7b1d2cf3b30"
-    },
-    {
       "path": "installation_guard.py",
       "sha256": "624c9409c32830bf2302874825e7f0a64c44bf9dbc1fa89dc260fe43d3a2e298"
     },
     {
       "path": "installer.py",
       "sha256": "49338885f6f8dfc0f2a70e9273395ab027d61389a48dcbb5b1f3c248a1671f03"
+    },
+    {
+      "path": "irbq_lab/LICENSE.txt",
+      "sha256": "faecfbdbf34f5bd7cc9af8b1641ac1e660fef5561933ada3aad2666ccc3c6132"
+    },
+    {
+      "path": "irbq_lab/Start_IRBQ_Lab.cmd",
+      "sha256": "83e4d4ce9d2329c4325a8fe260af9dfd419fed266926d119a2bbf4fa3542a666"
     },
     {
       "path": "irbq_lab/bootstrap.py",
@@ -406,20 +454,12 @@
       "sha256": "2b69c300523c3148d076284e2c067bd3138b8aa5e32154a72efbd93bb5fda049"
     },
     {
-      "path": "irbq_lab/LICENSE.txt",
-      "sha256": "faecfbdbf34f5bd7cc9af8b1641ac1e660fef5561933ada3aad2666ccc3c6132"
-    },
-    {
       "path": "irbq_lab/requirements.txt",
       "sha256": "76f0bccd65b49181c704affc0eb6973772bc836d7f28d09a1713faa7bd60fe76"
     },
     {
       "path": "irbq_lab/run.py",
       "sha256": "26fd842e75dd5a20bcdee14b5860f89e98429956988e7a2e642331a620552a7c"
-    },
-    {
-      "path": "irbq_lab/Start_IRBQ_Lab.cmd",
-      "sha256": "83e4d4ce9d2329c4325a8fe260af9dfd419fed266926d119a2bbf4fa3542a666"
     },
     {
       "path": "irbq_lab/tests/__init__.py",
@@ -522,10 +562,6 @@
       "sha256": "cdaf5ad4223e6ec837e59ff016fdfadd97886f938bdbae0b2b6ed7796e2a1e19"
     },
     {
-      "path": "LICENSE",
-      "sha256": "e715d1d3e0503e6adbc5d44291d45d58f9f6be9b54d594849df39913817eb9aa"
-    },
-    {
       "path": "licenses/Zoom-Firmware-Editor-MIT.txt",
       "sha256": "df5fc601ab7efaaca2ae444eda484cfb38a1e53dd291ef058bc96e03c3c6d5f6"
     },
@@ -534,28 +570,8 @@
       "sha256": "be39671b76786160f4e5d06b82d85f7adf8d413a86437f339b1facf2bfd16ba4"
     },
     {
-      "path": "README.md",
-      "sha256": "113694ecc175c58efa3b68d1399327f6e7b807ad543f4fa432f9e99cf3ddb308"
-    },
-    {
-      "path": "README.ru.md",
-      "sha256": "531a57329c6651db56e605b277d7c8a8cc0028bac9ab3c40ec31824f2a0d1b96"
-    },
-    {
-      "path": "README.uk.md",
-      "sha256": "2bb4576a6cdd733c92cdba9d292201eca767858a96b8889ee6cdd0f57cafe9aa"
-    },
-    {
       "path": "release.json",
       "sha256": "57c406b35bba6a75a99877aa77777475db7d59a017dc9eb25d1d9c03fe747c1c"
-    },
-    {
-      "path": "RELEASE_CANDIDATE.md",
-      "sha256": "78eada4365143a26141b2d464b2645fe07dbfeb3d63b6cafa357e7e2dddaa49b"
-    },
-    {
-      "path": "RELEASE_NOTES.md",
-      "sha256": "66dc9bc5cc8870626ef6aafacf715463349e1a5886344255230de906a53d0375"
     },
     {
       "path": "requirements-zoom-lock.txt",
@@ -598,24 +614,12 @@
       "sha256": "5308a93a641d817ce50846550fd7d27dc19cf75418082a3167ba67504dc331bc"
     },
     {
-      "path": "THIRD_PARTY_NOTICES.md",
-      "sha256": "f4a440953061c131c66865fc9b4f908c30825e87a587fe00851baa52490cae64"
-    },
-    {
-      "path": "THIRD_PARTY_NOTICES.uk.md",
-      "sha256": "2c99be7bec081389bc6a8af7f7742bb1c3e58e6bd55bd798b5d2ef7e9ada4328"
-    },
-    {
       "path": "uninstaller.py",
       "sha256": "2b13bb06710ec5b450b15f21e8938a1a2b100523ab4185322a7764fc04554be7"
     },
     {
       "path": "updater.py",
       "sha256": "6e408675bc5b6e3b398c6eb73f9bf86fc2d3977ab508fbc190d94a0d7d339f02"
-    },
-    {
-      "path": "UPSTREAM_PROVENANCE.json",
-      "sha256": "94b2535f0a06a46c03a2d99fb32c9471709d55f6a3bb6d9f434a0f14f96cc0e4"
     }
   ]
 }
