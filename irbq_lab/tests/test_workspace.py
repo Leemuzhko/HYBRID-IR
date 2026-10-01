@@ -1,5 +1,6 @@
 """Regression tests for the shared graph, inspector and persistent localisation/theme."""
 import os
+import sys
 import copy
 import json
 import time
@@ -35,7 +36,7 @@ class TestPreferences(unittest.TestCase):
         self.assertEqual(tr('Исходник: 512 отсч., 44100 Hz.'),'Source: 512 samples, 44100 Hz.')
         set_language('ru');self.assertEqual(tr('Source: 512 samples, 44100 Hz.'),'Исходник: 512 отсч., 44100 Hz.')
 
-@unittest.skipUnless(os.environ.get('DISPLAY') or os.name=='nt','requires GUI display')
+@unittest.skipUnless(os.environ.get('DISPLAY') or (os.name=='nt' or sys.platform=='darwin'),'requires GUI display')
 class TestWorkspace(unittest.TestCase):
     def setUp(self):
         from irbq.gui import App

@@ -3,6 +3,7 @@ import copy
 import hashlib
 import json
 import os
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -63,7 +64,7 @@ class ReleaseFeatures(unittest.TestCase):
         p.slots=[Slot('LONG'+str(i),Model(44100,np.r_[.1+i*.01,np.zeros(4095)],[])) for i in range(2)]
         with self.assertRaisesRegex(ValueError,'profile|capacity|budget'):plan_patch(p,package)
 
-@unittest.skipUnless(os.name=='nt' or os.environ.get('DISPLAY'),'Desktop required')
+@unittest.skipUnless((os.name=='nt' or sys.platform=='darwin') or os.environ.get('DISPLAY'),'Desktop required')
 class DefaultsGUI(unittest.TestCase):
     def test_defaults_survive_restart_and_all_k_modes_are_selectable(self):
         from irbq.gui import App,NORM_NAMES

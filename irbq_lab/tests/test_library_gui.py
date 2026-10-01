@@ -1,5 +1,6 @@
 import copy
 import os
+import sys
 from pathlib import Path
 import tempfile
 import time
@@ -10,7 +11,7 @@ from irbq.authoring import LibraryEntry, model_session
 from irbq.dsp import Model
 
 
-@unittest.skipUnless(os.name=='nt' or os.environ.get('DISPLAY'),'Desktop required')
+@unittest.skipUnless((os.name=='nt' or sys.platform=='darwin') or os.environ.get('DISPLAY'),'Desktop required')
 class LibraryGUI(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.settings=patch.dict(os.environ,{'IRBQ_SETTINGS_PATH':str(Path(self.temp.name)/'settings.json')})

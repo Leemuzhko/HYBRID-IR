@@ -1,6 +1,7 @@
 import copy
 import json
 import os
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -10,7 +11,7 @@ from irbq.dsp import Model
 from irbq.zoom_bank import BankProject,Slot
 
 
-@unittest.skipUnless(os.name=='nt' or os.environ.get('DISPLAY'),'Desktop required')
+@unittest.skipUnless((os.name=='nt' or sys.platform=='darwin') or os.environ.get('DISPLAY'),'Desktop required')
 class TestZoomGUI(unittest.TestCase):
     def test_default_passport_is_hardware_checked_v3(self):
         from irbq.gui import App

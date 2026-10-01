@@ -11,6 +11,7 @@ import zipfile
 import numpy as np
 from .dsp import Model, PrepConfig
 from .project import Session, import_models
+from .app_paths import safe_output_directory
 
 MAX_FILE = 64_000_000
 MAX_EXPANDED = 256_000_000
@@ -218,10 +219,7 @@ def load_portable_bank(path):
     project = BankProject(**data, slots=slots,stock_folder='',patched_folder='')
     project.validate(allow_empty=True)
     # Embedded image is materialized in an application-owned, content-addressed cache.
-    cache = settings_path().parent / 'bank_cards'
-    for parent in (cache,*cache.parents):
-        if parent.is_symlink() or (hasattr(parent,'is_junction') and parent.is_junction()):
-            raise ValueError('Unsafe card cache')
+    cache = safe_output_directory(settings_path().parent / 'bank_cards')
     cache.mkdir(parents=True, exist_ok=True)
     card = cache / (hashlib.sha256(image).hexdigest() + '.png')
     if card.exists():

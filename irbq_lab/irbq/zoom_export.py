@@ -10,6 +10,7 @@ import shutil
 import tempfile
 
 from PIL import Image
+from .app_paths import safe_output_directory
 
 
 def manager_icon(image_png):
@@ -34,11 +35,7 @@ def package_paths(project, output):
 
 
 def check_package_paths(project, output, overwrite=False):
-    output = Path(output)
-    absolute = output.absolute()
-    for component in (absolute, *absolute.parents):
-        if component.is_symlink() or component.is_junction():
-            raise ValueError('Output folder path must not traverse a link or junction: ' + str(component))
+    output = safe_output_directory(output)
     paths = package_paths(project, output)
     folder = paths['zdl'].parent
     if folder.is_symlink() or folder.is_junction() or (folder.exists() and not folder.is_dir()):

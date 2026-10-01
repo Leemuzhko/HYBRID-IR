@@ -5,6 +5,8 @@ from pathlib import Path
 import json
 import os
 import tempfile
+import sys
+from .app_paths import macos_support_directory
 
 @dataclass
 class Preferences:
@@ -35,6 +37,8 @@ class Preferences:
 def settings_path():
     override=os.environ.get('IRBQ_SETTINGS_PATH')
     if override: return Path(override).expanduser()
+    if sys.platform=='darwin':
+        return macos_support_directory()/'settings.json'
     if os.name=='nt':
         base=Path(os.environ.get('APPDATA',Path.home()/'AppData'/'Roaming'))
     else:

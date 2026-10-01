@@ -19,7 +19,8 @@ try {
         if (-not $source.StartsWith($appRoot + '\', [StringComparison]::OrdinalIgnoreCase)) { throw 'Path escaped installation' }
         $partPath = $source
         while ($partPath) {
-            $part = Get-Item -LiteralPath $partPath
+            # AppData and other hidden ancestors still require the same link check.
+            $part = Get-Item -LiteralPath $partPath -Force
             if ($part.Attributes -band [IO.FileAttributes]::ReparsePoint) { throw 'Linked runtime path' }
             $partPath = Split-Path -Parent $partPath
         }

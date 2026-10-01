@@ -1,0 +1,2 @@
+# Build tool only; the full resolved environment is saved in MACOS_BUILD.json.
+pyinstaller==6.22.0

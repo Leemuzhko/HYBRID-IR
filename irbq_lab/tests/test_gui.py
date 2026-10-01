@@ -1,12 +1,13 @@
 """GUI smoke tests. Run with a real display or xvfb-run. No sound device needed."""
 import os
+import sys
 import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
 import numpy as np
 
-@unittest.skipUnless(os.environ.get('DISPLAY') or os.name=='nt','GUI test requires DISPLAY / Windows desktop')
+@unittest.skipUnless(os.environ.get('DISPLAY') or (os.name=='nt' or sys.platform=='darwin'),'GUI test requires DISPLAY / Windows desktop')
 class TestGUI(unittest.TestCase):
     def test_editor_training_plots(self):
         from irbq.gui import App, BQEditor, PLOTS

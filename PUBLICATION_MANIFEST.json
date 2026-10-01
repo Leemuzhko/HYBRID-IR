@@ -1,6 +1,6 @@
 {
   "schema": "hybridir-publication/1",
-  "source_revision": "2411a5f03864ccaab458df25ddeab98744145532",
+  "source_revision": "52c1146e22a8c5fc8caea98fc802a9d108027981",
   "app_version": "0.4.1",
   "scope": "Trainer and compiler-free HYBRID IR patcher; optional TI developer builder",
   "transformations": [
@@ -346,12 +346,16 @@
       "sha256": "6688acbc39477e34773b53aae0821f567df58054569347b2e918db2943fcd7cc"
     },
     {
+      "path": "irbq_lab/irbq/app_paths.py",
+      "sha256": "0c187828fa05546b4c57aa42c2c9ae81a78593f628a69e905b66f87153c229c2"
+    },
+    {
       "path": "irbq_lab/irbq/audio.py",
       "sha256": "f5deb265f6c095e978d7ea203d373a365fe38e09e8da3ce938a6a28ca3fccb05"
     },
     {
       "path": "irbq_lab/irbq/authoring.py",
-      "sha256": "f0aef642e2b3de9421eca01161c9634bb81519198bd232d30cd3fd48fbff99b0"
+      "sha256": "eb29379e21142deee83bda1deb39ca78d5114fabd36e699a0727759a50917576"
     },
     {
       "path": "irbq_lab/irbq/bank_prepare.py",
@@ -378,8 +382,12 @@
       "sha256": "61361258aaa6421341c5a18b2fc6446c771c7a26392e04d7135aa0e57af24c56"
     },
     {
+      "path": "irbq_lab/irbq/macos_selftest.py",
+      "sha256": "1ee86a6071361e7c7d7c3c138c70c207b12334bf5a269103668a7b6ef58aa794"
+    },
+    {
       "path": "irbq_lab/irbq/preferences.py",
-      "sha256": "3193e60ffcc87fa15b853250670b1fe968f4f88b1f8555b96bad1acd6f029153"
+      "sha256": "85ad4f0033af1beaf3a9798e3e27ad4de126acf98c0dd58c30a295668de77a5a"
     },
     {
       "path": "irbq_lab/irbq/project.py",
@@ -427,7 +435,7 @@
     },
     {
       "path": "irbq_lab/irbq/zoom_export.py",
-      "sha256": "dc7a53d58471a5e125cea9c7827a6a4b13bcec7fbb6e7645e2a796bc4a96fbf8"
+      "sha256": "3e56cad4d2c47ca34f9840215c3e2ac9b40b4bf0493090d9034709cc4baa2a39"
     },
     {
       "path": "irbq_lab/irbq/zoom_panel.py",
@@ -466,6 +474,10 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
+      "path": "irbq_lab/tests/test_app_paths.py",
+      "sha256": "2dc96fdcbffabd3f2c1b0c014d98f9bc1fd816831a56161446c8d11355feb9fa"
+    },
+    {
       "path": "irbq_lab/tests/test_authoring.py",
       "sha256": "4f6d29a7fbd8df43ccc4d45025172afe8ce8279b3c64897c2d8e8f9e57e33311"
     },
@@ -487,7 +499,7 @@
     },
     {
       "path": "irbq_lab/tests/test_gui.py",
-      "sha256": "f16994c89edfbb8d7966490b207f219fa89063f4fe89111cf3e02a39b0bd8c9b"
+      "sha256": "31ab546ca9c8a4bd646130406aeed8be3c260a85f7fa78fc5943068eb508db60"
     },
     {
       "path": "irbq_lab/tests/test_hybrid_rbj_runtime.py",
@@ -499,7 +511,7 @@
     },
     {
       "path": "irbq_lab/tests/test_library_gui.py",
-      "sha256": "0bf363daaba66e8d8f34a72da8852e51609077204e3931361d89efffb524eaa3"
+      "sha256": "e1a0c735be1bfd7bd4f03a82b5c2bea4eb6a5d222cfa232d2d7584c5a10a11e3"
     },
     {
       "path": "irbq_lab/tests/test_original_audio.py",
@@ -507,7 +519,7 @@
     },
     {
       "path": "irbq_lab/tests/test_release_features.py",
-      "sha256": "80a45b9ea7d71c93746cc50f3c869c5e8331ca9a33a6526e4acd6b12eab5c7df"
+      "sha256": "065e63a6184fda3904bc0ff2c5c733ade52a55d85de459d9213197614eb4c0ae"
     },
     {
       "path": "irbq_lab/tests/test_template_packages.py",
@@ -527,7 +539,7 @@
     },
     {
       "path": "irbq_lab/tests/test_workspace.py",
-      "sha256": "9673188fd4e2f1481eabca9eb53690903ae0996e7dd4a31d632366ee43c27aea"
+      "sha256": "443b60c0b3f3aa65e8a624041662257bafc9b2f8d98e7042f3248e5fb48f02b1"
     },
     {
       "path": "irbq_lab/tests/test_zoom_bank.py",
@@ -539,7 +551,7 @@
     },
     {
       "path": "irbq_lab/tests/test_zoom_gui.py",
-      "sha256": "63e8463efc0663141403adf14465ca43b2165fa4da20da32b0bddb8cc8507c33"
+      "sha256": "181bebbfe93aae46cdc58e52aa5d7ae9bbc22562b6702be625b6cce03112ba05"
     },
     {
       "path": "irbq_lab/tests/test_zoom_patch.py",
@@ -568,6 +580,78 @@
     {
       "path": "licenses/ZoomMultistompZDL-MIT.txt",
       "sha256": "be39671b76786160f4e5d06b82d85f7adf8d413a86437f339b1facf2bfd16ba4"
+    },
+    {
+      "path": "packaging/macos/HYBRIDIR.spec",
+      "sha256": "2cba04157e65dfd591dfd06bae8d04217ee1560e6fc03488b14d42f9471ccd2b"
+    },
+    {
+      "path": "packaging/macos/README.md",
+      "sha256": "3ffaba38be767394310faaba5825cb25dc2b1ec541717d2ff513cc94dab9d1eb"
+    },
+    {
+      "path": "packaging/macos/audit_macho.py",
+      "sha256": "bedd03c3359c77b25fe2cd2da7df1f101a50f065f569df855da1d4b1d11f1fd8"
+    },
+    {
+      "path": "packaging/macos/build_macos.py",
+      "sha256": "7d5e9d3fb11f2fb26a8d8fa8ecd2287be9531c14d612f33bb4082a3dbce65852"
+    },
+    {
+      "path": "packaging/macos/compat/README.md",
+      "sha256": "4c680b0f443010faccf2f93a4aba8840aac4cfbbaa8fc1b37d0805e5bdbaeabe"
+    },
+    {
+      "path": "packaging/macos/compat/README.ru.md",
+      "sha256": "44a3b9c99fcd18d29752052d189e1e2ed2227f3678f95690f79dd3687ae89f88"
+    },
+    {
+      "path": "packaging/macos/compat/requirements-arm64.txt",
+      "sha256": "ce335d4e3df5b20fb6722a9861e02876d301dab24c640a0ff765c0d493b08708"
+    },
+    {
+      "path": "packaging/macos/compat/requirements-x86_64.txt",
+      "sha256": "be0c6f10719c6780c0b4d7aa1ecf488f0183b8b4ba2892bb758f78d7801eb6b3"
+    },
+    {
+      "path": "packaging/macos/compat_profile.py",
+      "sha256": "2831cdcc7375bde0a19ec34f1c4704daf6963ada1e836ed21cf46f5f00af8d9c"
+    },
+    {
+      "path": "packaging/macos/launch_macos.py",
+      "sha256": "2e566436b8233599e7a3226acd19a765317adf3602ca89a180a7e79870fe13db"
+    },
+    {
+      "path": "packaging/macos/licenses/Python-3.14.6-incorporated.txt",
+      "sha256": "c695d550b135e53e38807e76496d1db17d22c40e461d1f3f354c86188d3305dd"
+    },
+    {
+      "path": "packaging/macos/licenses/Python-3.14.6.txt",
+      "sha256": "b0e25a78cffb43f4d92de8b61ccfa1f1f98ecbc22330b54b5251e7b6ba010231"
+    },
+    {
+      "path": "packaging/macos/licenses/README.md",
+      "sha256": "4bf947b05c155501b8318f01e73d9c195f34eb5ddbb2abd0fcf8461abe013083"
+    },
+    {
+      "path": "packaging/macos/licenses/Tcl-9.0.3.txt",
+      "sha256": "c0a69a2bfd757361ec7e6143973b103c90409316b49e9c88db26ad6388e79f16"
+    },
+    {
+      "path": "packaging/macos/licenses/Tk-9.0.3.txt",
+      "sha256": "2cde822b93ca16ae535c954b7dfe658b4ad10df2a193628d1b358f1765e8b198"
+    },
+    {
+      "path": "packaging/macos/requirements-build.txt",
+      "sha256": "e239a95041c3773fb5461e5f91b6bb01e61af45eaa5e788b381a7ad2f6502fde"
+    },
+    {
+      "path": "packaging/macos/test_bundle.py",
+      "sha256": "4e5d653502c9ddd21ac7f6ddcab8c16e1d44b8e00097b3d07150085744402b74"
+    },
+    {
+      "path": "packaging/macos/tests/test_compat.py",
+      "sha256": "74bbc03008c44df2bf46cb4694adfa79cc99f40e31c46854a78a79802f867b8d"
     },
     {
       "path": "release.json",
@@ -611,7 +695,7 @@
     },
     {
       "path": "standalone_uninstall.ps1",
-      "sha256": "5308a93a641d817ce50846550fd7d27dc19cf75418082a3167ba67504dc331bc"
+      "sha256": "b5089aaa75a9c63751f162312530c357caf7e0b895d7cb9a8d8c2bc47a3e2702"
     },
     {
       "path": "uninstaller.py",
@@ -621,5 +705,6 @@
       "path": "updater.py",
       "sha256": "6e408675bc5b6e3b398c6eb73f9bf86fc2d3977ab508fbc190d94a0d7d339f02"
     }
-  ]
+  ],
+  "staging_recipe": "c0c8ba1ba50584890ae519a87662267824c37a45ac9f9d243f7d850a24bfd78d"
 }
