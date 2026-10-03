@@ -1,0 +1,140 @@
+name: Correct macOS compatibility test scope
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/correct-macos-test-scope.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+    steps:
+      - name: Correct v0.4.1 release description
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$REPO/releases/398745717" > stable.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("stable.json").read_text())
+          body=d["body"]
+
+          body=body.replace(
+            "The compatibility packages below have now been tested successfully on macOS 13; macOS 12.3+ remains a compatibility target pending a separate real-system test.",
+            "The **Intel (x86_64) compatibility package** has been successfully tested by a **user on an Intel Mac running macOS 13**. The **ARM64 compatibility package has not been tested on macOS 13**. macOS 12.3+ remains an unconfirmed compatibility target pending separate real-system testing."
+          )
+          body=body.replace(
+            "| macOS 13 — Apple Silicon | [ARM64 compatibility build](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-compat12-preview.zip) |",
+            "| Apple Silicon — compatibility build | [ARM64 package](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-compat12-preview.zip) — binary target 12.3+, **not tested on macOS 13** |"
+          )
+          body=body.replace(
+            "| macOS 13 — Intel | [x86_64 compatibility build](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-compat12-preview.zip) |",
+            "| macOS 13 — Intel | [x86_64 compatibility build](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-compat12-preview.zip) — **user-tested on Intel Mac** |"
+          )
+          body=body.replace(
+            "The separate compatibility candidate has now also been **successfully tested by the maintainer on macOS 13**. Its binaries declare a minimum of macOS 12.3; **12.3+ remains a compatibility target and is not yet confirmed by a separate real-system test**.",
+            "The **Intel (x86_64) compatibility package** has now been **successfully tested by a user on an Intel Mac running macOS 13**. The **ARM64 compatibility package has not been tested on macOS 13**. Both compatibility builds declare a minimum of macOS 12.3; **12.3+ remains an unconfirmed compatibility target pending separate real-system testing**."
+          )
+
+          body=body.replace(
+            "Compatibility-пакеты ниже теперь успешно проверены на macOS 13; macOS 12.3+ остаётся целевой совместимостью до отдельной проверки на реальной системе.",
+            "**Intel (x86_64) compatibility-пакет** успешно проверен **пользователем на Intel Mac с macOS 13**. **ARM64 compatibility-пакет на macOS 13 не тестировался.** macOS 12.3+ остаётся неподтверждённой целью совместимости до отдельной проверки на реальной системе."
+          )
+          body=body.replace(
+            "| macOS 13 — Apple Silicon | [ARM64 compatibility build](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-compat12-preview.zip) |",
+            "| Apple Silicon — compatibility build | [ARM64 пакет](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-arm64-compat12-preview.zip) — бинарная цель 12.3+, **на macOS 13 не тестировался** |"
+          )
+          body=body.replace(
+            "| macOS 13 — Intel | [x86_64 compatibility build](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-compat12-preview.zip) |",
+            "| macOS 13 — Intel | [x86_64 compatibility build](https://github.com/Leemuzhko/HYBRID-IR/releases/download/v0.4.1/HYBRID-IR-0.4.1-macOS-x86_64-compat12-preview.zip) — **проверен пользователем на Intel Mac** |"
+          )
+          body=body.replace(
+            "Отдельный compatibility candidate теперь также **успешно проверен автором на macOS 13**. Его бинарники заявляют минимум macOS 12.3; **12.3+ пока остаётся целевой совместимостью и не подтверждена отдельным тестом на реальной системе**.",
+            "**Intel (x86_64) compatibility-пакет** теперь **успешно проверен пользователем на Intel Mac с macOS 13**. **ARM64 compatibility-пакет на macOS 13 не тестировался.** Обе сборки заявляют минимум macOS 12.3; **12.3+ пока остаётся неподтверждённой целью совместимости до отдельной проверки на реальной системе**."
+          )
+
+          Path("body.md").write_text(body)
+          Path("payload.json").write_text(json.dumps({"body":body}))
+          PY
+          gh api --method PATCH "repos/$REPO/releases/398745717" --input payload.json
+
+      - name: Correct compatibility release description
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > compat-body.md <<'EOF'
+          # HYBRID IR 0.4.1 — macOS compatibility builds
+
+          [English](#english) · [Русский](#russian)
+
+          <a id="english"></a>
+          ## English
+
+          The **Intel (x86_64) compatibility build** has been **successfully tested by a user on an Intel Mac running macOS 13**.
+
+          - **Intel x86_64:** user-tested on macOS 13.
+          - **Apple Silicon ARM64:** packaged and statically validated, but **not tested on macOS 13**.
+          - Both packaged binaries declare **macOS 12.3** as their minimum.
+          - **macOS 12.3+ has not yet been confirmed by a separate real-system test**.
+          - The application ZIPs are unchanged from the original compatibility candidate; SHA-256 files and validation reports remain attached.
+          - The app is ad-hoc signed, not Developer ID signed or Apple-notarized.
+
+          The same compatibility ZIPs are also attached to the main **v0.4.1** release.
+
+          <a id="russian"></a>
+          ## Русский
+
+          **Intel (x86_64) compatibility-сборка** успешно проверена **пользователем на Intel Mac с macOS 13**.
+
+          - **Intel x86_64:** проверен пользователем на macOS 13.
+          - **Apple Silicon ARM64:** собран и прошёл статические проверки, но **на macOS 13 не тестировался**.
+          - Обе сборки заявляют минимальную версию **macOS 12.3**.
+          - **macOS 12.3+ пока не подтверждена отдельным тестом на реальной системе**.
+          - ZIP приложений не изменялись относительно первоначального compatibility candidate; SHA-256 и отчёты validation сохранены.
+          - Подпись приложения ad-hoc, без Developer ID и нотарификации Apple.
+
+          Эти же compatibility ZIP добавлены в основной релиз **v0.4.1**.
+          EOF
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          payload={
+            "name":"HYBRID IR 0.4.1 — macOS compatibility builds",
+            "body":Path("compat-body.md").read_text(),
+            "prerelease":False,
+            "make_latest":"false"
+          }
+          Path("payload.json").write_text(json.dumps(payload))
+          PY
+          gh api --method PATCH "repos/$REPO/releases/400865672" --input payload.json
+
+      - name: Verify wording
+        shell: bash
+        run: |
+          set -euo pipefail
+          stable="$(gh api "repos/$REPO/releases/398745717")"
+          compat="$(gh api "repos/$REPO/releases/400865672")"
+          python3 - "$stable" "$compat" <<'PY'
+          import json,sys
+          stable,compat=map(json.loads,sys.argv[1:3])
+          joined=stable["body"]+"\n"+compat["body"]
+          if "tested by the maintainer" in joined or "проверен автором" in joined:
+              raise SystemExit("stale author wording remains")
+          for needle in (
+              "user on an Intel Mac running macOS 13",
+              "ARM64 compatibility package has not been tested on macOS 13",
+              "пользователем на Intel Mac с macOS 13",
+              "ARM64 compatibility-пакет на macOS 13 не тестировался",
+          ):
+              if needle not in joined:
+                  raise SystemExit("missing required wording: "+needle)
+          print("wording verified")
+          PY
